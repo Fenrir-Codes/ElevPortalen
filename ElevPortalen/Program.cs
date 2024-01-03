@@ -1,6 +1,5 @@
 using ElevPortalen.Areas.Identity;
 using ElevPortalen.Data;
-using ElevPortalen.DBContext;
 using ElevPortalen.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -22,7 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 var dbString = builder.Configuration.GetConnectionString("DbConnection") ?? 
     throw new InvalidOperationException("Connection string 'DbConnection' not found.");
 
-builder.Services.AddDbContext<PortalDBContext>(options => options.UseSqlServer(dbString));
+builder.Services.AddDbContext<ElevPortalenDataDbContext>(options => options.UseSqlServer(dbString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -40,7 +39,7 @@ builder.Services.AddScoped<StudentService>();
 //End ----
 
 //added Database context.
-builder.Services.AddDbContext<PortalDBContext>(options =>
+builder.Services.AddDbContext<ElevPortalenDataDbContext>(options =>
     options.UseSqlServer(connectionString));
 // End ----
 

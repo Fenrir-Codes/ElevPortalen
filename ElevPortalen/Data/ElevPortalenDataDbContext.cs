@@ -1,11 +1,11 @@
 ﻿using ElevPortalen.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ElevPortalen.DBContext
+namespace ElevPortalen.Data
 {   //Lavet af Jozsef
-    public class PortalDBContext : DbContext
+    public class ElevPortalenDataDbContext : DbContext
     {
-        public PortalDBContext(DbContextOptions<PortalDBContext> options) : base(options)
+        public ElevPortalenDataDbContext(DbContextOptions<ElevPortalenDataDbContext> options) : base(options)
         {
 
         }
