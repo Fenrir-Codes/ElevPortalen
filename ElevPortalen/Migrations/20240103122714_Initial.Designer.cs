@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElevPortalen.Migrations
 {
     [DbContext(typeof(PortalDBContext))]
-    [Migration("20240103120708_Initial")]
+    [Migration("20240103122714_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -75,7 +75,7 @@ namespace ElevPortalen.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.ToTable("Commpany");
+                    b.ToTable("Company");
                 });
 
             modelBuilder.Entity("ElevPortalen.Models.StudentModel", b =>

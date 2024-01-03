@@ -12,7 +12,7 @@ namespace ElevPortalen.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Commpany",
+                name: "Company",
                 columns: table => new
                 {
                     CompanyId = table.Column<int>(type: "int", nullable: false)
@@ -31,7 +31,7 @@ namespace ElevPortalen.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Commpany", x => x.CompanyId);
+                    table.PrimaryKey("PK_Company", x => x.CompanyId);
                 });
 
             migrationBuilder.CreateTable(
@@ -60,7 +60,7 @@ namespace ElevPortalen.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Commpany");
+                name: "Company");
 
             migrationBuilder.DropTable(
                 name: "Student");

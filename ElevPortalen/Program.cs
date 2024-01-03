@@ -18,7 +18,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-//The LevPortalen-Data db string.
+//The ElevPortalen-Data db string.
 var dbString = builder.Configuration.GetConnectionString("DbConnection") ?? 
     throw new InvalidOperationException("Connection string 'DbConnection' not found.");
 
