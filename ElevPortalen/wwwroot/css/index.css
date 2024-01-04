@@ -5,3 +5,14 @@
 body {
     background-color: #faf2eb;
 }
+
+.topContainer {
+    padding: 30px;
+}
+.logoText {
+    font-family: 'Bevan', serif;
+    font-size: 64px;
+    color: #64becd;
+
+
+}
