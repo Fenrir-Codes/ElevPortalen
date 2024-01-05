@@ -1,0 +1,88 @@
+﻿@page "/studentProfile"
+@using ElevPortalen.Models
+@using ElevPortalen.Data
+@using Microsoft.AspNetCore.Mvc
+@using Microsoft.EntityFrameworkCore
+
+@inject ElevPortalenDataDbContext dbContext
+
+<PageTitle>Elev profil</PageTitle>
+
+
+<div class="container">
+    <h1 class="text-center mb-4">Elev profil</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post">
+                <div class="md-6 form-floating mb-3">
+                    <input class="form-control" type="text" placeholder="Titel" asp-for="Student.Title" />
+                    <label for="floatingInputGrid">Titel</label>
+
+                </div>
+                <div class="md-6 form-floating mb-3">
+                    <input class="form-control" type="text" placeholder="Fornavn" asp-for="Student.FirstName" />
+                    <label for="floatingInputGrid">Fornavn</label>
+
+                </div>
+                <div class="md-6 form-floating mb-3">
+                    <input class="form-control" type="text" placeholder="Mellemnavn" asp-for="Student.MiddleName" />
+                    <label for="floatingInputGrid">Mellemnavn</label>
+
+                </div>
+                <div class="md-6 form-floating mb-3">
+                    <input class="form-control" type="text" placeholder="Efternavn" asp-for="Student.LastName" />
+                    <label for="floatingInputGrid">Efternavn</label>
+
+                </div>
+                <div class="md-6 form-floating mb-3">
+                    <input class="form-control" type="text" placeholder="Adresse" asp-for="Student.Address" />
+                    <label for="floatingInputGrid">Adresse</label>
+
+                </div>
+                <div class="md-6 form-floating mb-3">
+                    <input class="form-control" type="text" placeholder="Beskrivelse" asp-for="Student.Description" />
+                    <label for="floatingInputGrid">Beskrivelse</label>
+
+                </div>
+                <div class="md-6 form-floating mb-3">
+                    <input class="form-control" type="text" placeholder="Speciale" asp-for="Student.Speciality" />
+                    <label for="floatingInputGrid">Speciale</label>
+
+                </div>
+                <div class="md-6 form-floating mb-3">
+                    <input class="form-control" type="tel" placeholder="Telefonnummer" asp-for="Student.PhoneNumber" />
+                    <label for="floatingInputGrid">Telefonnummer</label>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card text-center mb-3">
+                <img src="https://via.placeholder.com/150" id="cardImageView" class="card-img-top" alt="Image preview">
+                <div class="card-body">
+                    <h5 class="card-title align-items-center">Profilbillede</h5>
+                </div>
+            </div>
+            <!-- Image Upload Form Not working yet -->
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group mb-3">
+                    <label for="imageUpload">Upload Image</label>
+                    <input type="file" class="form-control" id="imageUpload" name="imageUpload" onchange="previewImage(event)">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    private StudentModel model = new StudentModel();
+
+    private async Task HandleFormSubmit()
+    {
+        dbContext.Student.Add(model);
+        await dbContext.SaveChangesAsync();
+    }
+
+}
