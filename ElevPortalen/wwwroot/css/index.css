@@ -9,10 +9,44 @@ body {
 .topContainer {
     padding: 30px;
 }
+
 .logoText {
     font-family: 'Bevan', serif;
-    font-size: 64px;
+    font-size: 72px;
     color: #64becd;
+}
 
 
+
+/* Adjust the font size for smaller screens */
+@media screen and (max-width: 1000px) {
+    .logoText {
+        font-size: 72px;
+    }
+
+    .picture {
+        width: 400px;
+        height: 400px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .logoText {
+        font-size: 56px; 
+    }
+    .picture {
+        width: 250px;
+        height: 250px;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .logoText {
+        font-size: 42px; 
+    }
+
+    .picture {
+        width: 250px;
+        height: 250px;
+    }
 }
