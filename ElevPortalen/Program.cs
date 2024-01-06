@@ -21,7 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 var dbString = builder.Configuration.GetConnectionString("DbConnection") ?? 
     throw new InvalidOperationException("Connection string 'DbConnection' not found.");
 
-builder.Services.AddDbContext<ElevPortalenDataDbContext>(options => options.UseSqlServer(dbString));
+builder.Services.AddDbContext<ElevPortalen.Data.ElevPortalenDataDbContext>(options => options.UseSqlServer(dbString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -35,11 +35,11 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 //Services added
 builder.Services.AddScoped<CompanyService>();
-builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<ElevPortalen.Services.ElevPortalenDataDbContext>();
 //End ----
 
 //added Database context.
-builder.Services.AddDbContext<ElevPortalenDataDbContext>(options =>
+builder.Services.AddDbContext<ElevPortalen.Data.ElevPortalenDataDbContext>(options =>
     options.UseSqlServer(connectionString));
 // End ----
 
