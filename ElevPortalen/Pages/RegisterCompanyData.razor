@@ -99,6 +99,7 @@
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
+        // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
         if (_authState != null)

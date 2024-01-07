@@ -14,10 +14,12 @@
 
 <PageTitle>Home</PageTitle>
 
+@* HHTMl and its logic*@
 <div class="container-fluid">
 
         @if (isAuthenticated)
         {
+
             @if (_authState.User.IsInRole(Student) && _studentList.Count >= 1)
             {
                 <table class="table table-striped table-hover table-bordered">
@@ -120,6 +122,7 @@
 
 
 @code{
+    // private fields within the scope of the class
     private AuthenticationState? _authState;
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
@@ -132,12 +135,14 @@
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
+        // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
         if (_authState != null)
         {
             if (_authState.User.Identity?.IsAuthenticated == true)
             {
+                // If authenticated set the bool to true zhan read the users data from the data table with the help of ReadData function
                 isAuthenticated = true;
                 await ReadData();
             }
@@ -155,14 +160,14 @@
         //Authenticating the user
         var _user = _authState.User;
 
-        if (_authState.User.IsInRole(Student))
+        if (_authState.User.IsInRole(Student)) // If the role is Student
         {
-            //Getting the data with the service call
+            //Getting the data with the service call from student
             _studentList = await _studentService.ReadData(_user);
         }
-        else if (_authState.User.IsInRole(Company))
+        else if (_authState.User.IsInRole(Company)) // If the role is Company
         {
-            //Getting the data with the service call
+            //Getting the data with the service call from company
             _companyList = await _companyService.ReadData(_user);
         }
         else
@@ -175,13 +180,14 @@
     #region navigation to register pages
     private void NavigateToRegister()
     {
-        if (_authState.User.IsInRole(Company))
+        // If the user signed in and have no data in its data table
+        if (_authState.User.IsInRole(Company))  // If the user role is Company
         {
-            NavManager.NavigateTo("/registercompany");
+            NavManager.NavigateTo("/registercompany"); // Route to the company registration page
         }
-        else if (_authState.User.IsInRole(Student))
+        else if (_authState.User.IsInRole(Student)) // If the role is Student
         {
-            NavManager.NavigateTo("/registerstudent");
+            NavManager.NavigateTo("/registerstudent"); // Route to the student registration page
         }
     }
     #endregion

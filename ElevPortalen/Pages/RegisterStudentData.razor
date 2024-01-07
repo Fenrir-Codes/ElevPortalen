@@ -87,10 +87,14 @@
     string.IsNullOrWhiteSpace(_phoneNumber.ToString());
 
     #region OnInitialize
+    // The OnInitializedAsync() method is called when a component is being initialized.
     protected override async Task OnInitializedAsync()
     {
+        // Perform asynchronous initialization
+        // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
+        //If the user is authed then i set the isAuthorized boolian to true
         if (_authState != null)
         {
             if (_authState.User.Identity?.IsAuthenticated == true)
