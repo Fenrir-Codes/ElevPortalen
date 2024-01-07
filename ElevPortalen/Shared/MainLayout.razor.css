@@ -1,17 +1,9 @@
 .page {
-    height: 100%;
-}
-
-/*.container-fluid {
+    position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 0px;
-    margin:0;
-    border: 1px solid black;
-    width:100%;
-}*/
-/*
+}
+
 main {
     flex: 1;
 }
@@ -51,9 +43,9 @@ main {
     .top-row a, .top-row .btn-link {
         margin-left: 0;
     }
-}*/
+}
 
-/*@media (min-width: 641px) {
+@media (min-width: 641px) {
     .page {
         flex-direction: row;
     }
@@ -75,4 +67,4 @@ main {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
-}*/
+}

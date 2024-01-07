@@ -9,11 +9,12 @@ using ElevPortalen.Data;
 
 namespace ElevPortalen.Services
 {
+
+    // Lavet af Jozsef
     public class StudentService
     {
         private readonly ElevPortalenDataDbContext _context;
         private readonly IDataProtector? _dataProtector;
-        private bool hasChanges = false;
 
         #region constructor
         public StudentService(ElevPortalenDataDbContext context, IDataProtectionProvider dataProtectionProvider)

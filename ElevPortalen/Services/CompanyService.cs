@@ -9,11 +9,11 @@ using System.Text;
 
 namespace ElevPortalen.Services
 {
+    //Lavet af Jozsef
     public class CompanyService
     {
         private readonly ElevPortalenDataDbContext _context;
         private readonly IDataProtector? _dataProtector;
-        private bool hasChanges = false;
 
         #region constructor
         public CompanyService(ElevPortalenDataDbContext context, IDataProtectionProvider dataProtectionProvider)

@@ -1,8 +1,5 @@
 ﻿@page
 @model RegisterModel
-@{
-    bool isStudent = Request.Query["isStudent"] == "true";
-}
 
 @*Lavet af Jozsef*@
 
@@ -11,14 +8,6 @@
     <div class="row justify-content-center">
         <div class="col-sm-12 col-md-6 col-lg-6">
             <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                @if (isStudent)
-                {
-                    <h3>Student Registration</h3>
-                }
-                else
-                {
-                    <h3>Company Registration</h3>
-                }
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-2">
@@ -36,92 +25,15 @@
                     <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
-
-                @if (isStudent)
-                {
-                    <div class="row">
-                        <div class="mb-2 col-sm-4 col-md-4 col-lg-4 ">
-                            <input type="text" class="form-control" placeholder="Title" aria-label="Title" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                            <input type="text" class="form-control" placeholder="First name" aria-label="First name" required>
-                        </div>
-                        <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                            <input type="text" class="form-control" placeholder="Last name" aria-label="Last name" required>
-                        </div>
-                        <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                            <input type="text" class="form-control" placeholder="Address" aria-label="Address" required>
-                        </div>
-                        <div class="mb-2 col-sm-12 col-md-12 col-lg-12 ">
-                            <label for="Description" class="form-label">Description</label>
-                            <textarea class="form-control" id="Description" rows="6"></textarea>
-                        </div>
-                        <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                            <input type="text" class="form-control" placeholder="Phone number" aria-label="Phone number" required>
-                        </div>
-                        <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                            <select class="form-select form-select-md" aria-label="Speciality" required>
-                                <option selected>Select speciality</option>
-                                <option value="1">It-Supporter</option>
-                                <option value="2">Infrastructure</option>
-                                <option value="3">Programming</option>
-                            </select>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="row">
-                        <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                            <input type="text" class="form-control" placeholder="Company name" aria-label="Company name" required>
-                        </div>
-                        <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                            <input type="text" class="form-control" placeholder="Address" aria-label="Address" required>
-                        </div>
-                        <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                            <select class="form-select form-select-md" aria-label="Region" required>
-                                <option selected>Select region</option>
-                                <option value="1">Region Nordjylland</option>
-                                <option value="2">Region Midtjylland</option>
-                                <option value="3">Region Syddanmark</option>
-                                <option value="3">Region Hovedstaden</option>
-                                <option value="3">Region Sjælland </option>
-                            </select>
-                        </div>
-                        <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                            <input type="text" class="form-control" placeholder="Company website Link" aria-label="Link">
-                        </div>
-                        <div class="mb-2 col-sm-12 col-md-12 col-lg-12 ">
-                            <label for="Description" class="form-label">Description</label>
-                            <textarea class="form-control" id="Description" rows="4"></textarea>
-                        </div>
-                        <div class="mt-2 mb-2 col-sm-12 col-md-4 col-lg-4">
-                            <input type="text" class="form-control" placeholder="Phone number" aria-label="Phone number" required>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminateDisabled" disabled>
-                            <label class="form-check-label" for="flexCheckIndeterminateDisabled">
-                                Disabled indeterminate checkbox
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled" disabled>
-                            <label class="form-check-label" for="flexCheckDisabled">
-                                Disabled checkbox
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked disabled>
-                            <label class="form-check-label" for="flexCheckCheckedDisabled">
-                                Disabled checked checkbox
-                            </label>
-                        </div>
-
-                    </div>
-                }
-
+                @*Added by Jozsef*@
+                <div class="form-group">
+                    <label asp-for="Input.Role"></label>
+                    <select asp-for="Input.Role" class="form-control">
+                        <option value="Student">Student</option>
+                        <option value="Company">Company</option>
+                    </select>
+                    <span asp-validation-for="Input.Role" class="text-danger"></span>
+                </div>
                 <button id="registerSubmit" type="submit" class="w-25 btn btn btn-success">Submit</button>
             </form>
         </div>
