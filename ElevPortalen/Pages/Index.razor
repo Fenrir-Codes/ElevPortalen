@@ -20,7 +20,7 @@
         <div class="bg-image" style="background-image: url('/images/Logo_ElevPortalen.png'); background-size: cover; background-position: center; position: absolute; top: 0; right: 0; bottom: 0; left: 0; opacity: 0.1;"></div>
 
         <!-- Text Over Image -->
-                    <div class="text-container" style="position: relative; top: 5%; color: black; z-index: 1;"> 
+                    <div class="text-container" style="position: relative; top: 4%; color: black; z-index: 1;"> 
                 <h1>Velkommen til ElevPortalen</h1>
             @if (isAuthenticated)
             {
@@ -39,17 +39,17 @@
             {
                 <div class="d-inline-flex align-items-center">
                     @* Message = " eller "; *@
-                    <a href="/Identity/Account/Login" class="btn mb-3" role="button" data-bs-toggle="button">Login</a>
+                    <a href="/Identity/Account/Login" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Login</a>
                     @* <p>@Message</p> *@
                     <p> eller </p>
-                    <a href="/Identity/Account/Register" class="btn mb-3" role="button" data-bs-toggle="button">Registrer</a>
+                    <a href="/Identity/Account/Register" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Registrer</a>
                     <p> dig først</p>
                 </div>
             }
 
     </div>
             <div style="position: absolute; bottom: 0; width: 100%; text-align: center;">
-                <p style="padding-bottom: 20px; margin-bottom: 0;">Udforsk Danmarks Mest Eftertragtede Sted for Lærepladser – Dit Springbræt til Succes og Innovation!</p>
+                <p style="padding-bottom: 40px; margin-bottom: 0;">Udforsk Danmarks Mest Eftertragtede Sted for Lærepladser – Dit Springbræt til Succes og Innovation!</p>
             </div>
         </div>
 
