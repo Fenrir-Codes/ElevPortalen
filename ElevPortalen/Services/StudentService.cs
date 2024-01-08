@@ -61,6 +61,23 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Get All Student data
+        public async Task<List<StudentModel>> ReadAllStudentData()
+        {
+            try
+            {
+                //Get all the data
+                var response = await _context.Student.AsNoTracking().ToListAsync();
+
+                return response; // return the data
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred while retrieving Student data." + ex.Message);
+            }
+        }
+        #endregion
+
         #region Student Update function
         public async Task<string> Update(StudentModel student)
         {
