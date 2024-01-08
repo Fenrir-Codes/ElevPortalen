@@ -1,9 +1,82 @@
 ﻿@page "/"
+@*Lavet af Jozsef*@
 
-<PageTitle>Index</PageTitle>
+@using ElevPortalen.Services;
+@using ElevPortalen.Data;
+@using ElevPortalen.Models;
 
-<h1>Hello, ElevPortalen</h1>
+@inject ElevPortalenDataDbContext _context
+@inject StudentService _studentService
+@inject CompanyService _companyService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IConfiguration Configuration
+@inject NavigationManager NavManager
 
-Welcome to your new app.
+<PageTitle>Home</PageTitle>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@* HHTMl and its logic*@
+<div class="container-fluid">
+    <h3>This is the Index Page</h3>
+
+    @if (isAuthenticated)
+    {
+        @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
+        {
+            <p>Go check your profile</p>
+            <button class="btn btn-success" @onclick="GoToProfile">Go to profile</button>
+        }
+        else
+        {
+            Message = "No Role assigned to your profile!";
+            <p>@Message</p>
+        }
+    }
+    else
+    {
+        Message = "Please login first.";
+        <p>@Message</p>
+    }
+
+</div>
+
+
+@code{
+    // private fields within the scope of the class
+    private AuthenticationState? _authState;
+    private List<StudentModel> _studentList = new List<StudentModel>();
+    private List<CompanyModel> _companyList = new List<CompanyModel>();
+
+    private bool isAuthenticated = false;
+    private string Company = "Company";
+    private string Student = "Student";
+    private string Message = "";
+
+    #region OnInitialize
+    protected override async Task OnInitializedAsync()
+    {
+        // Getting the user current authentication state.
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (_authState != null)
+        {
+            if (_authState.User.Identity?.IsAuthenticated == true)
+            {
+                // If authenticated set the bool to true zhan read the users data from the data table with the help of ReadData function
+                isAuthenticated = true;
+            }
+            else
+            {
+                isAuthenticated = false;
+            }
+        }
+    }
+    #endregion
+
+    #region Navigate to profile function
+    private void GoToProfile(){
+        NavManager.NavigateTo("/profile");
+    }
+    #endregion
+
+}
+   

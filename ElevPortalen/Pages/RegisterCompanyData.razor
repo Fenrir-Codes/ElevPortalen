@@ -1,0 +1,179 @@
+﻿@page "/registercompany"
+
+@*Lavet af Jozsef*@
+
+@using ElevPortalen.Models
+@using ElevPortalen.Services
+@using ElevPortalen.Data;
+
+@inject ElevPortalenDataDbContext _context
+@inject CompanyService _companyService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IConfiguration Configuration
+@inject NavigationManager NavManager
+
+
+<div class="container">
+    @if (_authState.User.IsInRole(Company))
+    {
+        <div class="row">
+            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
+                <input type="text" class="form-control" @bind="_companyName" id="_companyName" placeholder="Company name" aria-label="Company name" required>
+            </div>
+            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
+                <input type="text" class="form-control" @bind="_companyAddress" id="_saddress" placeholder="Address" aria-label="Address" required>
+            </div>
+            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
+                <select class="form-select form-select-md" @bind="_region" id="_region" aria-label="Region" required>
+                    <option selected>Region</option>
+                    <option value="Region Nordjylland">Region Nordjylland</option>
+                    <option value="Region Midtjylland">Region Midtjylland</option>
+                    <option value="Region Syddanmark">Region Syddanmark</option>
+                    <option value="Region Hovedstaden">Region Hovedstaden</option>
+                    <option value="Region Sjælland">Region Sjælland</option>
+                </select>
+            </div>
+            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
+                <input type="email" class="form-control" @bind="_email" id="_email" placeholder="Company Mail" aria-label="Link">
+            </div>
+            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
+                <input type="text" class="form-control" @bind="_link" id="_link" placeholder="Company website Link" aria-label="Link">
+            </div>
+            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
+                <input type="text" class="form-control" @bind="_preferences" id="_preferences" placeholder="Preferences" aria-label="Link">
+            </div>
+            <div class="mb-2 col-sm-12 col-md-12 col-lg-12 ">
+                <label for="Description" class="form-label">Description</label>
+                <textarea class="form-control" @bind="_description" id="_description" rows="4"></textarea>
+            </div>
+            <div class="mt-2 mb-2 col-sm-12 col-md-4 col-lg-4">
+                <input type="text" class="form-control" @bind="_phoneNumber" id="_phoneNumber" placeholder="Phone number" aria-label="Phone number" required>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" @bind="_isHiring">
+                <label class="form-check-label">
+                    Hiring Now
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" @bind="_isVisible">
+                <label class="form-check-label">
+                    Profile Visible
+                </label>
+            </div>
+        </div>
+
+        <button class="btn btn-success" @onclick="Create" disabled="@IsSubmitButtonDisabled">Submit</button>
+    }
+    else
+    {
+        <p>Nothing to do here!</p>
+    }
+</div>
+
+@code {
+    private AuthenticationState? _authState;
+
+    private string _companyName = string.Empty;
+    private string _companyAddress = string.Empty;
+    private string _region = string.Empty;
+    private string _email = string.Empty;
+    private string _link = string.Empty;
+    private string _preferences = string.Empty;
+    private string _description = string.Empty;
+    private int _phoneNumber = 0;
+    private bool _isHiring = false;
+    private bool _isVisible = false;
+
+    private string Message = "";
+
+    private bool isAuthenticated = false;
+    private string Company = "Company";
+
+    private bool IsSubmitButtonDisabled =>
+    string.IsNullOrWhiteSpace(_companyName) ||
+    string.IsNullOrWhiteSpace(_companyAddress) ||
+    string.IsNullOrWhiteSpace(_region) ||
+    string.IsNullOrWhiteSpace(_email) ||
+    string.IsNullOrWhiteSpace(_link) ||
+    string.IsNullOrWhiteSpace(_description) ||
+    string.IsNullOrWhiteSpace(_phoneNumber.ToString());
+
+    #region OnInitialize
+    protected override async Task OnInitializedAsync()
+    {
+        // Getting the user current authentication state.
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (_authState != null)
+        {
+            if (_authState.User.Identity?.IsAuthenticated == true)
+            {
+                isAuthenticated = true;
+            }
+            else
+            {
+                isAuthenticated = false;
+            }
+        }
+    }
+    #endregion
+
+    #region Create company Function
+    private async Task Create()
+    {
+        try
+        {
+            _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+            if (_authState != null)
+            {
+                var user = _authState.User;
+
+                if (user.Identity?.IsAuthenticated == true)
+                {
+                    // Retrieve the user's unique identifier (ID or GUID)
+                    var userIdString = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                    // Convert the string representation to a Guid
+                    if (Guid.TryParse(userIdString, out Guid userId))
+                    {
+                        CompanyModel companyData = new CompanyModel
+                        {
+                            CompanyName = _companyName,
+                            CompanyAddress = _companyAddress,
+                            Region = _region,
+                            Email = _email,
+                            Link = _link,
+                            Preferences = _preferences,
+                            Description = _description,
+                            PhoneNumber = _phoneNumber,
+                            IsHiring = _isHiring,
+                            IsVisible = _isVisible,
+                            UserId = userId
+                        };
+
+                        Message = await _companyService.CreateCompany(companyData);
+                        NavManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        // Handle the exception and return an error message
+                        Message = $"Error parsing GUID";
+                    }
+                }
+            }
+
+            // Default return statement if conditions are not met
+            Message = $"Unexpected error occurred";
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception and return an error message
+            Message = $"Error: {ex.Message}";
+        }
+    }
+    #endregion
+
+
+}

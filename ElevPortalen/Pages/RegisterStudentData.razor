@@ -1,0 +1,167 @@
+﻿@page "/registerstudent"
+
+@*Lavet af Jozsef*@
+
+@using ElevPortalen.Models
+@using ElevPortalen.Services
+@using ElevPortalen.Data;
+@using System.Security.Claims;
+
+@inject ElevPortalenDataDbContext _context
+@inject StudentService _studentService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IConfiguration Configuration
+@inject NavigationManager NavManager
+
+<div class="container">
+    @if (_authState.User.IsInRole(Student))
+    {
+        <div class="row">
+            <div class="mb-2 col-sm-4 col-md-4 col-lg-4">
+                <input type="text" @bind="_title" id="_title" class="form-control" placeholder="Title" aria-label="Title" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
+                <input type="text" @bind="_firstName" id="_firstName" class="form-control" placeholder="First name" aria-label="First name" required>
+            </div>
+            <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
+                <input type="text" @bind="_middleName" id="_middleName" class="form-control" placeholder="Middle name" aria-label="Middle name">
+            </div>
+            <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
+                <input type="text" @bind="_lastName" id="_lastName" class="form-control" placeholder="Last name" aria-label="Last name" required>
+            </div>
+            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
+                <input type="text" @bind="_address" id="_address" class="form-control" placeholder="Address" aria-label="Address" required>
+            </div>
+            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
+                <label for="Description" class="form-label">Description</label>
+                <textarea class="form-control" @bind="_description" id="_description" rows="6"></textarea>
+            </div>
+            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
+                <select class="form-select form-select-md" @bind="_speciality" id="_speciality" aria-label="Region" required>
+                    <option selected>It-Supporter</option>
+                    <option value="Infrastructure">Infrastructure</option>
+                    <option value="Programmer">Programmer</option>
+                </select>
+            </div>
+            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
+                <input type="text" @bind="_phoneNumber" id="_phoneNumber" class="form-control" placeholder="Phone number" aria-label="Phone number" required>
+            </div>
+        </div>
+
+        <button class="btn btn-success" @onclick="Create" disabled="@IsSubmitButtonDisabled">Submit</button>
+        <p></p>
+    }
+    else
+    {
+        <p>Nothing to do here!</p>
+    }
+   
+</div>
+
+@code {
+    private AuthenticationState? _authState;
+
+    private string _title = string.Empty;
+    private string _firstName = string.Empty;
+    private string _middleName = string.Empty;
+    private string _lastName = string.Empty;
+    private string _address = string.Empty;
+    private string _description = string.Empty;
+    private string _speciality = string.Empty;
+    private int _phoneNumber = 0;
+
+    private string Message = "";
+
+    private bool isAuthenticated = false;
+    private string Student = "Student";
+
+    private bool IsSubmitButtonDisabled =>
+    string.IsNullOrWhiteSpace(_title) ||
+    string.IsNullOrWhiteSpace(_firstName) ||
+    string.IsNullOrWhiteSpace(_lastName) ||
+    string.IsNullOrWhiteSpace(_address) ||
+    string.IsNullOrWhiteSpace(_speciality) ||
+    string.IsNullOrWhiteSpace(_description) ||
+    string.IsNullOrWhiteSpace(_phoneNumber.ToString());
+
+    #region OnInitialize
+    // The OnInitializedAsync() method is called when a component is being initialized.
+    protected override async Task OnInitializedAsync()
+    {
+        // Perform asynchronous initialization
+        // Getting the user current authentication state.
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        //If the user is authed then i set the isAuthorized boolian to true
+        if (_authState != null)
+        {
+            if (_authState.User.Identity?.IsAuthenticated == true)
+            {
+                isAuthenticated = true;
+            }
+            else
+            {
+                isAuthenticated = false;
+            }
+        }
+    }
+    #endregion
+
+    #region Create Function
+    private async Task Create()
+    {
+        try
+        {
+            _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+            if (_authState != null)
+            {
+                var user = _authState.User;
+
+                if (user.Identity?.IsAuthenticated == true)
+                {
+                    // Retrieve the user's unique identifier (ID or GUID)
+                    var userIdString = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                    // Convert the string representation to a Guid
+                    if (Guid.TryParse(userIdString, out Guid userId))
+                    {
+                        StudentModel studentData = new StudentModel
+                        {
+                            Title = _title,
+                            FirstName = _firstName,
+                            MiddleName = _middleName,
+                            LastName = _lastName,
+                            Address = _address,
+                            Description = _description,
+                            Speciality = _speciality,
+                            PhoneNumber = _phoneNumber,
+                            UserId = userId // Set the UserId to the user's unique identifier
+                        };
+
+                        Message = await _studentService.CreateStudent(studentData);
+                        NavManager.NavigateTo("/");
+                    }
+                    else
+                    {
+                        // Handle the exception and return an error message
+                        Message = $"Error parsing GUID";
+                    }
+                }
+            }
+
+            // Default return statement if conditions are not met
+            Message = $"Unexpected error occurred";
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception and return an error message
+            Message = $"Error: {ex.Message}";
+        }
+    }
+    #endregion
+
+
+}

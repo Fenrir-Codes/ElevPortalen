@@ -1,4 +1,5 @@
 using ElevPortalen.Areas.Identity;
+using ElevPortalen.Areas.Identity.Pages.Account;
 using ElevPortalen.Data;
 using ElevPortalen.Services;
 using Microsoft.AspNetCore.Components;
@@ -25,28 +26,31 @@ builder.Services.AddDbContext<ElevPortalenDataDbContext>(options => options.UseS
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+//Added IdentityRole by Jozsef
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddSingleton<WeatherForecastService>();
 
-//Services added
+//Services added by Jozsef
 builder.Services.AddScoped<CompanyService>();
+builder.Services.AddScoped<ElevPortalenDataDbContext>();
 builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<RegisterModel>();
 //End ----
 
-//added Database context.
+//added Database context by Jozsef
 builder.Services.AddDbContext<ElevPortalenDataDbContext>(options =>
     options.UseSqlServer(connectionString));
 // End ----
 
-//Dataprotection service
+//Dataprotection service by Jozsef
 builder.Services.AddDataProtection();
 // End ----
-
 
 
 var app = builder.Build();
@@ -74,5 +78,27 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+
+// Create a new scope within the dependency injection container by Jozsef
+using (var scope = app.Services.CreateScope())
+{
+    // Obtain an instance of the RoleManager service for managing roles
+    var roleManager =
+        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    // Define an array of role names to be created and seeded
+    var roles = new[] { "Admin", "Student", "Company" };
+
+    // Iterate over each role name in the array
+    foreach (var role in roles)
+    {
+        // Check if the role already exists in the system
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            // If the role does not exist, create a new role using RoleManager
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}
 
 app.Run();
