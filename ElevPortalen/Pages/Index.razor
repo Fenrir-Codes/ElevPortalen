@@ -16,31 +16,47 @@
 
 @* HHTMl and its logic*@
 <div class="container-fluid">
-    <h3>This is the Index Page</h3>
+    <div class="bg-image-container text-center" style="height: 100vh; position: relative;">
+        <div class="bg-image" style="background-image: url('/images/Logo_ElevPortalen.png'); background-size: cover; background-position: center; position: absolute; top: 0; right: 0; bottom: 0; left: 0; opacity: 0.1;"></div>
 
-    @if (isAuthenticated)
-    {
-        @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
-        {
-            <p>Go check your profile</p>
-            <button class="btn btn-success" @onclick="GoToProfile">Go to profile</button>
-        }
-        else
-        {
-            Message = "No Role assigned to your profile!";
-            <p>@Message</p>
-        }
-    }
-    else
-    {
-        Message = "Please login first.";
-        <p>@Message</p>
-    }
+        <!-- Text Over Image -->
+                    <div class="text-container" style="position: relative; top: 5%; color: black; z-index: 1;"> 
+                <h1>Velkommen til ElevPortalen</h1>
+            @if (isAuthenticated)
+            {
+                @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
+                {
+                    <p>Go check your profile</p>
+                    <button class="btn btn-success" @onclick="GoToProfile">Go to profile</button>
+                }
+                else
+                {
+                    Message = "No Role assigned to your profile!";
+                    <p>@Message</p>
+                }
+            }
+            else
+            {
+                <div class="d-inline-flex align-items-center">
+                    @* Message = " eller "; *@
+                    <a href="/Identity/Account/Login" class="btn mb-3" role="button" data-bs-toggle="button">Login</a>
+                    @* <p>@Message</p> *@
+                    <p> eller </p>
+                    <a href="/Identity/Account/Register" class="btn mb-3" role="button" data-bs-toggle="button">Registrer</a>
+                    <p> dig først</p>
+                </div>
+            }
+
+    </div>
+            <div style="position: absolute; bottom: 0; width: 100%; text-align: center;">
+                <p style="padding-bottom: 20px; margin-bottom: 0;">Udforsk Danmarks Mest Eftertragtede Sted for Lærepladser – Dit Springbræt til Succes og Innovation!</p>
+            </div>
+        </div>
 
 </div>
 
 
-@code{
+@code {
     // private fields within the scope of the class
     private AuthenticationState? _authState;
     private List<StudentModel> _studentList = new List<StudentModel>();
@@ -73,10 +89,10 @@
     #endregion
 
     #region Navigate to profile function
-    private void GoToProfile(){
+    private void GoToProfile()
+    {
         NavManager.NavigateTo("/profile");
     }
     #endregion
 
 }
-   
