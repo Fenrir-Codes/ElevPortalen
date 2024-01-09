@@ -20,11 +20,11 @@
         <div class="bg-image" style="background-image: url('/images/Logo_ElevPortalen.png'); background-size: cover; background-position: center; position: absolute; top: 0; right: 0; bottom: 0; left: 0; opacity: 0.1;"></div>
 
         <!-- Text Over Image -->
-        <div class="text-container mb-3" style="position: relative; top: 4%; color: black; z-index: 1;">
+        <div class="text-container mb-4" style="position: relative; top: 4%; color: black; z-index: 1;">
             <h1>Velkommen til ElevPortalen</h1>
             @if (isAuthenticated)
             {
-                @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
+@*                 @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
                 {
                     <p>Klik på knappen for at se din profil</p>
                     <button class="btn btn-success mb-5" @onclick="GoToProfile">Profil</button>
@@ -33,7 +33,7 @@
                 {
                     Message = "No Role assigned to your profile!";
                     <p>@Message</p>
-                }
+                } *@
             }
             else
             {
