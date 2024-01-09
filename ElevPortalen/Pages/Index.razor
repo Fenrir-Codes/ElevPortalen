@@ -19,14 +19,13 @@
 
     @if (isAuthenticated)
     {
-
         @if (_authState.User.IsInRole(Student) && _companyList.Count >= 1)
         {
             <!-- Display Company-related content -->
             <div class="container">
                 @foreach (var data in _companyList)
                 {
-                    <div class="card m-2">
+                    <div class="card border-secondary text-center m-2">
                         <div class="card-header">
                             @data.CompanyName
                         </div>
@@ -45,7 +44,7 @@
             <div class="container">
                 @foreach (var data in _studentList)
                 {
-                    <div class="card m-2">
+                    <div class="card text-center m-2">
                         <div class="card-header">
                             @data.LastName
                         </div>
