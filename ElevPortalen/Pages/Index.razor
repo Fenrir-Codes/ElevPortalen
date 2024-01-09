@@ -66,11 +66,25 @@
     }
     else
     {
-        <!-- Display message when not authenticated -->
-        Message = "Please login first.";
-        <p>@Message</p>
+
+        <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+            <div class="text-container mb-5" style="position:absolute; text-align: center; z-index: 2;">
+                <h1>Velkommen til ElevPortalen</h1>
+                <div class="d-inline-flex align-items-center">
+                    <a href="/Identity/Account/Login" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Login</a>
+                    <p> eller </p>
+                    <a href="/Identity/Account/Register" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Registrer</a>
+                    <p> dig først</p>
+                </div>
+            </div>
+            <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width:100%; height: auto; opacity: 0.1;">
+
+        </div>
+
+
     }
 </div>
+
 
 
 
