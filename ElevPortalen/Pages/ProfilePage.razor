@@ -31,6 +31,7 @@
                         <th scope="col">Description</th>
                         <th scope="col">Speciality</th>
                         <th scope="col">Phone Number</th>
+                        <th scope="col">Update</th>
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
@@ -45,6 +46,10 @@
                             <td>@data.Description</td>
                             <td>@data.Speciality</td>
                             <td>@data.PhoneNumber</td>
+                            <td>
+                                <button class="btn btn-info" @onclick="() => NavigateToUpdate(data.StudentId)">Update</button>
+                            </td>
+
                         </tr>
                     }
                 </tbody>
@@ -195,5 +200,11 @@
         }
     }
     #endregion
+
+    private void NavigateToUpdate(int studentId)
+    {
+        NavManager.NavigateTo($"/updatestudent/{studentId}");
+    }
+
 
 }

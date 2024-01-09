@@ -88,6 +88,15 @@ namespace ElevPortalen.Services
                 // If the response is not null
                 if (entry != null)
                 {
+                    entry.Title = student.Title;
+                    entry.FirstName = student.FirstName;
+                    entry.MiddleName = student.MiddleName;
+                    entry.LastName = student.LastName;
+                    entry.Address = student.Address;
+                    entry.Description = student.Description;
+                    entry.Speciality = student.Speciality;
+                    entry.PhoneNumber = student.PhoneNumber;
+
                     _context.Entry(entry).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
 
@@ -126,6 +135,26 @@ namespace ElevPortalen.Services
                 return $"An error has ocurred: {ex.Message}";
             }
         }
+        #endregion
+
+        #region Get Student by Id
+
+        public async Task<StudentModel> GetStudentById(int studentId)
+        {
+            try
+            {
+                var student = await _context.Student
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.StudentId == studentId);
+
+                return student; 
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while retrieving student data: {ex.Message}");
+            }
+        }
+
         #endregion
 
     }
