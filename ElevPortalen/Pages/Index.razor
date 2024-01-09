@@ -20,67 +20,65 @@
         <div class="bg-image" style="background-image: url('/images/Logo_ElevPortalen.png'); background-size: cover; background-position: center; position: absolute; top: 0; right: 0; bottom: 0; left: 0; opacity: 0.1;"></div>
 
         <!-- Text Over Image -->
-        <div class="text-container mb-4" style="position: relative; top: 4%; color: black; z-index: 1;">
-            <h1>Velkommen til ElevPortalen</h1>
+        <div class="text-container mb-5" style="position: relative; top: 4%; color: black; z-index: 1;">
+            <br />
+
+            @if (isAuthenticated)
+            {
+
+                @if (_authState.User.IsInRole(Student) && _companyList.Count >= 1)
+                {
+                    <!-- Display Company-related content -->
+                    <div class="container">
+                        @foreach (var data in _companyList)
+                        {
+                            <div class="card mt-5">
+                                <div class="card-header">
+                                    @data.CompanyName
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">Special title treatment</h5>
+                                    <p class="card-text">@data.Description</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else if (_authState.User.IsInRole(Company) && _studentList.Count >= 1)
+                {
+                    <!-- Display Student-related content -->
+                    <div class="container mt-5">
+                        @foreach (var data in _studentList)
+                        {
+                            <div class="card mt-5">
+                                <div class="card-header">
+                                    @data.LastName
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">@data.Title</h5>
+                                    <p class="card-text">@data.Description</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+            }
+            else
+            {
+                <h1>Velkommen til ElevPortalen</h1>
+                <div class="d-inline-flex align-items-center">
+                    @* Message = " eller "; *@
+                    <a href="/Identity/Account/Login" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Login</a>
+                    @* <p>@Message</p> *@
+                    <p> eller </p>
+                    <a href="/Identity/Account/Register" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Registrer</a>
+                    <p> dig først</p>
+                </div>
+            }
         </div>
-
-        @if (isAuthenticated)
-        {
-
-            @if (_authState.User.IsInRole(Student) && _companyList.Count >= 1)
-            {
-                <!-- Display Company-related content -->
-                <div class="container mt-5">
-                    @foreach (var data in _companyList)
-                    {
-                        <div class="card">
-                            <div class="card-header">
-                                @data.CompanyName
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">Special title treatment</h5>
-                                <p class="card-text">@data.Description</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-            else if (_authState.User.IsInRole(Company) && _studentList.Count >= 1)
-            {
-                <!-- Display Student-related content -->
-                <div class="container mt-5">
-                    @foreach (var data in _studentList)
-                    {
-                        <div class="card">
-                            <div class="card-header">
-                                @data.LastName
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">@data.Title</h5>
-                                <p class="card-text">@data.Description</p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-            
-
-        }
-        else
-        {
-            <div class="d-inline-flex align-items-center">
-                @* Message = " eller "; *@
-                <a href="/Identity/Account/Login" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Login</a>
-                @* <p>@Message</p> *@
-                <p> eller </p>
-                <a href="/Identity/Account/Register" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Registrer</a>
-                <p> dig først</p>
-            </div>
-        }
-        
-
         <div style="position: absolute; bottom: 0; width: 100%; text-align: center;">
             <p style="padding-bottom: 40px; margin-bottom: 0;">Udforsk Danmarks Mest Eftertragtede Sted for Lærepladser – Dit Springbræt til Succes og Innovation!</p>
         </div>
