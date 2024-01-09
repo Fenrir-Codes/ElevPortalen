@@ -26,7 +26,7 @@
             <div class="container">
                 @foreach (var data in _companyList)
                 {
-                    <div class="card mt-5">
+                    <div class="card mt-2">
                         <div class="card-header">
                             @data.CompanyName
                         </div>
@@ -42,10 +42,10 @@
         else if (_authState.User.IsInRole(Company) && _studentList.Count >= 1)
         {
             <!-- Display Student-related content -->
-            <div class="container mt-5">
+            <div class="container">
                 @foreach (var data in _studentList)
                 {
-                    <div class="card mt-5">
+                    <div class="card mt-2">
                         <div class="card-header">
                             @data.LastName
                         </div>
@@ -62,29 +62,31 @@
     }
     else
     {
-        <div class="container text-center" style="height: 100vh; position: relative;">
+        <div class="container-fluid d-flex flex-column align-items-center justify-content-top">
 
-            <div class="text-container mb-5" style="position: relative; top: 4%; color: black; z-index: 1;">
-                <br />
+            <div class="text-container mb-5" style="position:relative; text-align: center; z-index: 2;">
                 <h1>Velkommen til ElevPortalen</h1>
                 <div class="d-inline-flex align-items-center">
-                    @* Message = " eller "; *@
                     <a href="/Identity/Account/Login" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Login</a>
-                    @* <p>@Message</p> *@
                     <p> eller </p>
                     <a href="/Identity/Account/Register" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Registrer</a>
                     <p> dig først</p>
                 </div>
             </div>
+            <div class="bg-image-container text-center position-relative">
+                <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width:75%; height: auto; opacity: 0.1;">
+            </div>
         </div>
 
     }
 
-
-    @*     <div style="position: relative; bottom: 0; width: 100%; text-align: center;">
-    <p style="padding-bottom: 40px; margin-bottom: 0;">Udforsk Danmarks Mest Eftertragtede Sted for Lærepladser – Dit Springbræt til Succes og Innovation!</p>
-    </div> *@
 </div>
+@* <div class="row align-items-end">
+    <footer class="footer" style="text-align: center;">
+        Udforsk Danmarks Mest Eftertragtede Sted for Lærepladser – Dit Springbræt til Succes og Innovation!
+    </footer>
+</div>
+ *@
 
 @code {
     // private fields within the scope of the class
