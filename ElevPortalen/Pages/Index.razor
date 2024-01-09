@@ -20,14 +20,14 @@
         <div class="bg-image" style="background-image: url('/images/Logo_ElevPortalen.png'); background-size: cover; background-position: center; position: absolute; top: 0; right: 0; bottom: 0; left: 0; opacity: 0.1;"></div>
 
         <!-- Text Over Image -->
-                    <div class="text-container" style="position: relative; top: 4%; color: black; z-index: 1;"> 
-                <h1>Velkommen til ElevPortalen</h1>
+        <div class="text-container mb-3" style="position: relative; top: 4%; color: black; z-index: 1;">
+            <h1>Velkommen til ElevPortalen</h1>
             @if (isAuthenticated)
             {
                 @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
                 {
-                    <p>Go check your profile</p>
-                    <button class="btn btn-success" @onclick="GoToProfile">Go to profile</button>
+                    <p>Klik på knappen for at se din profil</p>
+                    <button class="btn btn-success mb-5" @onclick="GoToProfile">Profil</button>
                 }
                 else
                 {
@@ -47,47 +47,42 @@
                 </div>
             }
 
-    </div>
-            <div style="position: absolute; bottom: 0; width: 100%; text-align: center;">
-                <p style="padding-bottom: 40px; margin-bottom: 0;">Udforsk Danmarks Mest Eftertragtede Sted for Lærepladser – Dit Springbræt til Succes og Innovation!</p>
-            </div>
         </div>
 
-</div>
-    @if (isAuthenticated)
-    {
+        @if (isAuthenticated)
+        {
 
-@*             <p>Go check your profile</p>
-            <button class="btn btn-success" @onclick="GoToProfile">Go to profile</button>
-            <br>
-            <hr /> *@
+            @*             <p>Go check your profile</p>
+        <button class="btn btn-success" @onclick="GoToProfile">Go to profile</button>
+        <br>
+        <hr /> *@
 
             @if (_authState.User.IsInRole(Student) && _companyList.Count >= 1)
             {
                 <!-- Display Company-related content -->
-            <div class="container">
-                @foreach (var data in _companyList)
-                {
-                    <div class="card m-2">
-                        <div class="card-header">
-                            @data.CompanyName
+                <div class="container mt-5">
+                    @foreach (var data in _companyList)
+                    {
+                        <div class="card">
+                            <div class="card-header">
+                                @data.CompanyName
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">@data.Description</p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">@data.Description</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                    </div>
-                }
-            </div>
+                    }
+                </div>
             }
             else if (_authState.User.IsInRole(Company) && _studentList.Count >= 1)
             {
                 <!-- Display Student-related content -->
-                <div class="container">
+                <div class="container mt-5">
                     @foreach (var data in _studentList)
                     {
-                        <div class="card m-2">
+                        <div class="card">
                             <div class="card-header">
                                 @data.LastName
                             </div>
@@ -100,20 +95,24 @@
                     }
                 </div>
             }
-            else
-            {
-                <p>@Message</p>
-            }
+            @*             else
+        {
+        <p>@Message</p>
+        } *@
 
-    }
-    else
-    {
+        }
+        @*     else
+        {
         <!-- Display message when not authenticated -->
         Message = "Please login first.";
         <p>@Message</p>
-    }
-</div>
+        } *@
 
+        <div style="position: absolute; bottom: 0; width: 100%; text-align: center;">
+            <p style="padding-bottom: 40px; margin-bottom: 0;">Udforsk Danmarks Mest Eftertragtede Sted for Lærepladser – Dit Springbræt til Succes og Innovation!</p>
+        </div>
+    </div>
+</div>
 
 @code {
     // private fields within the scope of the class
@@ -154,7 +153,7 @@
     {
         if (_authState.User.IsInRole(Student)) // If the role is Student
         {
-            //Getting the data 
+            //Getting the data
             _companyList = await _companyService.ReadAllCompanyData();
         }
         else if (_authState.User.IsInRole(Company)) // If the role is Company
