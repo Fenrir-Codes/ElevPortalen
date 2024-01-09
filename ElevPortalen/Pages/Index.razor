@@ -54,6 +54,65 @@
         </div>
 
 </div>
+    @if (isAuthenticated)
+    {
+
+@*             <p>Go check your profile</p>
+            <button class="btn btn-success" @onclick="GoToProfile">Go to profile</button>
+            <br>
+            <hr /> *@
+
+            @if (_authState.User.IsInRole(Student) && _companyList.Count >= 1)
+            {
+                <!-- Display Company-related content -->
+            <div class="container">
+                @foreach (var data in _companyList)
+                {
+                    <div class="card m-2">
+                        <div class="card-header">
+                            @data.CompanyName
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">@data.Description</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                }
+            </div>
+            }
+            else if (_authState.User.IsInRole(Company) && _studentList.Count >= 1)
+            {
+                <!-- Display Student-related content -->
+                <div class="container">
+                    @foreach (var data in _studentList)
+                    {
+                        <div class="card m-2">
+                            <div class="card-header">
+                                @data.LastName
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">@data.Title</h5>
+                                <p class="card-text">@data.Description</p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>@Message</p>
+            }
+
+    }
+    else
+    {
+        <!-- Display message when not authenticated -->
+        Message = "Please login first.";
+        <p>@Message</p>
+    }
+</div>
 
 
 @code {
@@ -79,11 +138,33 @@
             {
                 // If authenticated set the bool to true zhan read the users data from the data table with the help of ReadData function
                 isAuthenticated = true;
+
+                await ReadAllData();
             }
             else
             {
                 isAuthenticated = false;
             }
+        }
+    }
+    #endregion
+
+    #region Reading the data from the database with the user claims
+    public async Task ReadAllData()
+    {
+        if (_authState.User.IsInRole(Student)) // If the role is Student
+        {
+            //Getting the data 
+            _companyList = await _companyService.ReadAllCompanyData();
+        }
+        else if (_authState.User.IsInRole(Company)) // If the role is Company
+        {
+            //Getting the data with the service call from company
+            _studentList = await _studentService.ReadAllStudentData();
+        }
+        else
+        {
+            Message = $"Could not read data.";
         }
     }
     #endregion

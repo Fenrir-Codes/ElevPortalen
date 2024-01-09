@@ -60,6 +60,23 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Get All Data from Company
+        public async Task<List<CompanyModel>> ReadAllCompanyData()
+        {
+            try
+            {
+                //Get all the data
+                var response = await _context.Company.AsNoTracking().ToListAsync();
+
+                return response; // return the data
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred while retrieving Company data." + ex.Message);
+            }
+        }
+        #endregion
+
         #region Company Update function
         public async Task<string> Update(CompanyModel company)
         {
