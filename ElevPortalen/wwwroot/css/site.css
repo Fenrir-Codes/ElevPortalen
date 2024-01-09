@@ -69,6 +69,7 @@ a, .btn-link {
     }
 
 
+/* Changed by Rasmus*/
 .btn-hover-change:hover {
     background-color: #dee6ec; /* New background color on hover */
     color: black; /* Text color on hover */
