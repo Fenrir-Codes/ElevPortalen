@@ -1,4 +1,5 @@
 ﻿@page "/profile"
+@*Lavet af Jozsef*@
 
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
@@ -15,81 +16,207 @@
 
     @if (isAuthenticated)
     {
-        <h3>Velkommen @_Name</h3>
 
         @if (_authState.User.IsInRole(Student) && _studentList.Count >= 1)
         {
-
-            <table class="table table-striped table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Firstname</th>
-                        <th scope="col">Middlename</th>
-                        <th scope="col">Lastname</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Speciality</th>
-                        <th scope="col">Phone Number</th>
-                        <th scope="col">Update</th>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                    @foreach (var data in _studentList)
-                    {
-                        <tr>
-                            <td>@data.Title</td>
-                            <td>@data.FirstName</td>
-                            <td>@data.MiddleName</td>
-                            <td>@data.LastName</td>
-                            <td>@data.Address</td>
-                            <td>@data.Description</td>
-                            <td>@data.Speciality</td>
-                            <td>@data.PhoneNumber</td>
-                            <td>
-                                <button class="btn btn-info" @onclick="() => NavigateToUpdate(data.StudentId)">Update</button>
-                            </td>
-
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            @foreach (var data in _studentList)
+            {
+                <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                                     class="rounded-circle img-fluid" style="width: 150px;">
+                                <h5 class="my-3">@data.FirstName @data.LastName</h5>
+                                <p class="text-muted mb-1">@data.Speciality</p>
+                                <p class="text-muted mb-4">@data.Address</p>
+                                <div class="d-flex justify-content-center mb-2">
+                                        <button type="button" class="btn btn-outline-success" @onclick="() => NavigateToUpdate(data.StudentId)">Update Profile</button>
+                                    <button type="button" class="btn btn-outline-danger ms-1">Delete Profile</button>
+                                </div>
+                            </div>
+                        </div>              
+                    </div>
+                        <div class="col-lg-8">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Username</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@_Name</p>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div class="row">
+                                       
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Full Name</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @data.FirstName 
+                                                @if (data.MiddleName != "")
+                                                {
+                                                    @data.MiddleName
+                                                } 
+                                                @data.LastName</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Phone</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@data.PhoneNumber</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Address</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@data.Address</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            }
         }
         else if (_authState.User.IsInRole(Company) && _companyList.Count >= 1)
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Company Name</th>
-                        <th>Address</th>
-                        <th>Region</th>
-                        <th>Email</th>
-                        <th>Link</th>
-                        <th>Preferences</th>
-                        <th>Description</th>
-                        <th>Phone Number</th>
-                        <th>Hiring Now</th>
-                        <th>Profile Visible</th>
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                    @foreach (var data in _companyList)
-                    {
-                        <tr>
-                            <td>@data.CompanyName</td>
-                            <td>@data.CompanyAddress</td>
-                            <td>@data.Region</td>
-                            <td>@data.Email</td>
-                            <td>@data.Link</td>
-                            <td>@data.Preferences</td>
-                            <td>@data.Description</td>
-                            <td>@data.PhoneNumber</td>
-                            <td>@data.IsHiring</td>
-                            <td>@data.IsVisible</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            @foreach (var data in _companyList)
+            {
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="card mb-4">
+                                <div class="card-body text-center">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                                         class="rounded-circle img-fluid" style="width: 150px;">
+                                    <h5 class="my-3">@data.CompanyName</h5>
+                                    <p class="text-muted mb-4">@data.CompanyAddress</p>
+                                    <div class="d-flex justify-content-center mb-2">
+                                        <button type="button" class="btn btn-outline-success">Update Profile</button>
+                                        <button type="button" class="btn btn-outline-danger ms-1">Delete Profile</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Username</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@_Name</p>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Region</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @data.Region
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Email</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @data.Email
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Website</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @data.Link
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Phone</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@data.PhoneNumber</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Leder efter</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @data.Preferences
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Søger Elev</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @if (data.IsHiring)
+                                                {
+                                                    <span>Ja</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Nej</span>
+                                                }
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Synlig profil</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @if (data.IsVisible)
+                                                {
+                                                    <span>Ja</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Nej</span>
+                                                }
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         }
         else
         {
