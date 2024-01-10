@@ -138,7 +138,6 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Get Student by Id
-
         public async Task<StudentModel> GetStudentById(int studentId)
         {
             try
@@ -154,7 +153,6 @@ namespace ElevPortalen.Services
                 throw new ApplicationException($"An error occurred while retrieving student data: {ex.Message}");
             }
         }
-
         #endregion
 
     }

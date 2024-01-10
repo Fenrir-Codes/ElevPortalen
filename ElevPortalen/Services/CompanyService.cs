@@ -87,6 +87,17 @@ namespace ElevPortalen.Services
                 // If the response is not null
                 if (entry != null)
                 {
+                    entry.CompanyName = company.CompanyName;
+                    entry.CompanyAddress = company.CompanyAddress;
+                    entry.Region = company.Region;
+                    entry.Email = company.Email;
+                    entry.Link = company.Link;
+                    entry.Preferences = company.Preferences;
+                    entry.Description = company.Description;
+                    entry.PhoneNumber = company.PhoneNumber;
+                    entry.IsHiring = company.IsHiring;
+                    entry.IsVisible = company.IsVisible;
+
                     _context.Entry(entry).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
 
@@ -123,6 +134,29 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 return $"An error has ocurred: {ex.Message}";
+            }
+        }
+        #endregion
+
+        #region Get Company by Id
+        public async Task<CompanyModel> GetCompanyById(int companyId)
+        {
+            try
+            {
+                var company = await _context.Company.AsNoTracking().FirstOrDefaultAsync(c => c.CompanyId == companyId);
+                if (company != null)
+                {
+                    return company;
+                }
+                else
+                {
+                    throw new ApplicationException("Company not found.");
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"An error occurred while retrieving Company data: {ex.Message}");
             }
         }
         #endregion

@@ -1,0 +1,126 @@
+﻿@page "/updatecompany/{CompanyId:int}"
+
+@using ElevPortalen.Services;
+@using ElevPortalen.Data;
+@using ElevPortalen.Models;
+
+@inject CompanyService _companyService
+@inject NavigationManager NavManager
+
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div class="alert alert-danger">
+        @(_errorMessage)
+    </div>
+}
+
+<EditForm Model="@_companyData" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container d-flex align-content-center justify-content-center">
+        <div class="col-xl-8">
+            <div class="card mb-4">
+                <div class="card-header">Opdater Dine Oplysninger</div>
+                <div class="card-body">
+                    <div class="row gx-3 mb-3">
+                        <!-- Form Group -->
+                        <div class="col-md-4 mb-2">
+                            <label for="companyname" class="form-label">Firmanavn</label>
+                            <input id="companyname" type="text" @bind="@_companyData.CompanyName" class="form-control" placeholder="Firmanavn" />
+                        </div>
+                        <div class="col-md-8 mb-2">
+                            <label for="address" class="form-label">Adresse</label>
+                            <input id="address" type="text" @bind="@_companyData.CompanyAddress" class="form-control" placeholder="Adresse" />
+                        </div>
+                    </div>
+                    <!-- Form Group -->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-4 mb-2">
+                            <label class="mb-2" for="_region">Region</label>
+                            <select class="form-select form-select-md" @bind="_companyData.Region" id="_region" aria-label="Region">
+                                <option disabled selected></option>
+                                <option value="Region Nordjylland">Region Nordjylland</option>
+                                <option value="Region Midtjylland">Region Midtjylland</option>
+                                <option value="Region Syddanmark">Region Syddanmark</option>
+                                <option value="Region Hovedstaden">Region Hovedstaden</option>
+                                <option value="Region Sjælland">Region Sjælland</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="email" class="form-label">E-mail</label>
+                            <input id="email" type="email" @bind="@_companyData.Email" class="form-control" placeholder="Email" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="link" class="form-label">Website link</label>
+                            <input id="link" type="text" @bind="@_companyData.Link" class="form-control" placeholder="Link" />
+                        </div>
+                    </div>
+                    <!-- Form Group -->
+                    <div class="row gx-3 mb-3">
+                        <!-- Form Group (preferencesr)-->
+                        <div class="col-md-4">
+                            <label class="small mb-1" for="_preferences">Preference</label>
+                            <select class="form-select form-select-md" @bind="_companyData.Preferences" id="_preferences"
+                                    aria-label="Preferences">
+                                <option value="" disabled selected></option>
+                                <option value="It-Supporter">It-Supporter</option>
+                                <option value="Infrastructure">Infrastruktur</option>
+                                <option value="Programmer">Programmør</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="Description" class="form-label">Beskrivelse</label>
+                        <textarea class="form-control" @bind="_companyData.Description" id="_description" rows="4"></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" @bind="_companyData.IsHiring">
+                        <label class="form-check-label">
+                            Hiring Now
+                        </label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" @bind="_companyData.IsVisible">
+                        <label class="form-check-label">
+                            Profile Visible
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-success">Update</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</EditForm>
+
+@code {
+    [Parameter] public int CompanyId { get; set; }
+    private CompanyModel _companyData = new CompanyModel();
+
+    private string _errorMessage = "";
+
+    #region OnInitialize
+    protected override async Task OnInitializedAsync()
+    {
+        _companyData = await _companyService.GetCompanyById(CompanyId);
+
+        if (_companyData == null)
+        {
+            _errorMessage = "Company not found.";
+        }
+    }
+    #endregion
+
+    #region Handle validation submit
+    private async Task HandleValidSubmit()
+    {
+        await _companyService.Update(_companyData);
+        NavManager.NavigateTo("/profile");
+    }
+    #endregion
+
+}
