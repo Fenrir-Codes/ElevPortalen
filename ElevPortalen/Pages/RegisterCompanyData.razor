@@ -14,60 +14,115 @@
 
 
 <div class="container">
-    @if (_authState.User.IsInRole(Company))
-    {
-        <div class="row">
-            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                <input type="text" class="form-control" @bind="_companyName" id="_companyName" placeholder="Company name" aria-label="Company name" required>
-            </div>
-            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                <input type="text" class="form-control" @bind="_companyAddress" id="_saddress" placeholder="Address" aria-label="Address" required>
-            </div>
-            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                <select class="form-select form-select-md" @bind="_region" id="_region" aria-label="Region" required>
-                    <option selected>Region</option>
-                    <option value="Region Nordjylland">Region Nordjylland</option>
-                    <option value="Region Midtjylland">Region Midtjylland</option>
-                    <option value="Region Syddanmark">Region Syddanmark</option>
-                    <option value="Region Hovedstaden">Region Hovedstaden</option>
-                    <option value="Region Sjælland">Region Sjælland</option>
-                </select>
-            </div>
-            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="email" class="form-control" @bind="_email" id="_email" placeholder="Company Mail" aria-label="Link">
-            </div>
-            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" class="form-control" @bind="_link" id="_link" placeholder="Company website Link" aria-label="Link">
-            </div>
-            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" class="form-control" @bind="_preferences" id="_preferences" placeholder="Preferences" aria-label="Link">
-            </div>
-            <div class="mb-2 col-sm-12 col-md-12 col-lg-12 ">
-                <label for="Description" class="form-label">Description</label>
-                <textarea class="form-control" @bind="_description" id="_description" rows="4"></textarea>
-            </div>
-            <div class="mt-2 mb-2 col-sm-12 col-md-4 col-lg-4">
-                <input type="text" class="form-control" @bind="_phoneNumber" id="_phoneNumber" placeholder="Phone number" aria-label="Phone number" required>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" @bind="_isHiring">
-                <label class="form-check-label">
-                    Hiring Now
-                </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" @bind="_isVisible">
-                <label class="form-check-label">
-                    Profile Visible
-                </label>
-            </div>
-        </div>
+    @if (_authState != null && _authState.User != null && isAuthenticated){
 
-        <button class="btn btn-success" @onclick="Create" disabled="@IsSubmitButtonDisabled">Submit</button>
+        @if (_authState.User.IsInRole(Company))
+        {
+            <div class="container d-flex align-content-center justify-content-center">
+                <div class="col-xl-8">
+                    <br />
+                    <!-- Account details card-->
+                    <div class="card mb-4">
+                        <div class="card-header">Registrer Kontooplysninger For Dit Firma</div>
+                        <div class="card-body">
+                            <form>
+                                <!-- Form Row-->
+                                <div class="row gx-3 mb-3">
+                                    <!-- Form Group (Company Name)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="companyname">Firmanavn</label>
+                                        <input class="form-control" id="companyname" type="text"
+                                               placeholder="Firmanavn" @bind="_companyName">
+                                    </div>
+                                    <!-- Form Group (company address)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputaddress">Addresse</label>
+                                        <input class="form-control" id="inputaddress" type="text"
+                                               placeholder="Firma Adresse" @bind="_companyAddress">
+                                    </div>
+                                </div>
+                                <!-- Form Row        -->
+                                <div class="row gx-3 mb-3">
+                                    <!-- Form Group (Region)-->
+                                    <div class="mb-3 col-md-6">
+                                        <label class="small mb-1" for="_region">Din Region</label>
+                                        <select class="form-select form-select-md" @bind="_region" id="_region" aria-label="Region">
+                                            <option disabled selected></option>
+                                            <option value="Region Nordjylland">Region Nordjylland</option>
+                                            <option value="Region Midtjylland">Region Midtjylland</option>
+                                            <option value="Region Syddanmark">Region Syddanmark</option>
+                                            <option value="Region Hovedstaden">Region Hovedstaden</option>
+                                            <option value="Region Sjælland">Region Sjælland</option>
+                                        </select>
+                                    </div>
+                                    <!-- Form Group (Email)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputEmail">E-Mail Addresse</label>
+                                        <input class="form-control" id="inputEmail" type="text"
+                                               placeholder="Firma E-mail" @bind="_email">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="small mb-1" for="inputPhone">Phone Number</label>
+                                        <input class="form-control" type="tel" id="inputPhone" name="phone"
+                                                placeholder="12345678" @bind="_phoneNumber">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="small mb-1" for="inputWebsite">Firma link</label>
+                                        <input class="form-control" id="inputWebsite" type="text"
+                                               placeholder="Indtast Webstedslink" @bind="_link">
+                                    </div>
+                                </div>
+                                <!-- Form Row-->
+                                <div class="row gx-3 mb-3">
+                                    <!-- Form Group (preferencesr)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="_preferences">Preference</label>
+                                        <select class="form-select form-select-md" @bind="_preferences" id="_preferences"
+                                                aria-label="Preferences">
+                                            <option value="" disabled selected></option>
+                                            <option value="It-Supporter">It-Supporter</option>
+                                            <option value="Infrastructure">Infrastruktur</option>
+                                            <option value="Programmer">Programmør</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Form Group (Description)-->
+                                <div class="col-md-12 mb-3">
+                                    <label for="Description" class="form-label">Beskrivelse</label>
+                                    <textarea class="form-control" @bind="_description" id="_description" rows="4"></textarea>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" @bind="_isHiring">
+                                    <label class="form-check-label">
+                                        Hiring Now
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" @bind="_isVisible">
+                                    <label class="form-check-label">
+                                        Profile Visible
+                                    </label>
+                                </div>
+                                <!-- Save changes button-->
+
+                            </form>
+
+                            <button class="btn btn-outline-success" @onclick="Create" disabled="@IsSubmitButtonDisabled">Gem</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p>Nothing to do here!</p>
+        }
+
     }
     else
     {
-        <p>Nothing to do here!</p>
+        <p>AuthState Possibly NULL</p>
     }
 </div>
 
@@ -126,7 +181,7 @@
         {
             _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-            if (_authState != null)
+            if (_authState != null && _authState.User != null)
             {
                 var user = _authState.User;
 

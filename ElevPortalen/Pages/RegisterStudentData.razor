@@ -14,51 +14,129 @@
 @inject NavigationManager NavManager
 
 <div class="container">
-    @if (_authState.User.IsInRole(Student))
+    @if (_authState != null && _authState.User != null && isAuthenticated)
     {
-        <div class="row">
-            <div class="mb-2 col-sm-4 col-md-4 col-lg-4">
-                <input type="text" @bind="_title" id="_title" class="form-control" placeholder="Title" aria-label="Title" required>
-            </div>
-        </div>
-        <div class="row">
-            <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" @bind="_firstName" id="_firstName" class="form-control" placeholder="Fornavn" aria-label="First name" required>
-            </div>
-            <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" @bind="_middleName" id="_middleName" class="form-control" placeholder="Mellemnavn" aria-label="Middle name">
-            </div>
-            <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" @bind="_lastName" id="_lastName" class="form-control" placeholder="Efternavn" aria-label="Last name" required>
-            </div>
-            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                <input type="text" @bind="_address" id="_address" class="form-control" placeholder="Adresse" aria-label="Address" required>
-            </div>
-            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                <label for="Description" class="form-label">Beskrivelse</label>
-                <textarea class="form-control" @bind="_description" id="_description" rows="6"></textarea>
-            </div>
-            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                <select class="form-select form-select-md" @bind="_speciality" id="_speciality" aria-label="Region" required>
-                    <option value="" disabled selected>Vælg dit speciale</option>
-                    <option value="">It-Supporter</option>
-                    <option value="Infrastructure">Infrastruktur</option>
-                    <option value="Programmer">Programmør</option>
-                </select>
-            </div>
-            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" @bind="_phoneNumber" id="_phoneNumber" class="form-control" placeholder="Telefonnummer" aria-label="Phone number" required>
-            </div>
-        </div>
+        @if (_authState.User.IsInRole(Student))
+        {
+            <div class="container d-flex align-content-center justify-content-center">
+                <div class="col-xl-8">
+                    <br />
+                    <!-- Account details card-->
+                    <div class="card mb-4">
+                        <div class="card-header">Registrer Kontooplysninger</div>
+                        <div class="card-body">
+                            <form>
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="title">Title</label>
+                                    <input class="form-control" id="title" type="text"
+                                           placeholder="Skriv Din titel" @bind="_title">
+                                </div>
+                                <!-- Form Row-->
+                                <div class="row gx-3 mb-3">
+                                    <!-- Form Group (Company Name)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="firstname">Fornavn</label>
+                                        <input class="form-control" id="firstname" type="text"
+                                               placeholder="Fornavn" @bind="_firstName">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="middlename">Mellemnavn</label>
+                                        <input class="form-control" id="middlename" type="text"
+                                               placeholder="Mellemnavn (hvis du har)" @bind="_middleName">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="flastname">Efternavn</label>
+                                        <input class="form-control" id="lastname" type="text"
+                                               placeholder="Efternavn" @bind="_lastName">
+                                    </div>
+                                    <!-- Form Group (company address)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputaddress">Addresse</label>
+                                        <input class="form-control" id="inputaddress" type="text"
+                                               placeholder="Skriv din adresse" @bind="_address">
+                                    </div>
+                                </div>
+                                <!-- Form Row        -->
+                                <div class="row gx-3 mb-3">
+                                    <div class="mb-3 col-md-6">
+                                        <label class="small mb-1" for="inputPhone">Mobil</label>
+                                        <input class="form-control" type="tel" id="inputPhone" name="phone"
+                                               placeholder="12 34 56 78" @bind="_phoneNumber" required>
+                                    </div>
 
-        <button class="btn btn-success" @onclick="Create" disabled="@IsSubmitButtonDisabled">Gem</button>
-        <p></p>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="_preferences">Specialisering</label>
+                                        <select class="form-select form-select-md" @bind="_speciality" id="_speciality" aria-label="Region" required>
+                                            <option value="" disabled selected>Vælg dit speciale</option>
+                                            <option value="">It-Supporter</option>
+                                            <option value="Infrastructure">Infrastruktur</option>
+                                            <option value="Programmer">Programmør</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Form Group (Description)-->
+                                <div class="col-md-12 mb-3">
+                                    <label for="Description" class="form-label">Beskrivelse</label>
+                                    <textarea class="form-control" @bind="_description" id="_description" rows="4"></textarea>
+                                </div>
+                            </form>
+
+                            <button class="btn btn-outline-success" @onclick="Create" disabled="@IsSubmitButtonDisabled">Gem</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+@*             <div class="row">
+                <div class="mb-2 col-sm-4 col-md-4 col-lg-4">
+                    <input type="text" @bind="_title" id="_title" class="form-control" placeholder="Title" aria-label="Title" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
+                    <input type="text" @bind="_firstName" id="_firstName" class="form-control" placeholder="Fornavn" aria-label="First name" required>
+                </div>
+                <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
+                    <input type="text" @bind="_middleName" id="_middleName" class="form-control" placeholder="Mellemnavn" aria-label="Middle name">
+                </div>
+                <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
+                    <input type="text" @bind="_lastName" id="_lastName" class="form-control" placeholder="Efternavn" aria-label="Last name" required>
+                </div>
+                <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
+                    <input type="text" @bind="_address" id="_address" class="form-control" placeholder="Adresse" aria-label="Address" required>
+                </div>
+                <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
+                    <label for="Description" class="form-label">Beskrivelse</label>
+                    <textarea class="form-control" @bind="_description" id="_description" rows="6"></textarea>
+                </div>
+                <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
+                    <select class="form-select form-select-md" @bind="_speciality" id="_speciality" aria-label="Region" required>
+                        <option value="" disabled selected>Vælg dit speciale</option>
+                        <option value="">It-Supporter</option>
+                        <option value="Infrastructure">Infrastruktur</option>
+                        <option value="Programmer">Programmør</option>
+                    </select>
+                </div>
+                <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
+                    <input type="text" @bind="_phoneNumber" id="_phoneNumber" class="form-control" placeholder="Telefonnummer" aria-label="Phone number" required>
+                </div>
+            </div>
+
+            <button class="btn btn-success" @onclick="Create" disabled="@IsSubmitButtonDisabled">Gem</button>
+            <p></p> *@
+        }
+        else
+        {
+            <p>Nothing to do here!</p>
+        }
+
     }
     else
     {
-        <p>Nothing to do here!</p>
+        <p>AuthState Possibly NULL</p>
     }
-   
+
 </div>
 
 @code {
@@ -71,7 +149,7 @@
     private string _address = string.Empty;
     private string _description = string.Empty;
     private string _speciality = string.Empty;
-    private int _phoneNumber = 0;
+    private int _phoneNumber;
 
     private string Message = "";
 

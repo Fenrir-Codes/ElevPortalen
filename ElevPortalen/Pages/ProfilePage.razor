@@ -16,229 +16,236 @@
 
     @if (isAuthenticated)
     {
+        @if (_authState != null && _authState.User != null)
+        {
+            @if (_authState.User.IsInRole(Student) && _studentList.Count >= 1)
+            {
+                @foreach (var data in _studentList)
+                {
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card mb-4">
+                                    <div class="card-body text-center">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                                             class="rounded-circle img-fluid" style="width: 150px;">
+                                        <h5 class="my-3">@data.FirstName @data.LastName</h5>
+                                        <p class="text-muted mb-1">@data.Speciality</p>
+                                        <p class="text-muted mb-4">@data.Address</p>
+                                        <div class="d-flex justify-content-center mb-2">
+                                            <button type="button" class="btn btn-outline-success" @onclick="() => NavigateToUpdate(data.StudentId)">Update Profile</button>
+                                            <button type="button" class="btn btn-outline-danger ms-1">Delete Profile</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Username</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">@_Name</p>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
 
-        @if (_authState.User.IsInRole(Student) && _studentList.Count >= 1)
-        {
-            @foreach (var data in _studentList)
-            {
-                <div class="container">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="card mb-4">
-                            <div class="card-body text-center">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                                     class="rounded-circle img-fluid" style="width: 150px;">
-                                <h5 class="my-3">@data.FirstName @data.LastName</h5>
-                                <p class="text-muted mb-1">@data.Speciality</p>
-                                <p class="text-muted mb-4">@data.Address</p>
-                                <div class="d-flex justify-content-center mb-2">
-                                        <button type="button" class="btn btn-outline-success" @onclick="() => NavigateToUpdate(data.StudentId)">Update Profile</button>
-                                    <button type="button" class="btn btn-outline-danger ms-1">Delete Profile</button>
-                                </div>
-                            </div>
-                        </div>              
-                    </div>
-                        <div class="col-lg-8">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Username</p>
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Full Name</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    @data.FirstName <span> </span>
+                                                    @if (data.MiddleName != "")
+                                                    {
+                                                         @data.MiddleName <span> </span>
+                                                    }
+                                                    @data.LastName
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">@_Name</p>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Phone</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">@data.PhoneNumber</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <hr/>
-                                    <div class="row">
-                                       
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Full Name</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                @data.FirstName 
-                                                @if (data.MiddleName != "")
-                                                {
-                                                    @data.MiddleName
-                                                } 
-                                                @data.LastName</p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Phone</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">@data.PhoneNumber</p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Address</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">@data.Address</p>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Address</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">@data.Address</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                
+
+                }
             }
-        }
-        else if (_authState.User.IsInRole(Company) && _companyList.Count >= 1)
-        {
-            @foreach (var data in _companyList)
+            else if (_authState.User.IsInRole(Company) && _companyList.Count >= 1)
             {
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="card mb-4">
-                                <div class="card-body text-center">
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                                         class="rounded-circle img-fluid" style="width: 150px;">
-                                    <h5 class="my-3">@data.CompanyName</h5>
-                                    <p class="text-muted mb-4">@data.CompanyAddress</p>
-                                    <div class="d-flex justify-content-center mb-2">
-                                        <button type="button" class="btn btn-outline-success">Update Profile</button>
-                                        <button type="button" class="btn btn-outline-danger ms-1">Delete Profile</button>
+                @foreach (var data in _companyList)
+                {
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="card mb-4">
+                                    <div class="card-body text-center">
+                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                                             class="rounded-circle img-fluid" style="width: 150px;">
+                                        <h5 class="my-3">@data.CompanyName</h5>
+                                        <p class="text-muted mb-4">@data.CompanyAddress</p>
+                                        <div class="d-flex justify-content-center mb-2">
+                                            <button type="button" class="btn btn-outline-success">Update Profile</button>
+                                            <button type="button" class="btn btn-outline-danger ms-1">Delete Profile</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-8">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Username</p>
+                            <div class="col-lg-8">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Username</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">@_Name</p>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">@_Name</p>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Region</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    @data.Region
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <hr />
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Region</p>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Email</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    @data.Email
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                @data.Region
-                                            </p>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Website</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    @data.Link
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Email</p>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Phone</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">@data.PhoneNumber</p>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                @data.Email
-                                            </p>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Leder efter</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    @data.Preferences
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Website</p>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Søger Elev</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    @if (data.IsHiring)
+                                                    {
+                                                        <span>Ja</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Nej</span>
+                                                    }
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                @data.Link
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Phone</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">@data.PhoneNumber</p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Leder efter</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                @data.Preferences
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Søger Elev</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                @if (data.IsHiring)
-                                                {
-                                                    <span>Ja</span>
-                                                }
-                                                else
-                                                {
-                                                    <span>Nej</span>
-                                                }
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Synlig profil</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">
-                                                @if (data.IsVisible)
-                                                {
-                                                    <span>Ja</span>
-                                                }
-                                                else
-                                                {
-                                                    <span>Nej</span>
-                                                }
-                                            </p>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Synlig profil</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">
+                                                    @if (data.IsVisible)
+                                                    {
+                                                        <span>Ja</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Nej</span>
+                                                    }
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
+            }
+            else
+            {
+                <p>
+                    @if (_authState.User.IsInRole(Student))
+                    {
+                        Message = "It seems like no personal data have been added to your profile, click the button to register your data.";
+                        @Message
+                    }
+                    else if (_authState.User.IsInRole(Company))
+                    {
+                        Message = "It seems like no data have been added to your Company profile, click the button to register your data.";
+                        @Message
+                    }
+                    else
+                    {
+                        Message = "You have no Role assigned!";
+                        @Message
+                    }
+                </p>
+                <br>
+                <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
             }
         }
         else
         {
-            <p>
-                @if (_authState.User.IsInRole(Student))
-                {
-                    Message = "It seems like no personal data have been added to your profile, click the button to register your data.";
-                    @Message
-                }
-                else if (_authState.User.IsInRole(Company))
-                {
-                    Message = "It seems like no data have been added to your Company profile, click the button to register your data.";
-                    @Message
-                }
-                else
-                {
-                    Message = "You have no Role assigned!";
-                    @Message
-                }
-            </p>
-            <br>
-            <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
+            <p>AuthState Possibly NULL</p>
         }
     }
     else
@@ -272,7 +279,7 @@
 
         if (_authState != null)
         {
-            if (_authState.User.Identity?.IsAuthenticated == true)
+            if (_authState.User.Identity?.IsAuthenticated == true && _authState != null && _authState.User != null)
             {
                 var _user = _authState.User;
                 // If authenticated set the bool to true zhan read the users data from the data table with the help of ReadData function
@@ -293,22 +300,25 @@
     #region Reading the data from the database with the user claims
     public async Task ReadData()
     {
-        //Authenticating the user
-        var _user = _authState.User;
+        if (_authState != null && _authState.User != null)
+        {
+            //Authenticating the user
+            var _user = _authState.User;
 
-        if (_authState.User.IsInRole(Student)) // If the role is Student
-        {
-            //Getting the data with the service call from student
-            _studentList = await _studentService.ReadData(_user);
-        }
-        else if (_authState.User.IsInRole(Company)) // If the role is Company
-        {
-            //Getting the data with the service call from company
-            _companyList = await _companyService.ReadData(_user);
-        }
-        else
-        {
-            Message = $"You Have No Role Assigned - Could not read data.";
+            if (_authState.User.IsInRole(Student)) // If the role is Student
+            {
+                //Getting the data with the service call from student
+                _studentList = await _studentService.ReadData(_user);
+            }
+            else if (_authState.User.IsInRole(Company)) // If the role is Company
+            {
+                //Getting the data with the service call from company
+                _companyList = await _companyService.ReadData(_user);
+            }
+            else
+            {
+                Message = $"You Have No Role Assigned - Could not read data.";
+            }
         }
     }
     #endregion
@@ -316,14 +326,17 @@
     #region navigation to register pages
     private void NavigateToRegister()
     {
-        // If the user signed in and have no data in its data table
-        if (_authState.User.IsInRole(Company))  // If the user role is Company
+        if (_authState != null && _authState.User != null)
         {
-            NavManager.NavigateTo("/registercompany"); // Route to the company registration page
-        }
-        else if (_authState.User.IsInRole(Student)) // If the role is Student
-        {
-            NavManager.NavigateTo("/registerstudent"); // Route to the student registration page
+            // If the user signed in and have no data in its data table
+            if (_authState.User.IsInRole(Company))  // If the user role is Company
+            {
+                NavManager.NavigateTo("/registercompany"); // Route to the company registration page
+            }
+            else if (_authState.User.IsInRole(Student)) // If the role is Student
+            {
+                NavManager.NavigateTo("/registerstudent"); // Route to the student registration page
+            }
         }
     }
     #endregion
