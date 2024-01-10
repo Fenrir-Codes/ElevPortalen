@@ -54,7 +54,7 @@
                                         <div class="row">
 
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Full Name</p>
+                                                <p class="mb-0">Fulde navn</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">
@@ -70,7 +70,7 @@
                                         <hr>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Phone</p>
+                                                <p class="mb-0">Mobile</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">@data.PhoneNumber</p>
@@ -79,10 +79,19 @@
                                         <hr>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Address</p>
+                                                <p class="mb-0">Adresse</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">@data.Address</p>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p class="mb-0">Beskrivelse</p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">@data.Description</p>
                                             </div>
                                         </div>
                                     </div>
@@ -341,10 +350,11 @@
     }
     #endregion
 
+    #region Navigate to update page
     private void NavigateToUpdate(int studentId)
     {
         NavManager.NavigateTo($"/updatestudent/{studentId}");
     }
-
+    #endregion
 
 }

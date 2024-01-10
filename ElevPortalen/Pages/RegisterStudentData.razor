@@ -81,7 +81,10 @@
                                 </div>
                             </form>
 
-                            <button class="btn btn-outline-success" @onclick="Create" disabled="@IsSubmitButtonDisabled">Gem</button>
+                            <button class="@(IsSubmitButtonDisabled ? "btn btn-outline-success" : "btn btn-success")"
+                                    @onclick="Create" disabled="@IsSubmitButtonDisabled">
+                                Gem
+                            </button>
 
                         </div>
                     </div>
@@ -221,7 +224,7 @@
                         };
 
                         Message = await _studentService.CreateStudent(studentData);
-                        NavManager.NavigateTo("/ProfilePage");
+                        NavManager.NavigateTo("/profile");
                     }
                     else
                     {

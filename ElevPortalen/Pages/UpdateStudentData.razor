@@ -17,52 +17,78 @@
 <EditForm Model="@_studentToUpdate" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <div class="container">
-        <h3>UpdateStudentData</h3>
 
-        <div class="row">
-            <div class="mb-3 col-sm-4 col-md-4 col-lg-4">
-                <input id="title" class="form-control" @bind="@_studentToUpdate.Title" placeholder="Title" />
-            </div>
-            <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" @bind="@_studentToUpdate.FirstName" class="form-control" placeholder="Fornavn" />
-            </div>
-            <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" @bind="@_studentToUpdate.MiddleName" class="form-control" placeholder="Mellemnavn" />
-            </div>
-            <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" @bind="@_studentToUpdate.LastName" class="form-control" placeholder="Efternavn" />
-            </div>
-            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                <input type="text" @bind="@_studentToUpdate.Address" class="form-control" placeholder="Adresse" />
-            </div>
-            <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                <label for="Description" class="form-label">Beskrivelse</label>
-                <input type="text" @bind="@_studentToUpdate.Description" class="form-control" rows="6">
-            </div>
-            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                <select class="form-select form-select-md" @bind="@_studentToUpdate.Speciality" aria-label="Region">
-                    <option value="" disabled selected>Vælg dit speciale</option>
-                    <option value="It-Supporter">It-Supporter</option>
-                    <option value="Infrastructure">Infrastruktur</option>
-                    <option value="Programmer">Programmør</option>
-                </select>
-            </div>
-            <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                <input type="text" @bind="@_studentToUpdate.PhoneNumber" class="form-control" placeholder="Telefonnummer" />
+    <div class="container d-flex align-content-center justify-content-center">
+        <div class="col-xl-8">
+            <div class="card mb-4">
+                <div class="card-header">Opdater Dine Oplysninger</div>
+                <div class="card-body">
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="title" class="form-label">Title</label>
+                            <input id="title" class="form-control" @bind="@_studentToUpdate.Title" placeholder="Title" />
+                        </div>
+                    </div>
+                    <div class="row gx-3 mb-3">
+                        <!-- Form Group -->
+                        <div class="col-md-4">
+                            <label for="firstname" class="form-label">Fornavn</label>
+                            <input id="firstname" type="text" @bind="@_studentToUpdate.FirstName" class="form-control" placeholder="Fornavn" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="Dmiddlename" class="form-label">Mellemnavn</label>
+                            <input id="middlename" type="text" @bind="@_studentToUpdate.MiddleName" class="form-control" placeholder="Mellemnavn" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="lastname" class="form-label">Efternavn</label>
+                            <input id="lastname" type="text" @bind="@_studentToUpdate.LastName" class="form-control" placeholder="Efternavn" />
+                        </div>           
+                    </div>
+                    <!-- Form Group -->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-4">
+                            <label for="address" class="form-label">Adresse</label>
+                            <input id="address" type="text" @bind="@_studentToUpdate.Address" class="form-control" placeholder="Adresse" />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="Dregion" class="form-label">Din Region</label>
+                            <select id="region" class="form-select form-select-md" @bind="@_studentToUpdate.Speciality" aria-label="Region">
+                                <option value="" disabled selected>Vælg dit speciale</option>
+                                <option value="It-Supporter">It-Supporter</option>
+                                <option value="Infrastructure">Infrastruktur</option>
+                                <option value="Programmer">Programmør</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="phone" class="form-label">Mobile</label>
+                            <input id="phone" type="text" @bind="@_studentToUpdate.PhoneNumber" class="form-control" placeholder="Telefonnummer" />
+                        </div>
+                    </div>
+                    <!-- Form Group -->
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-12">
+                            <label for="Description" class="form-label">Beskrivelse</label>
+                            <textarea class="form-control" @bind="_studentToUpdate.Description" id="_description" rows="8"></textarea>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-success">Update</button>
+
+                </div>
             </div>
         </div>
-
-        <button type="submit" class="btn btn-outline-success">Update</button>
     </div>
+
    
 </EditForm>
 
 @code {
     [Parameter] public int StudentId { get; set; }
     private StudentModel _studentToUpdate = new StudentModel();
-    private string _errorMessage;
+    private string _errorMessage ="";
 
+    #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
         _studentToUpdate = await _studentService.GetStudentById(StudentId);
@@ -72,10 +98,14 @@
             _errorMessage = "Student not found.";
         }
     }
+    #endregion
 
+    #region Handle validation submit
     private async Task HandleValidSubmit()
     {
         var updateResult = await _studentService.Update(_studentToUpdate);
         NavManager.NavigateTo("/profile");
     }
+    #endregion
+
 }
