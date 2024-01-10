@@ -65,10 +65,10 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="small mb-1" for="_preferences">Specialisering</label>
+                                        <label class="small mb-1" for="_speciality">Specialisering</label>
                                         <select class="form-select form-select-md" @bind="_speciality" id="_speciality" aria-label="Region" required>
                                             <option value="" disabled selected>Vælg dit speciale</option>
-                                            <option value="">It-Supporter</option>
+                                            <option value="It-Supporter">It-Supporter</option>
                                             <option value="Infrastructure">Infrastruktur</option>
                                             <option value="Programmer">Programmør</option>
                                         </select>
@@ -90,44 +90,6 @@
                     </div>
                 </div>
             </div>
-
-@*             <div class="row">
-                <div class="mb-2 col-sm-4 col-md-4 col-lg-4">
-                    <input type="text" @bind="_title" id="_title" class="form-control" placeholder="Title" aria-label="Title" required>
-                </div>
-            </div>
-            <div class="row">
-                <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                    <input type="text" @bind="_firstName" id="_firstName" class="form-control" placeholder="Fornavn" aria-label="First name" required>
-                </div>
-                <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                    <input type="text" @bind="_middleName" id="_middleName" class="form-control" placeholder="Mellemnavn" aria-label="Middle name">
-                </div>
-                <div class="mb-2 col-sm-12 col-md-6 col-lg-6">
-                    <input type="text" @bind="_lastName" id="_lastName" class="form-control" placeholder="Efternavn" aria-label="Last name" required>
-                </div>
-                <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                    <input type="text" @bind="_address" id="_address" class="form-control" placeholder="Adresse" aria-label="Address" required>
-                </div>
-                <div class="mb-2 col-sm-12 col-md-12 col-lg-12">
-                    <label for="Description" class="form-label">Beskrivelse</label>
-                    <textarea class="form-control" @bind="_description" id="_description" rows="6"></textarea>
-                </div>
-                <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                    <select class="form-select form-select-md" @bind="_speciality" id="_speciality" aria-label="Region" required>
-                        <option value="" disabled selected>Vælg dit speciale</option>
-                        <option value="">It-Supporter</option>
-                        <option value="Infrastructure">Infrastruktur</option>
-                        <option value="Programmer">Programmør</option>
-                    </select>
-                </div>
-                <div class="mt-2 mb-2 col-sm-12 col-md-6 col-lg-6">
-                    <input type="text" @bind="_phoneNumber" id="_phoneNumber" class="form-control" placeholder="Telefonnummer" aria-label="Phone number" required>
-                </div>
-            </div>
-
-            <button class="btn btn-success" @onclick="Create" disabled="@IsSubmitButtonDisabled">Gem</button>
-            <p></p> *@
         }
         else
         {
@@ -165,7 +127,6 @@
     string.IsNullOrWhiteSpace(_lastName) ||
     string.IsNullOrWhiteSpace(_address) ||
     string.IsNullOrWhiteSpace(_speciality) ||
-    string.IsNullOrWhiteSpace(_description) ||
     string.IsNullOrWhiteSpace(_phoneNumber.ToString());
 
     #region OnInitialize
