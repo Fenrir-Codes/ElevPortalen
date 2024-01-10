@@ -35,8 +35,9 @@
                                         <p class="text-muted mb-4">@data.Address</p>
                                         <div class="d-flex justify-content-center mb-2">
                                             <button type="button" class="btn btn-outline-success"
-                                                @onclick="() => NavigateToUpdate(data.StudentId)">Update Profile
-                                            </button>                                
+                                                    @onclick="() => NavigateToUpdate(data.StudentId)">
+                                                Update Profile
+                                            </button>
                                             <button type="button" class="btn btn-outline-danger ms-1"
                                                     @onclick="() => DeleteStudentData(data.StudentId)" disabled="@(!isConfirmationChecked)">
                                                 Delete Profile
@@ -48,6 +49,9 @@
                                                 Confirm Delete
                                             </label>
                                         </div>
+                                        <span style="color:red" hidden="@(!isConfirmationChecked)">
+                                            Dette vil slette dine personale data og kan ikke fortrydes!
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +77,7 @@
                                                     @data.FirstName <span> </span>
                                                     @if (data.MiddleName != "")
                                                     {
-                                                         @data.MiddleName <span> </span>
+                                                        @data.MiddleName <span> </span>
                                                     }
                                                     @data.LastName
                                                 </p>
@@ -97,7 +101,7 @@
                                                 <p class="text-muted mb-0">@data.Address</p>
                                             </div>
                                         </div>
-                                        <hr/>
+                                        <hr />
                                         <div class="row">
                                             <div class="col-sm-3">
                                                 <p class="mb-0">Beskrivelse</p>
@@ -111,7 +115,6 @@
                             </div>
                         </div>
                     </div>
-
                 }
             }
             else if (_authState.User.IsInRole(Company) && _companyList.Count >= 1)
@@ -129,7 +132,8 @@
                                         <p class="text-muted mb-4">@data.CompanyAddress</p>
                                         <div class="d-flex justify-content-center mb-2">
                                             <button type="button" class="btn btn-outline-success"
-                                                @onclick="() => NavigateToUpdateCompany(data.CompanyId)">Update Profile
+                                                    @onclick="() => NavigateToUpdateCompany(data.CompanyId)">
+                                                Update Profile
                                             </button>
                                             <button type="button" class="btn btn-outline-danger ms-1"
                                                     @onclick="() => DeleteCompanyData(data.CompanyId)" disabled="@(!isConfirmationChecked)">
@@ -142,6 +146,9 @@
                                                 Confirm Delete
                                             </label>
                                         </div>
+                                        <span style="color:red" hidden="@(!isConfirmationChecked)">
+                                            Dette vil slette dine personale data og kan ikke fortrydes!
+                                        </span>
                                     </div>
                                 </div>
                             </div>
