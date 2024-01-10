@@ -117,23 +117,32 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Delete Company function
-        public async Task<string> Delete(CompanyModel company)
+        public async Task<string> Delete(int companytId)
         {
             try
             {
-                var entryToRemove = _context.Company.Local.FirstOrDefault(c => c.CompanyId == company.CompanyId);
-                if (entryToRemove != null)
+                var company = await _context.Company.FindAsync(companytId);
+                if (company != null)
                 {
-                    _context.Entry(entryToRemove).State = EntityState.Detached;
-                }
-                _context.Company.Remove(company);
-                await _context.SaveChangesAsync();
+                    var entryToRemove = _context.Company.Local.FirstOrDefault(c => c.CompanyId == company.CompanyId);
+                    if (entryToRemove != null)
+                    {
+                        _context.Entry(entryToRemove).State = EntityState.Detached;
+                    }
 
-                return "The Company's Profile deleted Successfully.";
+                    _context.Company.Remove(company);
+                    await _context.SaveChangesAsync();
+
+                    return "The User Profile deleted Successfully.";
+                }
+                else
+                {
+                    return "Student not found.";
+                }
             }
             catch (Exception ex)
             {
-                return $"An error has ocurred: {ex.Message}";
+                return $"An error has occurred: {ex.Message}";
             }
         }
         #endregion
@@ -160,6 +169,7 @@ namespace ElevPortalen.Services
             }
         }
         #endregion
+
 
     }
 }

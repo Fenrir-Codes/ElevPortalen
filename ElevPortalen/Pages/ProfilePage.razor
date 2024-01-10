@@ -4,6 +4,7 @@
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
+@using Microsoft.JSInterop;
 
 @inject ElevPortalenDataDbContext _context
 @inject StudentService _studentService
@@ -33,8 +34,19 @@
                                         <p class="text-muted mb-1">@data.Speciality</p>
                                         <p class="text-muted mb-4">@data.Address</p>
                                         <div class="d-flex justify-content-center mb-2">
-                                            <button type="button" class="btn btn-outline-success" @onclick="() => NavigateToUpdate(data.StudentId)">Update Profile</button>
-                                            <button type="button" class="btn btn-outline-danger ms-1">Delete Profile</button>
+                                            <button type="button" class="btn btn-outline-success"
+                                                @onclick="() => NavigateToUpdate(data.StudentId)">Update Profile
+                                            </button>                                
+                                            <button type="button" class="btn btn-outline-danger ms-1"
+                                                    @onclick="() => DeleteStudentData(data.StudentId)" disabled="@(!isConfirmationChecked)">
+                                                Delete Profile
+                                            </button>
+                                        </div>
+                                        <div class="row-lg-4 gx-3 mb-3">
+                                            <input class="form-check-input" type="checkbox" @bind="isConfirmationChecked">
+                                            <label class="form-check-label">
+                                                Confirm Delete
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -116,8 +128,19 @@
                                         <h5 class="my-3">@data.CompanyName</h5>
                                         <p class="text-muted mb-4">@data.CompanyAddress</p>
                                         <div class="d-flex justify-content-center mb-2">
-                                            <button type="button" class="btn btn-outline-success" @onclick="() => NavigateToUpdateCompany(data.CompanyId)">Update Profile</button>
-                                            <button type="button" class="btn btn-outline-danger ms-1">Delete Profile</button>
+                                            <button type="button" class="btn btn-outline-success"
+                                                @onclick="() => NavigateToUpdateCompany(data.CompanyId)">Update Profile
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger ms-1"
+                                                    @onclick="() => DeleteCompanyData(data.CompanyId)" disabled="@(!isConfirmationChecked)">
+                                                Delete Profile
+                                            </button>
+                                        </div>
+                                        <div class="row-lg-4 gx-3 mb-3">
+                                            <input class="form-check-input" type="checkbox" @bind="isConfirmationChecked">
+                                            <label class="form-check-label">
+                                                Confirm Delete
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -275,8 +298,6 @@
 </div>
 
 
-
-
 @code {
     // private fields within the scope of the class
     private AuthenticationState? _authState;
@@ -284,10 +305,13 @@
     private List<CompanyModel> _companyList = new List<CompanyModel>();
 
     private bool isAuthenticated = false;
+    private bool isConfirmationChecked = false;
     private string Company = "Company";
     private string Student = "Student";
     private string Message = "";
     private string _Name = "Default";
+
+    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
@@ -370,6 +394,26 @@
     private void NavigateToUpdateCompany(int companyId)
     {
         NavManager.NavigateTo($"/updatecompany/{companyId}");
+    }
+    #endregion
+
+    #region Delete function calls for student and company
+    private async Task DeleteStudentData(int id)
+    {
+        if (isConfirmationChecked)
+        {
+            await _studentService.Delete(id);
+            NavManager.NavigateTo("/");
+        }
+    }
+
+    private async Task DeleteCompanyData(int id)
+    {
+        if (isConfirmationChecked)
+        {
+            await _companyService.Delete(id);
+            NavManager.NavigateTo("/");
+        }
     }
     #endregion
 

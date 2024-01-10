@@ -52,7 +52,14 @@ namespace ElevPortalen.Services
                 var response = await _context.Student.AsNoTracking().Where(user => user.UserId
                     == Guid.Parse(_user.FindFirstValue(ClaimTypes.NameIdentifier))).ToListAsync();
 
-                return response; // return the decrypted data
+                if (response != null)
+                {
+                    return response; // return the data
+                }
+                else
+                {
+                    throw new ApplicationException("An error occurred while retrieving student data.");
+                }
             }
             catch (Exception ex)
             {
@@ -116,37 +123,53 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Delete Student function
-        public async Task<string> Delete(StudentModel student)
+        public async Task<string> Delete(int studentId)
         {
             try
             {
-                var entryToRemove = _context.Student.Local.FirstOrDefault(s => s.StudentId == student.StudentId);
-                if (entryToRemove != null)
+                var student = await _context.Student.FindAsync(studentId);
+                if (student != null)
                 {
-                    _context.Entry(entryToRemove).State = EntityState.Detached;
-                }
-                _context.Student.Remove(student);
-                await _context.SaveChangesAsync();
+                    var entryToRemove = _context.Student.Local.FirstOrDefault(s => s.StudentId == student.StudentId);
+                    if (entryToRemove != null)
+                    {
+                        _context.Entry(entryToRemove).State = EntityState.Detached;
+                    }
 
-                return "The User Profile deleted Successfully.";
+                    _context.Student.Remove(student);
+                    await _context.SaveChangesAsync();
+
+                    return "The User Profile deleted Successfully.";
+                }
+                else
+                {
+                    return "Student not found.";
+                }
             }
             catch (Exception ex)
             {
-                return $"An error has ocurred: {ex.Message}";
+                return $"An error has occurred: {ex.Message}";
             }
         }
         #endregion
 
         #region Get Student by Id
-        public async Task<StudentModel> GetStudentById(int studentId)
+        public async Task<StudentModel> GetStudentById(int Id)
         {
             try
             {
                 var student = await _context.Student
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(s => s.StudentId == studentId);
+                    .FirstOrDefaultAsync(s => s.StudentId == Id);
 
-                return student; 
+                if (student != null)
+                {
+                    return student;
+                }
+                else
+                {
+                    throw new ApplicationException($"An error occurred while finding user's Id. Or no Id in database.");
+                }
             }
             catch (Exception ex)
             {
