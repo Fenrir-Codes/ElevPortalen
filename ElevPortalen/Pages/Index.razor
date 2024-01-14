@@ -17,55 +17,55 @@
 @* HHTMl and its logic*@
 <div class="container-fluid">
 
-    @if (isAuthenticated)
-    {
-        @if (_authState.User.IsInRole(Student) && _companyList.Count >= 1)
-        {
-            <!-- Display Company-related content -->
-            <div class="container">
-                @foreach (var data in _companyList)
-                {
-                    <div class="card border-secondary text-center m-2">
-                        <div class="card-header">
-                            @data.CompanyName
+    <!-- Authorized Student and Company-->
+    <AuthorizeView Roles="Student, Company, Admin">
+        <Authorized>
+            @if (_companyList.Count >= 1)
+            {
+                <!-- Display Company-related content -->
+                <div class="container">
+                    @foreach (var data in _companyList)
+                    {
+                        <div class="card border-secondary text-center m-2">
+                            <div class="card-header">
+                                @data.CompanyName
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">@data.Description</p>
+                                <a href="#" class="btn btn-primary">Vis</a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p class="card-text">@data.Description</p>
-                            <a href="#" class="btn btn-primary">Vis</a>
+                    }
+                </div>
+            }
+            else if (_studentList.Count >= 1)
+            {
+                <!-- Display Student-related content -->
+                <div class="container">
+                    @foreach (var data in _studentList)
+                    {
+                        <div class="card text-center m-2">
+                            <div class="card-header">
+                                @data.LastName
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">@data.Title</h5>
+                                <p class="card-text">@data.Description</p>
+                                <a href="#" class="btn btn-primary">Vis</a>
+                            </div>
                         </div>
-                    </div>
-                }
-            </div>
-        }
-        else if (_authState.User.IsInRole(Company) && _studentList.Count >= 1)
-        {
-            <!-- Display Student-related content -->
-            <div class="container">
-                @foreach (var data in _studentList)
-                {
-                    <div class="card text-center m-2">
-                        <div class="card-header">
-                            @data.LastName
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">@data.Title</h5>
-                            <p class="card-text">@data.Description</p>
-                            <a href="#" class="btn btn-primary">Vis</a>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <p>@Message</p>
-        }
+                    }
+                </div>
+            }
+            else
+            {
+                Message = "Admin authorized";
+                <p>@Message</p>
+            }
+        </Authorized>
 
-    }
-    else
-    {
-
-        <div class="container-fluid d-flex flex-column align-items-center justify-content-top">
+        <NotAuthorized>
+            <div class="container-fluid d-flex flex-column align-items-center justify-content-top">
 
                 <div class="text-container mb-5" style="position:relative; text-align: center; z-index: 2;">
                     <h1>Velkommen til ElevPortalen</h1>
@@ -76,12 +76,13 @@
                         <p> dig først</p>
                     </div>
                 </div>
-            <div class="bg-image-container text-center position-relative">
-                <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width:75%; height: auto; opacity: 0.1;">
+                <div class="bg-image-container text-center position-relative">
+                    <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width:75%; height: auto; opacity: 0.1;">
+                </div>
             </div>
-        </div>
-
-    }
+        </NotAuthorized>
+        
+    </AuthorizeView>
 </div>
 
 
@@ -113,6 +114,10 @@
 
                 await ReadAllData();
             }
+            else if (_authState.User.IsInRole("Admin"))
+            {
+                Message = $"Admin logged in.";
+            }
             else
             {
                 isAuthenticated = false;
@@ -136,7 +141,7 @@
         }
         else
         {
-            Message = $"Could not read data. There are no Users registered.";
+            return;
         }
     }
     #endregion

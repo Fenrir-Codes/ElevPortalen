@@ -79,6 +79,8 @@
                                     <label for="Description" class="form-label">Beskrivelse</label>
                                     <textarea class="form-control" @bind="_description" id="_description" rows="4"></textarea>
                                 </div>
+
+                                <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                             </form>
 
                             <button class="@(IsSubmitButtonDisabled ? "btn btn-outline-success" : "btn btn-success")"
@@ -114,6 +116,7 @@
     private string _address = string.Empty;
     private string _description = string.Empty;
     private string _speciality = string.Empty;
+    private string newFileName = string.Empty;
     private int _phoneNumber;
 
     private string Message = "";
@@ -128,6 +131,11 @@
     string.IsNullOrWhiteSpace(_address) ||
     string.IsNullOrWhiteSpace(_speciality) ||
     string.IsNullOrWhiteSpace(_phoneNumber.ToString());
+
+    //Fileupload
+    private long maxFileSize = 1024 * 1024 * 1; // represents 3MB
+    private int maxAllowedFiles = 1;
+    private List<string> errors = new();
 
     #region OnInitialize
     // The OnInitializedAsync() method is called when a component is being initialized.
@@ -172,16 +180,17 @@
                     if (Guid.TryParse(userIdString, out Guid userId))
                     {
                         StudentModel studentData = new StudentModel
-                        {
-                            Title = _title,
-                            FirstName = _firstName,
-                            MiddleName = _middleName,
-                            LastName = _lastName,
-                            Address = _address,
-                            Description = _description,
-                            Speciality = _speciality,
-                            PhoneNumber = _phoneNumber,
-                            UserId = userId // Set the UserId to the user's unique identifier
+                            {
+                                Title = _title,
+                                FirstName = _firstName,
+                                MiddleName = _middleName,
+                                LastName = _lastName,
+                                Address = _address,
+                                Description = _description,
+                                Speciality = _speciality,
+                                profileImage = newFileName,
+                                PhoneNumber = _phoneNumber,
+                                UserId = userId // Set the UserId to the user's unique identifier
                         };
 
                         Message = await _studentService.CreateStudent(studentData);
@@ -206,5 +215,41 @@
     }
     #endregion
 
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        errors.Clear();
+
+        if (e.FileCount > maxAllowedFiles)
+        {
+            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} files are allowed");
+            return;
+        }
+
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            try
+            {
+                    newFileName = Path.ChangeExtension(
+                    Path.GetRandomFileName(),
+                    Path.GetExtension(file.Name));
+
+                string path = Path.Combine(
+                    Configuration.GetValue<string>("FileStorage")!,
+                    "",
+                    newFileName);
+
+                Directory.CreateDirectory(Path.Combine(
+                    Configuration.GetValue<string>("FileStorage")!,
+                    ""));
+
+                await using FileStream fs = new(path, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"File: {file.Name} Error: {ex.Message}");
+            }
+        }
+    }
 
 }

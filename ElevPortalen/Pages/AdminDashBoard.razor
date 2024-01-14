@@ -1,0 +1,16 @@
+﻿@page "/admindashboard"
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <h3>Admin Dashboard</h3>
+
+      
+    </Authorized>
+    <NotAuthorized>
+        <p>You have no rights to administrative page!</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+}

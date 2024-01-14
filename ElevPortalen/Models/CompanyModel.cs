@@ -9,7 +9,6 @@ namespace ElevPortalen.Models
 
         [Key]
         public int CompanyId { get; set; }
-        //public int LoginId { get; set; }
         public string? CompanyName { get; set; }
         public string? CompanyAddress { get; set; }
         public string? Region { get; set; }
@@ -17,6 +16,7 @@ namespace ElevPortalen.Models
         public string? Link { get; set; }
         public string? Preferences { get; set; }
         public string? Description { get; set; }
+        public string? profileImage { get; set; }
         public int PhoneNumber { get; set; }
         public bool IsHiring { get; set; }
         public bool IsVisible { get; set; }

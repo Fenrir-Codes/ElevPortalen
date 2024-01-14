@@ -1,4 +1,5 @@
-﻿
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+
 @*Remade by Jozsef*@
 <div class="top-row ps-3 navbar navbar-dark bg-dark">
     <div class="container-fluid justify-content-center">
@@ -24,15 +25,28 @@
                 }
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/profile" Match="NavLinkMatch.All">
-                <span class="oi oi-person" aria-hidden="true"></span>
-                @if (!@IconMenuActive)
-                {
-                    <label>Profil</label>
-                }
-            </NavLink>
-        </div> 
+        <AuthorizeView Roles="Company,Student">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/profile" Match="NavLinkMatch.All">
+                    <span class="oi oi-person" aria-hidden="true"></span>
+                    @if (!@IconMenuActive)
+                    {
+                        <label>Profil</label>
+                    }
+                </NavLink>
+            </div>
+        </AuthorizeView>
+        <AuthorizeView Roles="Admin">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/admindashboard" Match="NavLinkMatch.All">
+                    <span class="oi" aria-hidden="true"><i class="fa-solid fa-user-gear"></i></span>
+                    @if (!@IconMenuActive)
+                    {
+                        <label>Dashboard</label>
+                    }
+                </NavLink>
+            </div>
+        </AuthorizeView>
     </nav>
 
 
@@ -52,6 +66,7 @@
 </div>
 
 @code {
+
     //bool to send to MainLayout for shrinking sidebar and showing/hide menu text
     private bool IconMenuActive { get; set; } = false;
 
@@ -74,4 +89,5 @@
         IconMenuActive = !IconMenuActive;
         await ShowIconMenu.InvokeAsync(IconMenuActive);
     }
+
 }

@@ -15,11 +15,10 @@
 
 <div class="container-fluid">
 
-    @if (isAuthenticated)
-    {
-        @if (_authState != null && _authState.User != null)
-        {
-            @if (_authState.User.IsInRole(Student) && _studentList.Count >= 1)
+    <!--Autorizeview for Student and Company -->
+    <AuthorizeView Roles="Student,Company">
+        <Authorized>
+            @if (_studentList.Count >= 1)
             {
                 @foreach (var data in _studentList)
                 {
@@ -28,7 +27,7 @@
                             <div class="col-lg-4">
                                 <div class="card mb-4">
                                     <div class="card-body text-center">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                                        <img src="images/ProfileImages/@data.profileImage" alt="avatar"
                                              class="rounded-circle img-fluid" style="width: 150px;">
                                         <h5 class="my-3">@data.FirstName @data.LastName</h5>
                                         <p class="text-muted mb-1">@data.Speciality</p>
@@ -117,7 +116,7 @@
                     </div>
                 }
             }
-            else if (_authState.User.IsInRole(Company) && _companyList.Count >= 1)
+            else if (_companyList.Count >= 1)
             {
                 @foreach (var data in _companyList)
                 {
@@ -290,17 +289,14 @@
                 <br>
                 <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
             }
-        }
-        else
-        {
-            <p>AuthState Possibly NULL</p>
-        }
-    }
-    else
-    {
-        Message = "Please login first.";
-        <label>@Message</label>
-    }
+        </Authorized>
+
+        <!-- Not authorized view -->
+        <NotAuthorized>
+            Message = "Please login first.";
+            <label>@Message</label>
+        </NotAuthorized>
+    </AuthorizeView>
 
 </div>
 
@@ -317,8 +313,6 @@
     private string Student = "Student";
     private string Message = "";
     private string _Name = "Default";
-
-    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
