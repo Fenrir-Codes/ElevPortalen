@@ -18,7 +18,7 @@
 <div class="container-fluid">
 
     <!-- Authorized Student and Company-->
-    <AuthorizeView Roles="Student, Company, Admin">
+    <AuthorizeView Roles="Student, Company">
         <Authorized>
             @if (_companyList.Count >= 1)
             {
@@ -59,7 +59,7 @@
             }
             else
             {
-                Message = "Admin authorized";
+                Message = "No data.";
                 <p>@Message</p>
             }
         </Authorized>
@@ -83,6 +83,8 @@
         </NotAuthorized>
         
     </AuthorizeView>
+
+
 </div>
 
 

@@ -170,6 +170,22 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Company count
+        public async Task<int> GetCompaniesCountAsync()
+        {
+            try
+            {
+                // Get all the data
+                int response = await _context.Company.CountAsync();
+
+                return response; // return the data
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred while retrieving Student data." + ex.Message);
+            }
+        }
+        #endregion
 
     }
 }

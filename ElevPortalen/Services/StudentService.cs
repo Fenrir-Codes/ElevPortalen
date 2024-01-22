@@ -43,7 +43,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get Student request
+        #region Get one Student request
         public async Task<List<StudentModel>> ReadData(ClaimsPrincipal _user)
         {
             try
@@ -75,6 +75,23 @@ namespace ElevPortalen.Services
             {
                 //Get all the data
                 var response = await _context.Student.AsNoTracking().ToListAsync();
+
+                return response; // return the data
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred while retrieving Student data." + ex.Message);
+            }
+        }
+        #endregion
+
+        #region Student count
+        public async Task<int> GetStudentCountAsync()
+        {
+            try
+            {
+                // Get all the data
+                int response = await _context.Student.CountAsync();
 
                 return response; // return the data
             }

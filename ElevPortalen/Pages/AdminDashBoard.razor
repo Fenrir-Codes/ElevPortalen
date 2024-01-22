@@ -1,8 +1,56 @@
 ﻿@page "/admindashboard"
 
+@using ElevPortalen.Services;
+@using ElevPortalen.Data;
+@using ElevPortalen.Models;
+
+@inject ElevPortalenDataDbContext _context
+@inject StudentService _studentService
+@inject CompanyService _companyService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IConfiguration Configuration
+@inject NavigationManager NavManager
+
 <AuthorizeView Roles="Admin">
     <Authorized>
-        <h3>Admin Dashboard</h3>
+        <div class="container-fluid text-center">
+            <div class="row">
+                <div class="col">
+                    <div class="card mb-3" style="max-width: 280px; background-color:cornflowerblue; color:white">                     
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text">Tilmeldte Elever: @_studentCount</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card mb-3" style="max-width: 280px;background-color:#f4a100; color:white">
+                        <h5 class="card-title"></h5>
+                        <div class="card-body">
+                            <p class="card-text">Tilmeldte Firmaer: @_companyCount</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-bg-info mb-3" style="max-width: 280px;background-color:#00ac69; color:white">
+                     
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text">content</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-bg-info mb-3" style="max-width: 18rem;background-color:#e81500; color:white">
+                     @*    <div class="card-header">Header</div> *@
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text">content.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
       
     </Authorized>
@@ -12,5 +60,19 @@
 </AuthorizeView>
 
 @code {
+    int _studentCount = 0;
+    int _companyCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCount();
+    }
+
+    public async Task GetCount()
+    {
+        _studentCount = await _studentService.GetStudentCountAsync();
+        _companyCount = await _companyService.GetCompaniesCountAsync();
+
+    }
 
 }
