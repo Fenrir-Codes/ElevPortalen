@@ -13,39 +13,103 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized>
+        <!-- Container -->
         <div class="container-fluid text-center">
+            <!-- Row -->
             <div class="row">
-                <div class="col">
-                    <div class="card mb-3" style="max-width: 280px; background-color:cornflowerblue; color:white">                     
-                        <div class="card-body">
-                            <h5 class="card-title"></h5>
-                            <p class="card-text">Tilmeldte Elever: @_studentCount</p>
+                <div class="col-xxl-12 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body h-100 p-5">
+                            <div class="row align-items-center">
+                                <div class="col-xl-8 col-xxl-12">
+                                    <div class="text-center text-xl-start text-xxl-center mb-4 mb-xl-0 mb-xxl-4">
+                                        <h1 class="text-primary">
+                                            Welcome to Admin Dashboard!
+                                        </h1>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card mb-3" style="max-width: 280px;background-color:#f4a100; color:white">
-                        <h5 class="card-title"></h5>
+            </div>
+            <!-- Row with 4 cards -->
+            <div class="row">
+                <div class="col-lg-6 col-xl-3 mb-4">
+                    <div class="card bg-primary text-white h-100">
                         <div class="card-body">
-                            <p class="card-text">Tilmeldte Firmaer: @_companyCount</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="me-3">
+                                    <div class="text-white-75 small">
+                                        Tilmeldte Elever:
+                                    </div>
+                                    <div class="text-lg fw-bold">
+                                        @_studentCount
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-user-check fa-2xl"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between small">
+                            <a class="text-white stretched-link">View</a>
+                            <div class="text-white" href="#"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card text-bg-info mb-3" style="max-width: 280px;background-color:#00ac69; color:white">
-                     
+                <div class="col-lg-6 col-xl-3 mb-4">
+                    <div class="card bg-warning text-white h-100">
                         <div class="card-body">
-                            <h5 class="card-title"></h5>
-                            <p class="card-text">content</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="me-3">
+                                    <div class="text-white-75 small">
+                                        Tilmeldte Firmaer:
+                                    </div>
+                                    <div class="text-lg fw-bold">
+                                        @_companyCount
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-building-circle-check fa-2xl"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between small">
+                            <a class="text-white stretched-link">View</a>
+                            <div class="text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card text-bg-info mb-3" style="max-width: 18rem;background-color:#e81500; color:white">
-                     @*    <div class="card-header">Header</div> *@
+                <div class="col-lg-6 col-xl-3 mb-4">
+                    <div class="card bg-success text-white h-100"> 
                         <div class="card-body">
-                            <h5 class="card-title"></h5>
-                            <p class="card-text">content.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="me-3">
+                                    <div class="text-white-75 small">
+                                        Something
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-square-check fa-2xl"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between small">
+                            <a class="text-white stretched-link">View</a>
+                            <div class="text-white" href="#"><i class="fas fa-angle-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xl-3 mb-4">
+                    <div class="card bg-danger text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="me-3">
+                                    <div class="text-white-75 small">
+                                        Something
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-comment fa-2xl"></i>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between small">
+                            <a class="text-white stretched-link">View</a>
+                            <div class="text-white" href="#"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>

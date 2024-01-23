@@ -176,7 +176,6 @@ namespace ElevPortalen.Services
             try
             {
                 var student = await _context.Student
-                    .AsNoTracking()
                     .FirstOrDefaultAsync(s => s.StudentId == Id);
 
                 if (student != null)
@@ -190,6 +189,30 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
+                throw new ApplicationException($"An error occurred while retrieving student data: {ex.Message}");
+            }
+        }
+        #endregion
+
+        #region Get a student by its Guid
+        public async Task<StudentModel> GetStudentByGuid(Guid id)
+        {
+            try
+            {
+                var student = await _context.Student.FirstOrDefaultAsync(s => s.UserId == id);
+
+                if (student != null)
+                {
+                    return student;
+                }
+                else
+                {
+                    throw new ApplicationException($"An error occurred while finding user's Guid. Or no Guid in database.");
+                }
+            }
+            catch (Exception ex)
+            {
+
                 throw new ApplicationException($"An error occurred while retrieving student data: {ex.Message}");
             }
         }

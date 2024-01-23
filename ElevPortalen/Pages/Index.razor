@@ -15,7 +15,7 @@
 <PageTitle>Home</PageTitle>
 
 @* HHTMl and its logic*@
-<div class="container-fluid">
+<div class="container">
 
     <!-- Authorized Student and Company-->
     <AuthorizeView Roles="Student, Company">
@@ -26,13 +26,11 @@
                 <div class="container">
                     @foreach (var data in _companyList)
                     {
-                        <div class="card border-secondary text-center m-2">
-                            <div class="card-header">
+                        <div class="card m-2">
                                 @data.CompanyName
-                            </div>
                             <div class="card-body">
                                 <p class="card-text">@data.Description</p>
-                                <a href="#" class="btn btn-primary">Vis</a>
+                                <button class="btn btn-primary" onclick="ShowProfile(@data.UserId)">Vis</button>
                             </div>
                         </div>
                     }
@@ -44,14 +42,14 @@
                 <div class="container">
                     @foreach (var data in _studentList)
                     {
-                        <div class="card text-center m-2">
+                        <div class="card m-2">
                             <div class="card-header">
                                 @data.LastName
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">@data.Title</h5>
                                 <p class="card-text">@data.Description</p>
-                                <a href="#" class="btn btn-primary">Vis</a>
+                                <button class="btn btn-primary" onclick="ShowProfile(@data.UserId)">Vis</button>
                             </div>
                         </div>
                     }
@@ -154,5 +152,10 @@
         NavManager.NavigateTo("/profile");
     }
     #endregion
+
+    // private void ShowProfile(Guid id)
+    // {
+    //     NavManager.NavigateTo($"/userprofile/{id}");
+    // }
 
 }
