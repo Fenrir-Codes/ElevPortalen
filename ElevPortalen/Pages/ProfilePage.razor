@@ -44,6 +44,8 @@
                                                     @onclick="() => NavigateToUpdate(data.StudentId)">
                                                 Update Profile
                                             </button>
+
+                                            <button type="button" class="btn btn-outline-success ms-1" @onclick="() => DialogModal?.Open(data.StudentId)">Open the modal</button>
                                             <button type="button" class="btn btn-outline-danger ms-1"
                                                     @onclick="() => DeleteStudentData(data.StudentId)" disabled="@(!isConfirmationChecked)">
                                                 Delete Profile
@@ -313,6 +315,9 @@
         </NotAuthorized>
     </AuthorizeView>
 
+    <!-- DialogModal for update view -->
+     <ModalDialog @ref="DialogModal" StudentId="@StudentId" OnClose="ReRenderPage"></ModalDialog>
+
 </div>
 
 
@@ -321,6 +326,7 @@
     private AuthenticationState? _authState;
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
+    private ModalDialog? DialogModal { get; set; }
 
     private bool isAuthenticated = false;
     private bool isConfirmationChecked = false;
@@ -328,6 +334,9 @@
     private string Student = "Student";
     private string Message = "";
     private string _Name = "Default";
+
+    // The StudentId 
+    private int StudentId { get; set; }
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
@@ -430,6 +439,14 @@
             await _companyService.Delete(id);
             NavManager.NavigateTo("/");
         }
+    }
+    #endregion
+
+    #region Re-RenderPage function for re-renderint the profile page on change
+    private async void ReRenderPage()
+    {
+        await ReadData();
+        StateHasChanged();
     }
     #endregion
 

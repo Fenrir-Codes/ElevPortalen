@@ -5,54 +5,100 @@
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
 
+
 @inject ElevPortalenDataDbContext _context
 @inject StudentService _studentService
 @inject CompanyService _companyService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IConfiguration Configuration
 @inject NavigationManager NavManager
+@inject PostCodeService PostalCodeService
 
 <PageTitle>Home</PageTitle>
 
 @* HHTMl and its logic*@
-<div class="container">
+<div class="container-fluid text-center">
 
     <!-- Authorized Student and Company-->
-    <AuthorizeView Roles="Student, Company">
+    <AuthorizeView Roles="Student, Company, Admin">
         <Authorized>
-            @if (_companyList.Count >= 1)
+            @if (context.User.IsInRole(Admin))
+            {
+                <AdminDashBoard></AdminDashBoard>
+            }
+            else if (_companyList.Count >= 1 && context.User.IsInRole(Student))
             {
                 <!-- Display Company-related content -->
                 <div class="container">
-                    @foreach (var data in _companyList)
-                    {
-                        <div class="card m-2">
-                                @data.CompanyName
-                            <div class="card-body">
-                                <p class="card-text">@data.Description</p>
-                                <button class="btn btn-primary" onclick="ShowProfile(@data.UserId)">Vis</button>
+                    <div class="row">
+                        @foreach (var data in _companyList)
+                        {
+@*                             <div class="col-sm-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@data.CompanyName</h5>
+                                        <p class="card-text">@data.Description</p>
+                                    </div>
+                                </div>
+                            </div> *@
+
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                <div class="our-team">
+                                    <div class="team-content">
+                                        <h3 style="font-size:20px" class="name">@data.CompanyName</h3>
+                                    </div>
+                                    <ul class="social">
+                                        <li><a href="@data.Link" class="fa-solid fa-up-right-from-square"></a></li>
+                                        <li><a href="https://codepen.io/collection/XdWJOQ/" class="fa fa-linkedin"></a></li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
+                
+
             }
-            else if (_studentList.Count >= 1)
+            else if (_studentList.Count >= 1 && context.User.IsInRole(Company))
             {
                 <!-- Display Student-related content -->
                 <div class="container">
+                <div class="row">
                     @foreach (var data in _studentList)
                     {
-                        <div class="card m-2">
-                            <div class="card-header">
-                                @data.LastName
+@*                             <div class="col-sm-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@data.FirstName @data.LastName</h5>
+                                        <p class="card-text">@data.Description</p>
+                                    </div>
+                                </div>
+                            </div> *@
+
+                            <div class="col-12 col-sm-6  col-lg-3">
+                                <div class="our-team">
+                                    <div class="picture">
+                                        @if (data.profileImage != "")
+                                        {
+                                            <img class="img-fluid" src="images/ProfileImages/@data.profileImage">
+                                        }
+                                        else
+                                        {
+                                            <img class="img-fluid" src="images/DefaultAvatar.jpg">
+                                        }
+                                    </div>
+                                    <div class="team-content">
+                                        <h3 class="name">@data.FirstName @data.LastName</h3>
+                                        <h4 class="title">@data.Speciality</h4>
+                                    </div>
+                                    <ul class="social">
+                                        <li><a href="https://codepen.io/collection/XdWJOQ/" class="fa fa-facebook" aria-hidden="true"></a></li>
+                                        <li><a href="https://codepen.io/collection/XdWJOQ/" class="fa fa-linkedin" aria-hidden="true"></a></li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title">@data.Title</h5>
-                                <p class="card-text">@data.Description</p>
-                                <button class="btn btn-primary" onclick="ShowProfile(@data.UserId)">Vis</button>
-                            </div>
-                        </div>
                     }
+                    </div>
                 </div>
             }
             else
@@ -64,6 +110,17 @@
 
         <NotAuthorized>
             <div class="container-fluid d-flex flex-column align-items-center justify-content-top">
+
+@*                 <input type="text" @bind="searchTerm" @oninput="HandleInputChange" />
+
+                @if (postalCodes != null)
+                {
+                        @foreach (var postalCode in postalCodes)
+                        {
+                        <p>@postalCode.Nr</p>
+                        }
+
+                } *@
 
                 <div class="text-container mb-5" style="position:relative; text-align: center; z-index: 2;">
                     <h1>Velkommen til ElevPortalen</h1>
@@ -78,10 +135,10 @@
                     <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width:75%; height: auto; opacity: 0.1;">
                 </div>
             </div>
+
         </NotAuthorized>
         
     </AuthorizeView>
-
 
 </div>
 
@@ -97,7 +154,12 @@
     private bool isAuthenticated = false;
     private string Company = "Company";
     private string Student = "Student";
+    private string Admin = "Admin";
     private string Message = "";
+
+    private List<PostalCodeModel> postalCodes = new List<PostalCodeModel>();
+    private string searchTerm = "";
+
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
@@ -109,7 +171,7 @@
         {
             if (_authState.User.Identity?.IsAuthenticated == true)
             {
-                // If authenticated set the bool to true zhan read the users data from the data table with the help of ReadData function
+                // If authenticated set the bool to true than read the users data from the data table with the help of ReadData function
                 isAuthenticated = true;
 
                 await ReadAllData();
@@ -153,9 +215,26 @@
     }
     #endregion
 
-    // private void ShowProfile(Guid id)
+    #region outcommented code
+    // private async Task HandleInputChange(ChangeEventArgs e)
     // {
-    //     NavManager.NavigateTo($"/userprofile/{id}");
+    //     searchTerm = e.Value.ToString();
+    //     await SearchPostalCodes();
     // }
+
+    // private async Task SearchPostalCodes()
+    // {
+    //     try
+    //     {
+    //         var text = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
+    //         postalCodes = await PostalCodeService.GetPostalCodes(text);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // Handle the exception as needed
+    //         Console.WriteLine(ex.Message);
+    //     }
+    // }
+    #endregion
 
 }

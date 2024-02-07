@@ -40,7 +40,9 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<ElevPortalenDataDbContext>();
 builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<PostCodeService>();
 builder.Services.AddScoped<RegisterModel>();
+builder.Services.AddHttpClient();
 //End ----
 
 //added Database context by Jozsef
