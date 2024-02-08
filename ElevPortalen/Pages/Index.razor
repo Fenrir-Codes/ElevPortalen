@@ -19,11 +19,7 @@
     <!-- Authorized Student and Company-->
     <AuthorizeView Roles="Student, Company, Admin">
         <Authorized>
-            @if (context.User.IsInRole(Admin))
-            {
-                <AdminDashBoard></AdminDashBoard>
-            }
-            else if (_companyList.Count >= 1 && context.User.IsInRole(Student))
+            @if (_companyList.Count >= 1 && context.User.IsInRole(Student))
             {
                 <!-- Display Company-related content -->
                 <div class="container">
@@ -82,8 +78,10 @@
             }
             else
             {
-                Message = "No data.";
+                Message = "Wellcome " + context.User.Identity.Name;
                 <p>@Message</p>
+                <p>@Datenow</p>
+
             }
         </Authorized>
 
@@ -123,10 +121,13 @@
     private string Student = "Student";
     private string Admin = "Admin";
     private string Message = "";
+    private string Datenow = "";
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
+        Datenow = "Idag er " + DateTime.Now.ToString("dd, MMMM, yyyy") + ".";
+
         // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
