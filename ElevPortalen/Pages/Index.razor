@@ -14,7 +14,7 @@
 <PageTitle>Home</PageTitle>
 
 @* HHTMl and its logic*@
-<div class="container-fluid text-center">
+<div class="container-fluid text-center p-4">
 
     <!-- Authorized Student and Company-->
     <AuthorizeView Roles="Student, Company, Admin">
@@ -30,7 +30,7 @@
                     <div class="row">
                         @foreach (var data in _companyList)
                         {
-                            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-2">
                                 <div class="our-team">
                                     <div class="team-content">
                                         <h3 style="font-size:20px" class="name">@data.CompanyName</h3>
@@ -71,8 +71,8 @@
                                         <h4 class="title">@data.Speciality</h4>
                                     </div>
                                     <ul class="social">
-                                        <li><a href="https://codepen.io/collection/XdWJOQ/" class="fa fa-facebook" aria-hidden="true"></a></li>
-                                        <li><a href="https://codepen.io/collection/XdWJOQ/" class="fa fa-linkedin" aria-hidden="true"></a></li>
+                                        <li><a href="#" class="fa fa-facebook" aria-hidden="true"></a></li>
+                                        <li><a href="#" class="fa fa-linkedin" aria-hidden="true"></a></li>
                                     </ul>
                                 </div>
                             </div>
