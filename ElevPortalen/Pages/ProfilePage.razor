@@ -4,14 +4,12 @@
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
-@using Microsoft.JSInterop;
 
-@inject ElevPortalenDataDbContext _context
 @inject StudentService _studentService
 @inject CompanyService _companyService
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IConfiguration Configuration
 @inject NavigationManager NavManager
+@inject IJSRuntime jsRuntime
 
 <div class="container-fluid">
 
@@ -41,11 +39,9 @@
                                         <p class="text-muted mb-4">@data.Address</p>
                                         <div class="d-flex justify-content-center mb-2">
                                             <button type="button" class="btn btn-outline-success"
-                                                    @onclick="() => NavigateToUpdate(data.StudentId)">
+                                                    @onclick="() => DialogModal?.OpenStudentUpdate(data.StudentId)">
                                                 Update Profile
                                             </button>
-
-                                            <button type="button" class="btn btn-outline-success ms-1" @onclick="() => DialogModal?.OpenStudentUpdate(data.StudentId)">Open the modal</button>
                                             <button type="button" class="btn btn-outline-danger ms-1"
                                                     @onclick="() => DeleteStudentData(data.StudentId)" disabled="@(!isConfirmationChecked)">
                                                 Delete Profile
@@ -208,7 +204,7 @@
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">
-                                                    @data.Link
+                                                    <button class="btn btn-outline-info" @onclick="NavigateToNewTab">Open Link on new tab</button>
                                                 </p>
                                             </div>
                                         </div>
@@ -306,6 +302,10 @@
                 <br>
                 <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
             }
+
+            <!-- DialogModal for update view -->
+            <UpdateModalDialog @ref="DialogModal" StudentId="@StudentId" OnClose="ReRenderPage"></UpdateModalDialog>
+
         </Authorized>
 
         <!-- Not authorized view -->
@@ -315,8 +315,6 @@
         </NotAuthorized>
     </AuthorizeView>
 
-    <!-- DialogModal for update view -->
-     <ModalDialog @ref="DialogModal" StudentId="@StudentId" OnClose="ReRenderPage"></ModalDialog>
 
 </div>
 
@@ -326,7 +324,7 @@
     private AuthenticationState? _authState;
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
-    private ModalDialog? DialogModal { get; set; }
+    private UpdateModalDialog? DialogModal { get; set; }
 
     private bool isAuthenticated = false;
     private bool isConfirmationChecked = false;
@@ -408,18 +406,20 @@
     }
     #endregion
 
-    #region Navigate to update page
-    private void NavigateToUpdate(int studentId)
-    {
-        NavManager.NavigateTo($"/updatestudent/{studentId}");
-    }
-    #endregion
+    #region outcommented functions
+    // #region Navigate to update page
+    // private void NavigateToUpdate(int studentId)
+    // {
+    //     NavManager.NavigateTo($"/updatestudent/{studentId}");
+    // }
+    // #endregion
 
-    #region Navigate to update company page
-    private void NavigateToUpdateCompany(int companyId)
-    {
-        NavManager.NavigateTo($"/updatecompany/{companyId}");
-    }
+    // #region Navigate to update company page
+    // private void NavigateToUpdateCompany(int companyId)
+    // {
+    //     NavManager.NavigateTo($"/updatecompany/{companyId}");
+    // }
+    // #endregion
     #endregion
 
     #region Delete function calls for student and company
@@ -447,6 +447,14 @@
     {
         await ReadData();
         StateHasChanged();
+    }
+    #endregion
+
+    #region Navigate to company website Link with opening new window
+    public async Task NavigateToNewTab()
+    {
+        string url = "https://" + _companyList[0].Link;
+        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
     }
     #endregion
 

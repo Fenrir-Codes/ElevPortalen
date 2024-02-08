@@ -7,7 +7,7 @@
 
 <AuthorizeView Roles="Student, Company, Admin">
     <Authorized>
-        <div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@DisplayStyle">
+        <div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@DisplayStyle" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen">
                 <div class="modal-content">
                     <div class="modal-body p-0">
@@ -16,7 +16,7 @@
                             <div class="container-fluid d-flex p-0 align-content-center justify-content-center">
                                 <div class="col-xl-12 col-md-12 col-sm-12">
                                     <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">Opdater Dine Oplysninger</div>
-                                    <div class="card-body b-0">
+                                    <div class="card-body">
                                         <div class="row gx-3 mb-3 px-4">
                                             <div class="col-md-12">
                                                 <label for="title" class="form-label">Title</label>
@@ -72,9 +72,10 @@
                         else if (context.User.IsInRole("Company"))
                         {
                             <div class="container-fluid d-flex p-0 align-content-center justify-content-center">
-                                <div class="col-xl-8">
-
-                                        <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">Opdater Dine Oplysninger</div>
+                                <div class="col-xl-12 col-md-12 col-sm-12">
+                                        <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
+                                        <h3>Opdater Dine Oplysninger</h3>
+                                    </div>
                                         <div class="card-body">
                                         <div class="row gx-3 mb-3 px-4">
                                                 <!-- Form Group -->
@@ -230,7 +231,7 @@
     public async Task OpenStudentUpdate(int Id)
     {
         DisplayStyle = "block;";
-        ModalClass = "Show";
+        ModalClass = "show";
         ShowBackdrop = true;
 
         StudentId = Id;
@@ -241,7 +242,7 @@
     public async Task OpenCompanyUpdate(int Id)
     {
         DisplayStyle = "block;";
-        ModalClass = "Show";
+        ModalClass = "show";
         ShowBackdrop = true;
 
         CompanyId = Id;
