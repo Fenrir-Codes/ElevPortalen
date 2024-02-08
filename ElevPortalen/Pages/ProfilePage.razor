@@ -25,9 +25,10 @@
                             <div class="col-lg-4">
                                 <div class="card mb-4">
                                     <div class="card-body text-center">
-                                        @if(data.profileImage !=""){
+                                        @if (data.profileImage != "")
+                                        {
                                             <img src="images/ProfileImages/@data.profileImage" alt="avatar"
-                                            class="rounded-circle img-fluid" style="width: 150px;">
+                                                 class="rounded-circle img-fluid" style="width: 150px;">
                                         }
                                         else
                                         {
@@ -313,9 +314,8 @@
             Message = "Please login first.";
             <label>@Message</label>
         </NotAuthorized>
+
     </AuthorizeView>
-
-
 </div>
 
 

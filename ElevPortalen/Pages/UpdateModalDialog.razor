@@ -10,40 +10,48 @@
         <div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@DisplayStyle" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen">
                 <div class="modal-content">
-                    <div class="modal-body p-0">
+                    <div class="modal-body p-0" style="background-color:@ModalBgColor; color:@textColor;">
+
                         @if (context.User.IsInRole("Student"))
                         {
-                            <div class="container-fluid d-flex p-0 align-content-center justify-content-center">
                                 <div class="col-xl-12 col-md-12 col-sm-12">
-                                    <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">Opdater Dine Oplysninger</div>
+                                    <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
+                                        Opdater Dine Oplysninger
+                                        </div>
                                     <div class="card-body">
+                                        <!-- Row -->
                                         <div class="row gx-3 mb-3 px-4">
                                             <div class="col-md-12">
                                                 <label for="title" class="form-label">Title</label>
                                                 <input id="title" class="form-control" @bind="@_studentToUpdate.Title" placeholder="Title" />
                                             </div>
                                         </div>
+                                        <!-- Row -->
                                         <div class="row gx-3 mb-3 px-4">
-                                            <!-- Form Group -->
+                                            <!-- Firstname -->
                                             <div class="col-md-4">
                                                 <label for="firstname" class="form-label">Fornavn</label>
                                                 <input id="firstname" type="text" @bind="@_studentToUpdate.FirstName" class="form-control" placeholder="Fornavn" />
                                             </div>
+                                            <!-- Middlename -->
                                             <div class="col-md-4">
                                                 <label for="Dmiddlename" class="form-label">Mellemnavn</label>
                                                 <input id="middlename" type="text" @bind="@_studentToUpdate.MiddleName" class="form-control" placeholder="Mellemnavn" />
                                             </div>
+                                            <!-- Lastname -->
                                             <div class="col-md-4">
                                                 <label for="lastname" class="form-label">Efternavn</label>
                                                 <input id="lastname" type="text" @bind="@_studentToUpdate.LastName" class="form-control" placeholder="Efternavn" />
                                             </div>
                                         </div>
-                                        <!-- Form Group -->
+                                        <!-- Row -->
                                         <div class="row gx-3 mb-3 px-4">
+                                        <!-- Address -->
                                             <div class="col-md-4">
                                                 <label for="address" class="form-label">Adresse</label>
                                                 <input id="address" type="text" @bind="@_studentToUpdate.Address" class="form-control" placeholder="Adresse" />
                                             </div>
+                                            <!-- Select speciality -->
                                             <div class="col-md-4">
                                                 <label for="Dregion" class="form-label">Din Region</label>
                                                 <select id="region" class="form-select form-select-md" @bind="@_studentToUpdate.Speciality" aria-label="Region">
@@ -53,12 +61,13 @@
                                                     <option value="Programmer">Programmør</option>
                                                 </select>
                                             </div>
+                                            <!-- Phone number-->
                                             <div class="col-md-4">
                                                 <label for="phone" class="form-label">Mobile</label>
                                                 <input id="phone" type="text" @bind="@_studentToUpdate.PhoneNumber" class="form-control" placeholder="Telefonnummer" />
                                             </div>
                                         </div>
-                                        <!-- Form Group -->
+                                        <!-- Description Textarea -->
                                         <div class="row gx-3 mb-3 px-4">
                                             <div class="col-md-12">
                                                 <label for="Description" class="form-label">Beskrivelse</label>
@@ -67,71 +76,81 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
+                                            }
                         else if (context.User.IsInRole("Company"))
                         {
+                            <!--container of the update page-->
                             <div class="container-fluid d-flex p-0 align-content-center justify-content-center">
                                 <div class="col-xl-12 col-md-12 col-sm-12">
-                                        <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
+
+                                    <!--Header of the update page-->
+                                    <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
                                         <h3>Opdater Dine Oplysninger</h3>
                                     </div>
-                                        <div class="card-body">
+                                    <!--body of the update page-->
+                                    <div class="card-body">
+                                        <!-- Row -->
                                         <div class="row gx-3 mb-3 px-4">
-                                                <!-- Form Group -->
-                                                <div class="col-md-4 mb-2">
-                                                    <label for="companyname" class="form-label">Firmanavn</label>
-                                                    <input id="companyname" type="text" @bind="@_companyToUpdate.CompanyName" class="form-control" placeholder="Firmanavn" />
-                                                </div>
-                                                <div class="col-md-8 mb-2">
-                                                    <label for="address" class="form-label">Adresse</label>
-                                                    <input id="address" type="text" @bind="@_companyToUpdate.CompanyAddress" class="form-control" placeholder="Adresse" />
-                                                </div>
+                                            <!-- Company name -->
+                                            <div class="col-md-4 mb-2">
+                                                <label for="companyname" class="form-label">Firmanavn</label>
+                                                <input id="companyname" type="text" @bind="@_companyToUpdate.CompanyName" class="form-control" placeholder="Firmanavn" />
                                             </div>
-                                            <!-- Form Group -->
-                                        <div class="row gx-3 mb-3 px-4">
-                                                <div class="col-md-4 mb-2">
-                                                    <label class="mb-2" for="_region">Region</label>
-                                                    <select class="form-select form-select-md" @bind="_companyToUpdate.Region" id="_region" aria-label="Region">
-                                                        <option disabled selected></option>
-                                                        <option value="Region Nordjylland">Region Nordjylland</option>
-                                                        <option value="Region Midtjylland">Region Midtjylland</option>
-                                                        <option value="Region Syddanmark">Region Syddanmark</option>
-                                                        <option value="Region Hovedstaden">Region Hovedstaden</option>
-                                                        <option value="Region Sjælland">Region Sjælland</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-4 mb-2">
-                                                    <label for="email" class="form-label">E-mail</label>
-                                                    <input id="email" type="email" @bind="@_companyToUpdate.Email" class="form-control" placeholder="Email" />
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <label for="link" class="form-label">Website link</label>
-                                                    <input id="link" type="text" @bind="@_companyToUpdate.Link" class="form-control" placeholder="Link" />
-                                                </div>
+                                            <!-- Address -->
+                                            <div class="col-md-8 mb-2">
+                                                <label for="address" class="form-label">Adresse</label>
+                                                <input id="address" type="text" @bind="@_companyToUpdate.CompanyAddress" class="form-control" placeholder="Adresse" />
                                             </div>
-                                            <!-- Form Group -->
-                                        <div class="row gx-3 mb-3 px-4">
-                                                <!-- Form Group (preferencesr)-->
-                                                <div class="col-md-4">
-                                                    <label class="small mb-1" for="_preferences">Preference</label>
-                                                    <select class="form-select form-select-md" @bind="_companyToUpdate.Preferences" id="_preferences"
-                                                            aria-label="Preferences">
-                                                        <option value="" disabled selected></option>
-                                                        <option value="It-Supporter">It-Supporter</option>
-                                                        <option value="Infrastructure">Infrastruktur</option>
-                                                        <option value="Programmer">Programmør</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        <div class="row gx-3 mb-1 px-4">
-                                                <div class="col-md-12 mb-3">
-                                                    <label for="Description" class="form-label">Beskrivelse</label>
-                                                       <textarea class="form-control" @bind="_companyToUpdate.Description" id="_description" rows="12">
-
-                                                       </textarea>
-                                                </div>
                                         </div>
+                                        <!-- Select region -->
+                                        <!-- Row -->
+                                        <div class="row gx-3 mb-3 px-4">
+                                            <div class="col-md-4 mb-2">
+                                                <label class="mb-2" for="_region">Region</label>
+                                                <select class="form-select form-select-md" @bind="_companyToUpdate.Region" id="_region" aria-label="Region">
+                                                    <option disabled selected></option>
+                                                    <option value="Region Nordjylland">Region Nordjylland</option>
+                                                    <option value="Region Midtjylland">Region Midtjylland</option>
+                                                    <option value="Region Syddanmark">Region Syddanmark</option>
+                                                    <option value="Region Hovedstaden">Region Hovedstaden</option>
+                                                    <option value="Region Sjælland">Region Sjælland</option>
+                                                </select>
+                                            </div>
+                                            <!-- Email -->
+                                            <div class="col-md-4 mb-2">
+                                                <label for="email" class="form-label">E-mail</label>
+                                                <input id="email" type="email" @bind="@_companyToUpdate.Email" class="form-control" placeholder="Email" />
+                                            </div>
+                                            <!-- Link -->
+                                            <div class="col-md-4">
+                                                <label for="link" class="form-label">Website link</label>
+                                                <input id="link" type="text" @bind="@_companyToUpdate.Link" class="form-control" placeholder="Link" />
+                                            </div>
+                                        </div>
+                                        <!-- Row -->
+                                        <div class="row gx-3 mb-3 px-4">
+                                            <!--select preferences-->
+                                            <div class="col-md-4">
+                                                <label class="small mb-1" for="_preferences">Preference</label>
+                                                <select class="form-select form-select-md" @bind="_companyToUpdate.Preferences" id="_preferences"
+                                                        aria-label="Preferences">
+                                                    <option value="" disabled selected></option>
+                                                    <option value="It-Supporter">It-Supporter</option>
+                                                    <option value="Infrastructure">Infrastruktur</option>
+                                                    <option value="Programmer">Programmør</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- Textarea description -->
+                                        <!-- Row -->
+                                        <div class="row gx-3 mb-1 px-4">
+                                            <div class="col-md-12 mb-3">
+                                                <label for="Description" class="form-label">Beskrivelse</label>
+                                                <textarea class="form-control" @bind="_companyToUpdate.Description" id="_description" rows="12"></textarea>
+                                            </div>
+                                        </div>
+                                        <!-- checkbox Hiring-->
+                                        <!-- Row -->
                                         <div class="row gx-3 mb-1 px-4">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" @bind="_companyToUpdate.IsHiring">
@@ -140,17 +159,18 @@
                                                 </label>
                                             </div>
                                         </div>
-                                      
-                                            <div class="row gx-3 mb-1 px-4">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" @bind="_companyToUpdate.IsVisible">
-                                                            <label class="form-check-label">
-                                                                Profile Visible
-                                                            </label>
-                                                     </div>
-                                             </div>
+                                        <!-- checkbox visible  -->
+                                        <!-- Row -->
+                                        <div class="row gx-3 mb-1 px-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" @bind="_companyToUpdate.IsVisible">
+                                                <label class="form-check-label">
+                                                    Profile Visible
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
                             </div>
                         }
                         else
@@ -159,7 +179,10 @@
                         }
 
                     </div>
-                    <div class="modal-footer d-flex justify-content-center">
+
+                    <!--Footer of the update page-->
+                    <div class="modal-footer d-flex justify-content-center" style="background-color:@ModalBgColor;">
+
                         @if(context.User.IsInRole("Student"))
                         {
                             <button type="button" class="btn btn-success" @onclick=@SubmitUpdateStudent>Update</button>
@@ -168,7 +191,9 @@
                         {
                             <button type="button" class="btn btn-success" @onclick=@SubmitUpdateCompany>Update</button>
                         }
+
                         <button type="button" class="btn btn-danger" @onclick=@Close>Close</button>
+
                     </div>
                 </div>
             </div>
@@ -190,9 +215,13 @@
     private CompanyModel _companyToUpdate = new CompanyModel();
 
     private string _errorMessage = "";
-    private bool showErrorMessage = false;
+
     public string DisplayStyle = "none;";
     public string ModalClass = "";
+    private string ModalBgColor = "rgba(50, 50, 50,0.8)";
+    private string textColor = "white";
+
+    private bool showErrorMessage = false;
     public bool ShowBackdrop = false;
 
     #region Handle validation submit (SubmitUpdate for Student)

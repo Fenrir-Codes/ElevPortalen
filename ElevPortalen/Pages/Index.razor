@@ -5,14 +5,11 @@
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
 
-
-@inject ElevPortalenDataDbContext _context
 @inject StudentService _studentService
 @inject CompanyService _companyService
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IConfiguration Configuration
 @inject NavigationManager NavManager
-@inject PostCodeService PostalCodeService
+@inject IJSRuntime jsRuntime
 
 <PageTitle>Home</PageTitle>
 
@@ -33,23 +30,14 @@
                     <div class="row">
                         @foreach (var data in _companyList)
                         {
-@*                             <div class="col-sm-6 mb-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">@data.CompanyName</h5>
-                                        <p class="card-text">@data.Description</p>
-                                    </div>
-                                </div>
-                            </div> *@
-
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                                 <div class="our-team">
                                     <div class="team-content">
                                         <h3 style="font-size:20px" class="name">@data.CompanyName</h3>
                                     </div>
                                     <ul class="social">
-                                        <li><a href="@data.Link" class="fa-solid fa-up-right-from-square"></a></li>
-                                        <li><a href="https://codepen.io/collection/XdWJOQ/" class="fa fa-linkedin"></a></li>
+                                        <li><a @onclick="() => NavigateToNewTab(data.Link)" class="fa-solid fa-up-right-from-square"></a></li>
+                                        <li><a href="#" class="fa fa-linkedin"></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -66,15 +54,6 @@
                 <div class="row">
                     @foreach (var data in _studentList)
                     {
-@*                             <div class="col-sm-6 mb-3">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">@data.FirstName @data.LastName</h5>
-                                        <p class="card-text">@data.Description</p>
-                                    </div>
-                                </div>
-                            </div> *@
-
                             <div class="col-12 col-sm-6  col-lg-3">
                                 <div class="our-team">
                                     <div class="picture">
@@ -110,18 +89,6 @@
 
         <NotAuthorized>
             <div class="container-fluid d-flex flex-column align-items-center justify-content-top">
-
-@*                 <input type="text" @bind="searchTerm" @oninput="HandleInputChange" />
-
-                @if (postalCodes != null)
-                {
-                        @foreach (var postalCode in postalCodes)
-                        {
-                        <p>@postalCode.Nr</p>
-                        }
-
-                } *@
-
                 <div class="text-container mb-5" style="position:relative; text-align: center; z-index: 2;">
                     <h1>Velkommen til ElevPortalen</h1>
                     <div class="d-inline-flex align-items-center">
@@ -156,10 +123,6 @@
     private string Student = "Student";
     private string Admin = "Admin";
     private string Message = "";
-
-    private List<PostalCodeModel> postalCodes = new List<PostalCodeModel>();
-    private string searchTerm = "";
-
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
@@ -235,6 +198,14 @@
     //         Console.WriteLine(ex.Message);
     //     }
     // }
+    #endregion
+
+    #region opening link in a new window
+    public async Task NavigateToNewTab(string weblink)
+    {
+        string url = "https://" + weblink;
+        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
     #endregion
 
 }
