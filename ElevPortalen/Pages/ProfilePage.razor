@@ -45,7 +45,7 @@
                                                 Update Profile
                                             </button>
 
-                                            <button type="button" class="btn btn-outline-success ms-1" @onclick="() => DialogModal?.Open(data.StudentId)">Open the modal</button>
+                                            <button type="button" class="btn btn-outline-success ms-1" @onclick="() => DialogModal?.OpenStudentUpdate(data.StudentId)">Open the modal</button>
                                             <button type="button" class="btn btn-outline-danger ms-1"
                                                     @onclick="() => DeleteStudentData(data.StudentId)" disabled="@(!isConfirmationChecked)">
                                                 Delete Profile
@@ -148,7 +148,7 @@
                                         <p class="text-muted mb-4">@data.CompanyAddress</p>
                                         <div class="d-flex justify-content-center mb-2">
                                             <button type="button" class="btn btn-outline-success"
-                                                    @onclick="() => NavigateToUpdateCompany(data.CompanyId)">
+                                                    @onclick="() => DialogModal?.OpenCompanyUpdate(data.CompanyId)">
                                                 Update Profile
                                             </button>
                                             <button type="button" class="btn btn-outline-danger ms-1"
