@@ -32,17 +32,31 @@
                     <div class="row">
                         @foreach (var data in _companySearchResult)
                         {
-                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-                                <div class="our-team">
-                                    <div class="team-content">
-                                        <h3 style="font-size:20px" class="name">@data.CompanyName</h3>
+                            <div class="col-12 col-sm-12 col-lg-4">
+                                <div class="card mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            @if (data.profileImage != "")
+                                            {
+                                                <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage">
+                                            }
+                                            else
+                                            {
+                                                <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg">
+                                            }
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5>@data.CompanyName</h5>
+                                            </div>
+                                            <p class="card-text">
+                                                <button class="btn btn-outline-info" @onclick="() => NavigateToNewTab(data.Link)">Visit hjemmeside</button>
+                                            </p>
+                                        </div>
                                     </div>
-                                    <ul class="social">
-                                        <li><a @onclick="() => NavigateToNewTab(data.Link)" class="fa-solid fa-up-right-from-square"></a></li>
-                                        <li><a href="#" class="fa fa-linkedin"></a></li>
-                                    </ul>
                                 </div>
                             </div>
+
                         }
                     </div>
                 </div>
@@ -58,32 +72,40 @@
 
                 <!-- Display Student-related content -->
                 <div class="container">
-                <div class="row">
-                    @foreach (var data in _studentSearchResult)
-                    {
-                            <div class="col-12 col-sm-6 col-lg-3">
-                                <div class="our-team">
-                                    <div class="picture">
-                                        @if (data.profileImage != "")
-                                        {
-                                            <img class="img-fluid" src="images/ProfileImages/@data.profileImage">
-                                        }
-                                        else
-                                        {
-                                            <img class="img-fluid" src="images/DefaultAvatar.jpg">
-                                        }
+                    <div class="row">
+                        @foreach (var data in _studentSearchResult)
+                        {
+                            <div class="col-sm-4">
+                                <div class="card mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                            @if (data.profileImage != "")
+                                            {
+                                                <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage">
+                                            }
+                                            else
+                                            {
+                                                <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg">
+                                            }
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h4>
+                                                    @data.FirstName <span> </span>
+                                                    @if (data.MiddleName != null)
+                                                    {
+                                                        @data.MiddleName <span> </span>
+                                                    }
+                                                    @data.LastName
+                                                </h4>
+                                                <p class="card-text">Specialiseret i @data.Speciality</p>
+                                                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="team-content">
-                                        <h3 class="name">@data.FirstName @data.LastName</h3>
-                                        <h4 class="title">@data.Speciality</h4>
-                                    </div>
-                                    <ul class="social">
-                                        <li><a href="#" class="fa fa-facebook" aria-hidden="true"></a></li>
-                                        <li><a href="#" class="fa fa-linkedin" aria-hidden="true"></a></li>
-                                    </ul>
                                 </div>
                             </div>
-                    }
+                        }
                     </div>
                 </div>
             }
@@ -170,10 +192,6 @@
                 isAuthenticated = true;
 
                 await ReadAllData();
-            }
-            else if (_authState.User.IsInRole("Admin"))
-            {
-                Message = $"Admin logged in.";
             }
             else
             {
