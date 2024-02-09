@@ -1,0 +1,20 @@
+﻿@typeparam Entity
+
+<div class="input-group mb-3" style="max-width:600px;"> 
+    <input type="text" class="form-control" @bind="searchItem" placeholder="Search..." @oninput="OnInputChange">
+</div>
+
+@code {
+    [Parameter]
+    public List<Entity>? Items { get; set; }
+    [Parameter]
+    public EventCallback<string> OnSearch { get; set; }
+
+    private string? searchItem;
+
+    private async Task OnInputChange(ChangeEventArgs e)
+    {
+        searchItem = e.Value?.ToString();
+        await OnSearch.InvokeAsync(searchItem);
+    }
+}

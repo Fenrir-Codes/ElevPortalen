@@ -21,10 +21,15 @@
         <Authorized>
             @if (_companyList.Count >= 1 && context.User.IsInRole(Student))
             {
+                <!-- this is the searchBox component here-->
+                <div class="d-flex justify-content-center w-100 mb-4">
+                    <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
+                </div>
+
                 <!-- Display Company-related content -->
                 <div class="container">
                     <div class="row">
-                        @foreach (var data in _companyList)
+                        @foreach (var data in searchResult)
                         {
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                                 <div class="our-team">
@@ -39,8 +44,7 @@
                             </div>
                         }
                     </div>
-                </div>
-                
+                </div> 
 
             }
             else if (_studentList.Count >= 1 && context.User.IsInRole(Company))
@@ -123,6 +127,7 @@
     private AuthenticationState? _authState;
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
+    private List<CompanyModel> searchResult = new List<CompanyModel>();
 
     private bool isAuthenticated = false;
     private string Company = "Company";
@@ -172,6 +177,7 @@
         {
             //Getting the data
             _companyList = await _companyService.ReadAllCompanyData();
+            searchResult = _companyList.ToList();
         }
         else if (_authState.User.IsInRole(Company)) // If the role is Company
         {
@@ -221,5 +227,19 @@
         await jsRuntime.InvokeVoidAsync("open", url, "_blank");
     }
     #endregion
+
+    void onSearch(string searchTerm)
+    {
+        if (string.IsNullOrEmpty(searchTerm))
+        {
+            searchResult = _companyList;
+        }
+        else
+        {
+            searchResult = _companyList.Where(company => company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+            company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+    }
+
 
 }
