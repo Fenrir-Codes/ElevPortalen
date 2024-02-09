@@ -21,6 +21,7 @@
         <Authorized>
             @if (_companyList.Count >= 1 && context.User.IsInRole(Student))
             {
+                isStudent = true;
                 <!-- this is the searchBox component here-->
                 <div class="d-flex justify-content-center w-100 mb-4">
                     <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
@@ -29,7 +30,7 @@
                 <!-- Display Company-related content -->
                 <div class="container">
                     <div class="row">
-                        @foreach (var data in searchResult)
+                        @foreach (var data in _companySearchResult)
                         {
                             <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                                 <div class="our-team">
@@ -44,15 +45,21 @@
                             </div>
                         }
                     </div>
-                </div> 
+                </div>
 
             }
             else if (_studentList.Count >= 1 && context.User.IsInRole(Company))
             {
+                isCompany = true;
+                <!-- this is the searchBox component here-->
+                <div class="d-flex justify-content-center w-100 mb-4">
+                    <SearchBox Items="_studentList" OnSearch="onSearch"></SearchBox>
+                </div>
+
                 <!-- Display Student-related content -->
                 <div class="container">
                 <div class="row">
-                    @foreach (var data in _studentList)
+                    @foreach (var data in _studentSearchResult)
                     {
                             <div class="col-12 col-sm-6 col-lg-3">
                                 <div class="our-team">
@@ -82,6 +89,10 @@
             }
             else
             {
+                isStudent = false;
+                isCompany = false;
+
+
                 Message = "Wellcome " + context.User.Identity.Name;
                 <p>@Message</p>
                 <p>@Datenow</p>
@@ -89,8 +100,7 @@
             }
         </Authorized>
 
-        <NotAuthorized>
-
+        <NotAuthorized>        
             <div class="container-fluid d-flex flex-column align-items-center justify-content-center position-relative">
                 <div class="bg-image-container text-center position-absolute top-50 start-50 translate-middle" style="z-index: 1;">
                     <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width: 75%; height: auto; opacity: 0.1;">
@@ -127,9 +137,14 @@
     private AuthenticationState? _authState;
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
-    private List<CompanyModel> searchResult = new List<CompanyModel>();
+
+    private List<CompanyModel> _companySearchResult = new List<CompanyModel>();
+    private List<StudentModel> _studentSearchResult = new List<StudentModel>();
+
 
     private bool isAuthenticated = false;
+    private bool isStudent = false;
+    private bool isCompany = false;
     private string Company = "Company";
     private string Student = "Student";
     private string Admin = "Admin";
@@ -177,12 +192,17 @@
         {
             //Getting the data
             _companyList = await _companyService.ReadAllCompanyData();
-            searchResult = _companyList.ToList();
+
+            _companySearchResult.Clear();
+            _companySearchResult = _companyList;
         }
         else if (_authState.User.IsInRole(Company)) // If the role is Company
         {
             //Getting the data with the service call from company
             _studentList = await _studentService.ReadAllStudentData();
+
+            _studentSearchResult.Clear();
+            _studentSearchResult = _studentList;
         }
         else
         {
@@ -228,18 +248,53 @@
     }
     #endregion
 
+    #region search function
     void onSearch(string searchTerm)
     {
+        // if the input field empty
         if (string.IsNullOrEmpty(searchTerm))
         {
-            searchResult = _companyList;
+            // if student loggied in
+            if (isStudent)
+            {
+                _companySearchResult = _companyList; // list companies
+            }
+            else if (isCompany)
+            {
+                _studentSearchResult = _studentList;
+            }
+            else
+            {
+                _studentSearchResult.Clear();
+                _companySearchResult.Clear();
+            }
         }
         else
         {
-            searchResult = _companyList.Where(company => company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-            company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if (isStudent)
+            {
+                _companySearchResult = _companyList.Where(company => company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            else if(isCompany)
+            {
+                _studentSearchResult = _studentList
+                    .Where(student =>
+                        student.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                        student.Speciality.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                        student.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                        student.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+            }
+            else
+            {
+                _studentSearchResult.Clear();
+                _companySearchResult.Clear();
+            }
         }
     }
-
+    #endregion
 
 }

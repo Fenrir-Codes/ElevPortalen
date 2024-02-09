@@ -1,4 +1,4 @@
-﻿@typeparam Entity
+﻿@typeparam TEntity
 
 <div class="input-group mb-3" style="max-width:600px;"> 
     <input type="text" class="form-control" @bind="searchItem" placeholder="Search..." @oninput="OnInputChange">
@@ -6,7 +6,7 @@
 
 @code {
     [Parameter]
-    public List<Entity>? Items { get; set; }
+    public List<TEntity>? Items { get; set; }
     [Parameter]
     public EventCallback<string> OnSearch { get; set; }
 
