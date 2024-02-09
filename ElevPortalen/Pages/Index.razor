@@ -26,7 +26,7 @@
                     <div class="row">
                         @foreach (var data in _companyList)
                         {
-                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
                                 <div class="our-team">
                                     <div class="team-content">
                                         <h3 style="font-size:20px" class="name">@data.CompanyName</h3>
@@ -50,7 +50,7 @@
                 <div class="row">
                     @foreach (var data in _studentList)
                     {
-                            <div class="col-12 col-sm-6  col-lg-3">
+                            <div class="col-12 col-sm-6 col-lg-3">
                                 <div class="our-team">
                                     <div class="picture">
                                         @if (data.profileImage != "")
@@ -86,8 +86,13 @@
         </Authorized>
 
         <NotAuthorized>
-            <div class="container-fluid d-flex flex-column align-items-center justify-content-top">
-                <div class="text-container mb-5" style="position:relative; text-align: center; z-index: 2;">
+
+            <div class="container-fluid d-flex flex-column align-items-center justify-content-center position-relative">
+                <div class="bg-image-container text-center position-absolute top-50 start-50 translate-middle" style="z-index: 1;">
+                    <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width: 75%; height: auto; opacity: 0.1;">
+                </div>
+
+                <div class="text-container mb-5" style="text-align: center; z-index: 2;">
                     <h1>Velkommen til ElevPortalen</h1>
                     <div class="d-inline-flex align-items-center">
                         <a href="/Identity/Account/Login" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Login</a>
@@ -95,11 +100,14 @@
                         <a href="/Identity/Account/Register" class="btn mb-3 btn-hover-change" role="button" data-bs-toggle="button">Registrer</a>
                         <p> dig først</p>
                     </div>
-                </div>
-                <div class="bg-image-container text-center position-relative">
-                    <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width:75%; height: auto; opacity: 0.1;">
+                    <div>
+                        <p> Studenter i databasen @studentCount</p>
+                        <p> Firmaer i databasen @companyCount</p>
+                    </div>
                 </div>
             </div>
+
+
 
         </NotAuthorized>
         
@@ -122,6 +130,9 @@
     private string Admin = "Admin";
     private string Message = "";
     private string Datenow = "";
+
+    private int studentCount = 0;
+    private int companyCount = 0;
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
@@ -147,6 +158,8 @@
             else
             {
                 isAuthenticated = false;
+                studentCount = await _studentService.GetStudentCountAsync();
+                companyCount = await _companyService.GetCompaniesCountAsync();
             }
         }
     }
