@@ -20,8 +20,8 @@ namespace ElevPortalen.Models
         public int PhoneNumber { get; set; }
         public bool IsHiring { get; set; }
         public bool IsVisible { get; set; }
-
-        //LogoImage is not declared yet we have to find out first how we declare it, as an Image or a string
+        public DateTime RegisteredDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
 
     }
 }

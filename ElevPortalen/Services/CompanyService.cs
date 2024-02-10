@@ -97,6 +97,7 @@ namespace ElevPortalen.Services
                     entry.PhoneNumber = company.PhoneNumber;
                     entry.IsHiring = company.IsHiring;
                     entry.IsVisible = company.IsVisible;
+                    entry.UpdatedDate = DateTime.Now;
 
                     _context.Entry(entry).State = EntityState.Modified;
                     await _context.SaveChangesAsync();

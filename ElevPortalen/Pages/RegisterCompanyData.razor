@@ -202,19 +202,21 @@
                     if (Guid.TryParse(userIdString, out Guid userId))
                     {
                         CompanyModel companyData = new CompanyModel
-                        {
-                            CompanyName = _companyName,
-                            CompanyAddress = _companyAddress,
-                            Region = _region,
-                            Email = _email,
-                            Link = _link,
-                            Preferences = _preferences,
-                            Description = _description,
-                            PhoneNumber = _phoneNumber,
-                            profileImage = newFileName,
-                            IsHiring = _isHiring,
-                            IsVisible = _isVisible,
-                            UserId = userId
+                            {
+                                CompanyName = _companyName,
+                                CompanyAddress = _companyAddress,
+                                Region = _region,
+                                Email = _email,
+                                Link = _link,
+                                Preferences = _preferences,
+                                Description = _description,
+                                PhoneNumber = _phoneNumber,
+                                profileImage = newFileName,
+                                IsHiring = _isHiring,
+                                IsVisible = _isVisible,
+                                UpdatedDate = DateTime.Now,
+                                RegisteredDate = DateTime.Now,
+                                UserId = userId
                         };
 
                         Message = await _companyService.CreateCompany(companyData);

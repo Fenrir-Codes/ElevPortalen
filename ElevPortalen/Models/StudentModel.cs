@@ -19,7 +19,8 @@ namespace ElevPortalen.Models
         public string? profileImage { get; set; }
         public string? Speciality { get; set; }
         public int PhoneNumber { get; set; }
+        public DateTime RegisteredDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
 
-        //Image is not declared yet we have to find out first how we declare it, as an Image or a string
     }
 }
