@@ -75,6 +75,9 @@
                     <div class="row">
                         @foreach (var data in _studentSearchResult)
                         {
+                            var studentPrevDate = data.UpdatedDate;
+                            var daysDifference = (today - studentPrevDate).Days;
+
                             <div class="col-sm-3">
                                 <div class="card mb-3">
                                     <div class="row g-0">
@@ -99,7 +102,7 @@
                                                     @data.LastName
                                                 </h4>
                                                 <p class="card-text">Specialiseret i @data.Speciality</p>
-                                                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                                                <p class="card-text"><small class="text-body-secondary">Opdateret for @daysDifference dage siden</small></p>
                                             </div>
                                         </div>
                                     </div>
@@ -117,12 +120,11 @@
 
                 Message = "Wellcome " + context.User.Identity.Name;
                 <p>@Message</p>
-                <p>@Datenow</p>
 
             }
         </Authorized>
 
-        <NotAuthorized>        
+        <NotAuthorized>
             <div class="container-fluid d-flex flex-column align-items-center justify-content-center position-relative">
                 <div class="bg-image-container text-center position-absolute top-50 start-50 translate-middle" style="z-index: 1;">
                     <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width: 75%; height: auto; opacity: 0.1;">
@@ -146,7 +148,7 @@
 
 
         </NotAuthorized>
-        
+
     </AuthorizeView>
 
 </div>
@@ -171,15 +173,16 @@
     private string Student = "Student";
     private string Admin = "Admin";
     private string Message = "";
-    private string Datenow = "";
 
     private int studentCount = 0;
     private int companyCount = 0;
 
+    DateTime today;
+
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
-        Datenow = "Idag er " + DateTime.Now.ToString("dd, MMMM, yyyy") + ".";
+        today = DateTime.Now;
 
         // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -295,7 +298,7 @@
                 _companySearchResult = _companyList.Where(company => company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
                 company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
             }
-            else if(isCompany)
+            else if (isCompany)
             {
                 _studentSearchResult = _studentList
                     .Where(student =>
