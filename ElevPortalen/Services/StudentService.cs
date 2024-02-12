@@ -14,12 +14,14 @@ namespace ElevPortalen.Services
     public class StudentService
     {
         private readonly ElevPortalenDataDbContext _context;
+        private readonly DataRecoveryDbContext _recoveryContext;
         private readonly IDataProtector? _dataProtector;
 
         #region constructor
-        public StudentService(ElevPortalenDataDbContext context, IDataProtectionProvider dataProtectionProvider)
+        public StudentService(ElevPortalenDataDbContext context, DataRecoveryDbContext recoveryContext, IDataProtectionProvider dataProtectionProvider)
         {
             _context = context;
+            _recoveryContext = recoveryContext;
             _dataProtector = dataProtectionProvider.CreateProtector("ProtectData"); 
             //i just placed it here if need, we can use it to protect data
         }
@@ -147,6 +149,8 @@ namespace ElevPortalen.Services
                 var student = await _context.Student.FindAsync(studentId);
                 if (student != null)
                 {
+                    await CreateRecoveryData(student);// First create a recovery data
+
                     var entryToRemove = _context.Student.Local.FirstOrDefault(s => s.StudentId == student.StudentId);
                     if (entryToRemove != null)
                     {
@@ -214,6 +218,42 @@ namespace ElevPortalen.Services
             {
 
                 throw new ApplicationException($"An error occurred while retrieving student data: {ex.Message}");
+            }
+        }
+        #endregion
+
+        #region create Recovery data function
+        public async Task<string> CreateRecoveryData(StudentModel deletedStudent)
+        {
+            try
+            {
+                var recoveryData = new StudentRecoveryModel
+                {
+                    UserId = deletedStudent.UserId,
+                    StudentId = deletedStudent.StudentId,
+                    Title = deletedStudent.Title,
+                    FirstName = deletedStudent.FirstName,
+                    MiddleName = deletedStudent.MiddleName,
+                    LastName = deletedStudent.LastName,
+                    Email = deletedStudent.Email,
+                    Address = deletedStudent.Address,
+                    Description = deletedStudent.Description,
+                    profileImage = deletedStudent.profileImage,
+                    Speciality = deletedStudent.Speciality,
+                    PhoneNumber = deletedStudent.PhoneNumber,
+                    RegisteredDate = deletedStudent.RegisteredDate,
+                    RecoveryCreationDate = DateTime.Now
+                };
+
+                _recoveryContext.StudentDataRecovery.Add(recoveryData); // Add input to context variables
+                await _recoveryContext.SaveChangesAsync(); // Save data
+
+                return $"Recovery Created";
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error message
+                return $"An error has occurred: {ex.Message}";
             }
         }
         #endregion

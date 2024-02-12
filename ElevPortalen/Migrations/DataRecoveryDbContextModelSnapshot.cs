@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ElevPortalen.Migrations
 {
-    [DbContext(typeof(ElevPortalenDataDbContext))]
-    partial class ElevPortalenDataDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DataRecoveryDbContext))]
+    partial class DataRecoveryDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,16 +22,19 @@ namespace ElevPortalen.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ElevPortalen.Models.CompanyModel", b =>
+            modelBuilder.Entity("ElevPortalen.Models.CompanyRecoveryModel", b =>
                 {
-                    b.Property<int>("CompanyId")
+                    b.Property<int>("HistoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompanyId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistoryId"));
 
                     b.Property<string>("CompanyAddress")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CompanyName")
                         .HasColumnType("nvarchar(max)");
@@ -57,13 +60,13 @@ namespace ElevPortalen.Migrations
                     b.Property<string>("Preferences")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("RecoveryCreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Region")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RegisteredDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
@@ -72,18 +75,18 @@ namespace ElevPortalen.Migrations
                     b.Property<string>("profileImage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CompanyId");
+                    b.HasKey("HistoryId");
 
-                    b.ToTable("Company");
+                    b.ToTable("CompanyDataRecovery");
                 });
 
-            modelBuilder.Entity("ElevPortalen.Models.StudentModel", b =>
+            modelBuilder.Entity("ElevPortalen.Models.StudentRecoveryModel", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<int>("HistoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistoryId"));
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -106,17 +109,20 @@ namespace ElevPortalen.Migrations
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("RecoveryCreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("RegisteredDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Speciality")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -124,9 +130,9 @@ namespace ElevPortalen.Migrations
                     b.Property<string>("profileImage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StudentId");
+                    b.HasKey("HistoryId");
 
-                    b.ToTable("Student");
+                    b.ToTable("StudentDataRecovery");
                 });
 #pragma warning restore 612, 618
         }

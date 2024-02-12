@@ -22,7 +22,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 var dbString = builder.Configuration.GetConnectionString("DbConnection") ?? 
     throw new InvalidOperationException("Connection string 'DbConnection' not found.");
 
+var DataRecoveryDbString = builder.Configuration.GetConnectionString("RecoveryDbConnection") ??
+    throw new InvalidOperationException("Connection string 'DbConnection' not found.");
+
 builder.Services.AddDbContext<ElevPortalenDataDbContext>(options => options.UseSqlServer(dbString));
+builder.Services.AddDbContext<DataRecoveryDbContext>(options => options.UseSqlServer(DataRecoveryDbString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

@@ -13,12 +13,14 @@ namespace ElevPortalen.Services
     public class CompanyService
     {
         private readonly ElevPortalenDataDbContext _context;
+        private readonly DataRecoveryDbContext _recoveryContext;
         private readonly IDataProtector? _dataProtector;
 
         #region constructor
-        public CompanyService(ElevPortalenDataDbContext context, IDataProtectionProvider dataProtectionProvider)
+        public CompanyService(ElevPortalenDataDbContext context, DataRecoveryDbContext recoveryContext, IDataProtectionProvider dataProtectionProvider)
         {
             _context = context;
+            _recoveryContext = recoveryContext;
             _dataProtector = dataProtectionProvider.CreateProtector("ProtectData"); 
             //i just placed it here if need, we can use it to protect data
         }
@@ -125,6 +127,8 @@ namespace ElevPortalen.Services
                 var company = await _context.Company.FindAsync(companytId);
                 if (company != null)
                 {
+                    await CreateRecoveryData(company); // First create a recovery data
+
                     var entryToRemove = _context.Company.Local.FirstOrDefault(c => c.CompanyId == company.CompanyId);
                     if (entryToRemove != null)
                     {
@@ -184,6 +188,43 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 throw new ApplicationException("An error occurred while retrieving Student data." + ex.Message);
+            }
+        }
+        #endregion
+
+        #region create Recovery data function async for CompanyModel
+        public async Task<string> CreateRecoveryData(CompanyModel deletedCompany)
+        {
+            try
+            {
+                var recoveryData = new CompanyRecoveryModel
+                {
+                    UserId = deletedCompany.UserId,
+                    CompanyId = deletedCompany.CompanyId,
+                    CompanyName = deletedCompany.CompanyName,
+                    CompanyAddress = deletedCompany.CompanyAddress,
+                    Region = deletedCompany.Region,
+                    Email = deletedCompany.Email,
+                    Link = deletedCompany.Link,
+                    Preferences = deletedCompany.Preferences,
+                    Description = deletedCompany.Description,
+                    profileImage = deletedCompany.profileImage,
+                    PhoneNumber = deletedCompany.PhoneNumber,
+                    IsHiring = deletedCompany.IsHiring,
+                    IsVisible = deletedCompany.IsVisible,
+                    RegisteredDate = deletedCompany.RegisteredDate,
+                    RecoveryCreatedDate = DateTime.Now
+                };
+
+                _recoveryContext.CompanyDataRecovery.Add(recoveryData); // Add input to context variables
+                await _recoveryContext.SaveChangesAsync(); // Save data
+
+                return $"Company Recovery Created";
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception and return an error message
+                return $"An error has occurred: {ex.Message}";
             }
         }
         #endregion
