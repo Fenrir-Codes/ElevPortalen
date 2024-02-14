@@ -28,7 +28,6 @@
                 </div>
 
                 <!-- Display Company-related content -->
-                <div class="container">
                     <div class="row">
                         @foreach (var data in _companySearchResult)
                         {
@@ -59,7 +58,6 @@
 
                         }
                     </div>
-                </div>
 
             }
             else if (_studentList.Count >= 1 && context.User.IsInRole(Company))
@@ -69,48 +67,44 @@
                 <div class="d-flex justify-content-center w-100 mb-4">
                     <SearchBox Items="_studentList" OnSearch="onSearch"></SearchBox>
                 </div>
-
                 <!-- Display Student-related content -->
-                <div class="container-fluid">
                     <div class="row">
                         @foreach (var data in _studentSearchResult)
                         {
                             var studentPrevDate = data.UpdatedDate;
                             var daysDifference = (today - studentPrevDate).Days;
 
-                            <div class="col-sm-4">
-                                <div class="card mb-3">
-                                    <div class="row g-0">
-                                        <div class="col-md-4">
-                                            @if (data.profileImage != "")
-                                            {
-                                                <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage">
-                                            }
-                                            else
-                                            {
-                                                <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg">
-                                            }
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="card-body">
-                                                <h4>
-                                                    @data.FirstName <span> </span>
-                                                    @if (data.MiddleName != null)
-                                                    {
-                                                        @data.MiddleName <span> </span>
-                                                    }
-                                                    @data.LastName
-                                                </h4>
-                                                <p class="card-text">Specialiseret i @data.Speciality</p>
-                                                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                                            </div>
+                            <div class="card mb-3 mx-1" style="max-width: 540px;">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        @if (data.profileImage != "")
+                                        {
+                                            <img class="rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
+                                        }
+                                        else
+                                        {
+                                            <img class="rounded-start" src="images/DefaultAvatar.jpg" style="width: 100%; height: auto;">
+                                        }
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h4>
+                                                @data.FirstName <span> </span>
+                                                @if (data.MiddleName != null)
+                                                {
+                                                    @data.MiddleName <span> </span>
+                                                }
+                                                @data.LastName
+                                            </h4>
+                                            <p class="card-text">Specialiseret i @data.Speciality</p>
+                                            <p class="card-text"><small class="text-body-secondary">Sidst opdateret @daysDifference dage siden.</small></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         }
                     </div>
-                </div>
             }
             else
             {
