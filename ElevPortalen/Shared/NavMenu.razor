@@ -47,23 +47,39 @@
                 </NavLink>
             </div>
         </AuthorizeView>
+
     </nav>
 
+    <div class="bottom-row">
 
-</div>
+        <AuthorizeView>
+            <Authorized>
+                <form method="post" action="Identity/Account/Logout">
+                    <button type="submit" class="btn btn-link" style="color:red">Log out</button>
+                </form>
+                <a href="Identity/Account/Manage" style="color:white">Hello, @context.User.Identity?.Name!</a>
+            </Authorized>
+            <NotAuthorized>
+                <a href="Identity/Account/Register" class="btn btn-link" style="color:white">Register</a>
+                <a href="Identity/Account/Login" class="btn btn-link" style="color:white">Log in</a>
+            </NotAuthorized>
+        </AuthorizeView>
 
-<div class="bottom-row">
-    <div class="icon-menu-arrow">
+        @*     <div class="icon-menu-arrow">
         @if (!@IconMenuActive)
         {
-            <span class="oi oi-arrow-left" style="color: white;" @onclick="ToggleIconMenu"></span>
+        <span class="oi oi-arrow-left" style="color: white;" @onclick="ToggleIconMenu"></span>
         }
         else
         {
-            <span class="oi oi-arrow-right" style="color: white;" @onclick="ToggleIconMenu"></span>
+        <span class="oi oi-arrow-right" style="color: white;" @onclick="ToggleIconMenu"></span>
         }
+        </div> *@
     </div>
+
+
 </div>
+
 
 @code {
 
