@@ -19,6 +19,9 @@ namespace ElevPortalen.Services
         #region GetAdress function
         public async Task<List<AddressModel>> GetAddress(string searchTerm)
         {
+            // Capitalize the first letter of searchTerm , otherwise the search will not find adresses
+            searchTerm = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
+
             var response = await httpClient.GetAsync($"https://api.dataforsyningen.dk/adresser/autocomplete?q={searchTerm}");
             Console.WriteLine($"API Response: {response}");
 
