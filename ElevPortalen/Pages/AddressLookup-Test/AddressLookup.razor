@@ -1,0 +1,50 @@
+﻿<!--Made by Jozsef for testing purpose-->
+
+@page "/address-lookup"
+
+@using Models
+@using Services
+@using System.Text.Json
+
+@inject HttpClient httpClient
+@inject DawaService dawaService
+
+
+    <div class="container">
+
+        <h3>Address Lookup</h3>
+
+        <input @bind="searchTerm" placeholder="Enter address">
+        <button @onclick="LookupAddress">Lookup</button>
+
+        @foreach (var item in address)
+        {
+            <div>
+                <label>Address:</label>
+                <input type="text" value="@item.adresse.adresseringsvejnavn" disabled readonly />
+                <label>HusNr:</label>
+                <input type="text" value="@item.adresse.husnr" disabled readonly />
+                <label>Dør:</label>
+                <input type="text" value="@item.adresse.dør" disabled readonly />
+                <label>Etage:</label>
+                <input type="text" value="@item.adresse.etage" disabled readonly />
+                <!--Add more if needed-->
+            </div>
+        }
+
+    </div>
+
+
+
+@code {
+    private string searchTerm;
+    private List<AddressModel> address = new List<AddressModel>();
+
+    private async Task LookupAddress()
+    {
+        address = await dawaService.GetAddress(searchTerm);
+    }
+
+
+
+}
