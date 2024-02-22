@@ -1,50 +1,97 @@
 ﻿<!--Made by Jozsef for testing purpose-->
-
 @page "/address-lookup"
 
 @using Models
 @using Services
 @using System.Text.Json
+@using System.Threading
 
 @inject HttpClient httpClient
 @inject DawaService dawaService
 
+<div class="container">
+    <h3>Address Lookup</h3>
 
-    <div class="container">
+    <!-- Input field with two-way data binding to searchTerm -->
+    <input @bind="searchTerm" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
 
-        <h3>Address Lookup</h3>
-
-        <input @bind="searchTerm" placeholder="Enter address">
-        <button @onclick="LookupAddress">Lookup</button>
-
+    <!-- Dropdown for displaying address suggestions -->
+    <ul class="address-dropdown" style="display: @(showDropdown ? "block" : "none")">
         @foreach (var item in address)
         {
-            <div>
-                <label>Address:</label>
-                <input type="text" value="@item.adresse.adresseringsvejnavn" disabled readonly />
-                <label>HusNr:</label>
-                <input type="text" value="@item.adresse.husnr" disabled readonly />
-                <label>Dør:</label>
-                <input type="text" value="@item.adresse.dør" disabled readonly />
-                <label>Etage:</label>
-                <input type="text" value="@item.adresse.etage" disabled readonly />
-                <!--Add more if needed-->
-            </div>
+            <!-- List item with an onclick event to select an address -->
+            <li @onclick="() => SelectAddress(item.adresse.adresseringsvejnavn, item.adresse.husnr)">
+                <!-- Display street name and house number for each address suggestion -->
+                @item.adresse.adresseringsvejnavn @item.adresse.husnr
+            </li>
         }
+    </ul>
 
-    </div>
+    <br />
 
-
+    <!-- Display selected address in a readonly input field -->
+    <label for="selectedAddress">Selected Address:</label>
+    <input type="text" id="selectedAddress" @bind="selectedAddress" readonly />
+</div>
 
 @code {
-    private string searchTerm;
+    private string? searchTerm;
     private List<AddressModel> address = new List<AddressModel>();
+    private string? selectedAddress;
+    private bool showDropdown;
+    private CancellationTokenSource? cancellationTokenSource;
 
-    private async Task LookupAddress()
+    #region Method to update address suggestions with a delay
+    private async Task UpdateDropdownWithDelay(ChangeEventArgs args)
     {
-        address = await dawaService.GetAddress(searchTerm);
+        searchTerm = args.Value?.ToString();
+
+        <!-- Cancel the previous delay if any -->
+        cancellationTokenSource?.Cancel();
+
+        <!-- Create a new cancellation token for the delay -->
+        cancellationTokenSource = new CancellationTokenSource();
+
+        try
+        {
+            <!-- Delay for 300 milliseconds before fetching suggestions -->
+            await Task.Delay(300, cancellationTokenSource.Token);
+        }
+        catch (TaskCanceledException)
+        {
+            <!-- Delay was canceled due to a new input change -->
+            return;
+        }
+
+        <!-- Fetch and update address suggestions based on the searchTerm -->
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            searchTerm = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
+            var updatedAddress = await dawaService.GetAddress(searchTerm);
+            address = updatedAddress ?? new List<AddressModel>();
+            showDropdown = address.Count > 0;
+        }
+        else
+        {
+            <!-- Clear suggestions if searchTerm is empty -->
+            address = new List<AddressModel>();
+            showDropdown = false;
+        }
+
+        <!-- Trigger a re-render to update the UI -->
+        StateHasChanged();
     }
+    #endregion
 
-
-
+    #region Method to handle the selection of an address
+    private void SelectAddress(string streetName, string houseNumber)
+    {
+        <!-- Combine streetName and houseNumber and set it as the selectedAddress -->
+        selectedAddress = $"{streetName} {houseNumber}";
+        <!-- Hide the dropdown after selecting an address -->
+        showDropdown = false;
+        <!-- Trigger a re-render to update the UI -->
+        StateHasChanged();
+    }
+    #endregion
 }
