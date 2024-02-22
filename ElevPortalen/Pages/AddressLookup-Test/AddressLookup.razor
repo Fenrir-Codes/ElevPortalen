@@ -10,28 +10,24 @@
 @inject DawaService dawaService
 
 <div class="container">
+
     <h3>Address Lookup</h3>
 
     <!-- Input field with two-way data binding to searchTerm -->
-    <input @bind="searchTerm" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
+    <input list="addressSuggestions" @bind="searchTerm" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
 
-    <!-- Dropdown for displaying address suggestions -->
-    <ul class="address-dropdown" style="display: @(showDropdown ? "block" : "none")">
+    <!-- Datalist for address suggestions -->
+    <datalist id="addressSuggestions">
         @foreach (var item in address)
         {
-            <!-- List item with an onclick event to select an address -->
-            <li @onclick="() => SelectAddress(item.adresse.adresseringsvejnavn, item.adresse.husnr)">
+            <!-- Option for each address suggestion -->
+            <option value="@item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.postnr @item.adresse.postnrnavn">
                 <!-- Display street name and house number for each address suggestion -->
-                @item.adresse.adresseringsvejnavn @item.adresse.husnr
-            </li>
+                @item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.postnr @item.adresse.postnrnavn
+            </option>
         }
-    </ul>
+    </datalist>
 
-    <br />
-
-    <!-- Display selected address in a readonly input field -->
-    <label for="selectedAddress">Selected Address:</label>
-    <input type="text" id="selectedAddress" @bind="selectedAddress" readonly />
 </div>
 
 @code {
@@ -69,7 +65,8 @@
             searchTerm = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
             var updatedAddress = await dawaService.GetAddress(searchTerm);
             address = updatedAddress ?? new List<AddressModel>();
-            showDropdown = address.Count > 0;
+            showDropdown = true;
+            <!-- Set showDropdown to true to display the datalist -->
         }
         else
         {
@@ -82,16 +79,5 @@
         StateHasChanged();
     }
     #endregion
-
-    #region Method to handle the selection of an address
-    private void SelectAddress(string streetName, string houseNumber)
-    {
-        <!-- Combine streetName and houseNumber and set it as the selectedAddress -->
-        selectedAddress = $"{streetName} {houseNumber}";
-        <!-- Hide the dropdown after selecting an address -->
-        showDropdown = false;
-        <!-- Trigger a re-render to update the UI -->
-        StateHasChanged();
-    }
-    #endregion
 }
+
