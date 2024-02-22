@@ -14,9 +14,8 @@
     <h3>Address Lookup</h3>
 
     <!-- Input field with two-way data binding to searchTerm -->
-    <input list="addressSuggestions" @bind="searchTerm" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
-
-    <!-- Datalist for address suggestions -->
+    <label for="exampleDataList" class="form-label">Datalist with adresses</label>
+    <input class="form-control" list="addressSuggestions" @bind="searchTerm" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
     <datalist id="addressSuggestions">
         @foreach (var item in address)
         {
