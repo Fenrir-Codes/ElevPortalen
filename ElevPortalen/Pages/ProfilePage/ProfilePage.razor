@@ -407,11 +407,11 @@
             // If the user signed in and have no data in its data table
             if (_authState.User.IsInRole(Company))  // If the user role is Company
             {
-                NavManager.NavigateTo("/registercompany"); // Route to the company registration page
+                NavManager.NavigateTo("/registerprofile"); // Route to the company registration page
             }
             else if (_authState.User.IsInRole(Student)) // If the role is Student
             {
-                NavManager.NavigateTo("/registerstudent"); // Route to the student registration page
+                NavManager.NavigateTo("/registerprofile"); // Route to the student registration page
             }
         }
     }

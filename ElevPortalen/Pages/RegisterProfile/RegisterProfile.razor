@@ -1,0 +1,497 @@
+﻿@page "/registerprofile"
+
+@*Lavet af Jozsef*@
+@using ElevPortalen.Models
+@using ElevPortalen.Services
+@using ElevPortalen.Data;
+@using System.Text.Json
+@using System.Threading
+
+@inject DawaService dawaService
+@inject ElevPortalenDataDbContext _context
+@inject CompanyService _companyService
+@inject StudentService _studentService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IConfiguration Configuration
+@inject NavigationManager NavManager
+
+
+<div class="container">
+
+        <AuthorizeView Roles="Student">
+
+            <Authorized>
+            <div class="container d-flex align-content-center justify-content-center">
+                <div class="col-xl-8">
+                    <br />
+                    <!-- Account details card-->
+                    <div class="card mb-4">
+                        <div class="card-header">Registrer Kontooplysninger</div>
+                        <div class="card-body">
+                            <form>
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="title">Title</label>
+                                    <input class="form-control" id="title" type="text"
+                                           placeholder="Skriv Din titel" @bind="_title">
+                                </div>
+                                <!-- Form Row-->
+                                <div class="row gx-3 mb-3">
+                                    <!-- Form Group (Name)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="firstname">Fornavn</label>
+                                        <input class="form-control" id="firstname" type="text"
+                                               placeholder="Fornavn" @bind="_firstName">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="middlename">Mellemnavn</label>
+                                        <input class="form-control" id="middlename" type="text"
+                                               placeholder="Mellemnavn (hvis du har)" @bind="_middleName">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="flastname">Efternavn</label>
+                                        <input class="form-control" id="lastname" type="text"
+                                               placeholder="Efternavn" @bind="_lastName">
+                                    </div>
+                                    <!-- Form Group (address)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputaddress">Addresse</label>
+                                        <input class="form-control" list="addressSuggestions" @bind="_address" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
+                                        <datalist id="addressSuggestions">
+                                            @foreach (var item in address)
+                                            {
+                                                <!-- Option for each address suggestion -->
+                                                <option value="@item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn">
+                                                    <!-- Display street name and house number for each address suggestion -->
+                                                    @item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn
+                                                </option>
+                                            }
+                                        </datalist>
+                                    </div>
+                                </div>
+                                <!-- Form Row -->
+                                <div class="row gx-3 mb-3">
+                                    <div class="mb-3 col-md-6">
+                                        <label class="small mb-1" for="inputPhone">Mobil</label>
+                                        <input class="form-control" type="tel" id="inputPhone" name="phone"
+                                               placeholder="12 34 56 78" @bind="_phoneNumber" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="_speciality">Specialisering</label>
+                                        <select class="form-select form-select-md" @bind="_speciality" id="_speciality" aria-label="Region" required>
+                                            <option value="" disabled selected>Vælg dit speciale</option>
+                                            <option value="It-Support">It-Supporter</option>
+                                            <option value="Infrastrukture">Infrastruktur</option>
+                                            <option value="Programmering">Programmering</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Form Group (Description)-->
+                                <div class="col-md-12 mb-3">
+                                    <label for="Description" class="form-label">Beskrivelse</label>
+                                    <textarea class="form-control" @bind="_description" id="_description" rows="4"></textarea>
+                                </div>
+
+                                <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
+                            </form>
+
+@*                             <button class="@(IsSubmitButtonDisabled ? "btn btn-outline-success" : "btn btn-success")"
+                                    @onclick="CreateStudentProfile" disabled="@IsSubmitButtonDisabled">
+                                Gem
+                            </button> *@
+
+                            <button class="btn btn-outline-success" @onclick="CreateStudentProfile">Gem</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </Authorized>
+
+        </AuthorizeView>
+
+        <AuthorizeView Roles="Company">
+
+            <Authorized>
+            <div class="container d-flex align-content-center justify-content-center">
+                <div class="col-xl-8">
+                    <br />
+                    <!-- Account details card-->
+                    <div class="card mb-4">
+                        <div class="card-header">Registrer Kontooplysninger For Dit Firma</div>
+                        <div class="card-body">
+                            <form>
+                                <!-- Form Row-->
+                                <div class="row gx-3 mb-3">
+                                    <!-- Form Group (Company Name)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="companyname">Firmanavn</label>
+                                        <input class="form-control" id="companyname" type="text"
+                                               placeholder="Firmanavn" @bind="_companyName">
+                                    </div>
+                                    <!-- Form Group (company address)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputaddress">Addresse</label>
+                                        <input class="form-control" list="addressSuggestions" @bind="_companyAddress" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
+                                        <datalist id="addressSuggestions">
+                                            @foreach (var item in address)
+                                            {
+                                                <!-- Option for each address suggestion -->
+                                                <option value="@item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn">
+                                                    <!-- Display street name and house number for each address suggestion -->
+                                                    @item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn
+                                                </option>
+                                            }
+                                        </datalist>
+                                    </div>
+                                </div>
+                                <!-- Form Row        -->
+                                <div class="row gx-3 mb-3">
+                                    <!-- Form Group (Region)-->
+                                    <div class="mb-3 col-md-6">
+                                        <label class="small mb-1" for="_region">Din Region</label>
+                                        <select class="form-select form-select-md" @bind="_region" id="_region" aria-label="Region">
+                                            <option disabled selected></option>
+                                            <option value="Region Nordjylland">Region Nordjylland</option>
+                                            <option value="Region Midtjylland">Region Midtjylland</option>
+                                            <option value="Region Syddanmark">Region Syddanmark</option>
+                                            <option value="Region Hovedstaden">Region Hovedstaden</option>
+                                            <option value="Region Sjælland">Region Sjælland</option>
+                                        </select>
+                                    </div>
+                                    <!-- Form Group (Email)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="inputEmail">E-Mail Addresse</label>
+                                        <input class="form-control" id="inputEmail" type="text"
+                                               placeholder="Firma E-mail" @bind="_email">
+                                    </div>
+                                    <div class="mb-3 col-md-6">
+                                        <label class="small mb-1" for="inputPhone">Phone Number</label>
+                                        <input class="form-control" type="tel" id="inputPhone" name="phone"
+                                               placeholder="8 cifre" @bind="_phoneNumber">
+                                    </div>
+                                    <!-- webLink -->
+                                    <div class="mb-3 col-md-6">
+                                        <label class="small mb-1" for="inputWebsite">Firma link</label>
+                                        <input class="form-control" id="inputWebsite" type="text"
+                                               placeholder="Indtast Webstedslink" @bind="_link">
+                                    </div>
+                                </div>
+                                <!-- Form Row-->
+                                <div class="row gx-3 mb-3">
+                                    <!-- Form Group (preferencesr)-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="_preferences">Preference</label>
+                                        <select class="form-select form-select-md" @bind="_preferences" id="_preferences"
+                                                aria-label="Preferences">
+                                            <option value="" disabled selected></option>
+                                            <option value="It-Supporter">It-Supporter</option>
+                                            <option value="Infrastructure">Infrastruktur</option>
+                                            <option value="Programmer">Programmør</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Form Group (Description)-->
+                                <div class="col-md-12 mb-3">
+                                    <label for="Description" class="form-label">Beskrivelse</label>
+                                    <textarea class="form-control" @bind="_description" id="_description" rows="4"></textarea>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" @bind="_isHiring">
+                                    <label class="form-check-label">
+                                        Hiring Now
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" @bind="_isVisible">
+                                    <label class="form-check-label">
+                                        Profile Visible
+                                    </label>
+                                </div>
+
+                            </form>
+@* 
+                            <button class="@(IsSubmitButtonDisabled ? "btn btn-outline-success" : "btn btn-success")"
+                                    @onclick="CreateCompanyProfile"  disabled="@IsSubmitButtonDisabled">
+                                Gem
+                            </button> *@
+
+                            <button class="btn btn-outline-success" @onclick="CreateCompanyProfile">Gem</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </Authorized>
+
+        </AuthorizeView>
+
+</div>
+
+@code {
+    #region fields
+
+    private AuthenticationState? _authState;
+
+    private string _title = string.Empty;
+    private string _firstName = string.Empty;
+    private string _middleName = string.Empty;
+    private string _lastName = string.Empty;
+    private string _address = string.Empty;
+    private string _description = string.Empty;
+    private string _speciality = string.Empty;
+    private string newFileName = string.Empty;
+    private int _phoneNumber;
+
+    private string _companyName = string.Empty;
+    private string _companyAddress = string.Empty;
+    private string _region = string.Empty;
+    private string _email = string.Empty;
+    private string _link = string.Empty;
+    private string _preferences = string.Empty;
+    private bool _isHiring = false;
+    private bool _isVisible = false;
+
+    private string Message = "";
+
+    private bool isAuthenticated = false;
+
+    // private bool IsSubmitButtonDisabled =>
+    // string.IsNullOrWhiteSpace(_title) ||
+    // string.IsNullOrWhiteSpace(_firstName) ||
+    // string.IsNullOrWhiteSpace(_lastName) ||
+    // string.IsNullOrWhiteSpace(_address) ||
+    // string.IsNullOrWhiteSpace(_speciality) ||
+    // string.IsNullOrWhiteSpace(_phoneNumber.ToString());
+
+    //Fileupload
+    private long maxFileSize = 1024 * 1024 * 1; // represents 3MB
+    private int maxAllowedFiles = 1;
+    private List<string> errors = new();
+
+    //address lookup
+    private string? searchTerm;
+    private List<AddressModel> address = new List<AddressModel>();
+    private string? selectedAddress;
+    private bool showDropdown;
+    private CancellationTokenSource? cancellationTokenSource;
+    #endregion
+
+    #region OnInitialize
+    protected override async Task OnInitializedAsync()
+    {
+        // Getting the user current authentication state.
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (_authState != null)
+        {
+            if (_authState.User.Identity?.IsAuthenticated == true)
+            {
+                isAuthenticated = true;
+            }
+            else
+            {
+                isAuthenticated = false;
+            }
+        }
+    }
+    # endregion
+
+    #region Create Student Profile Function
+    private async Task CreateStudentProfile()
+    {
+        try
+        {
+            _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+            if (_authState != null)
+            {
+                var user = _authState.User;
+
+                if (user.Identity?.IsAuthenticated == true)
+                {
+                    // Retrieve the user's unique identifier (ID or GUID)
+                    var userIdString = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                    // Convert the string representation to a Guid
+                    if (Guid.TryParse(userIdString, out Guid userId))
+                    {
+                        StudentModel studentData = new StudentModel
+                            {
+                                Title = _title,
+                                FirstName = _firstName,
+                                MiddleName = _middleName,
+                                LastName = _lastName,
+                                Address = _address,
+                                Description = _description,
+                                Speciality = _speciality,
+                                profileImage = newFileName,
+                                PhoneNumber = _phoneNumber,
+                                RegisteredDate = DateTime.Now,
+                                UpdatedDate = DateTime.Now,
+                                UserId = userId // Set the UserId to the user's unique identifier
+                            };
+
+                        Message = await _studentService.CreateStudent(studentData);
+                        NavManager.NavigateTo("/profile");
+                    }
+                    else
+                    {
+                        // Handle the exception and return an error message
+                        Message = $"Error parsing GUID";
+                    }
+                }
+            }
+
+            // Default return statement if conditions are not met
+            Message = $"Unexpected error occurred";
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception and return an error message
+            Message = $"Error: {ex.Message}";
+        }
+    }
+    #endregion
+
+    #region Create Company Profile Function
+    private async Task CreateCompanyProfile()
+    {
+        try
+        {
+            _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+            if (_authState != null && _authState.User != null)
+            {
+                var user = _authState.User;
+
+                if (user.Identity?.IsAuthenticated == true)
+                {
+                    // Retrieve the user's unique identifier (ID or GUID)
+                    var userIdString = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                    // Convert the string representation to a Guid
+                    if (Guid.TryParse(userIdString, out Guid userId))
+                    {
+                        CompanyModel companyData = new CompanyModel
+                            {
+                                CompanyName = _companyName,
+                                CompanyAddress = _companyAddress,
+                                Region = _region,
+                                Email = _email,
+                                Link = _link,
+                                Preferences = _preferences,
+                                Description = _description,
+                                PhoneNumber = _phoneNumber,
+                                profileImage = newFileName,
+                                IsHiring = _isHiring,
+                                IsVisible = _isVisible,
+                                UpdatedDate = DateTime.Now,
+                                RegisteredDate = DateTime.Now,
+                                UserId = userId
+                            };
+
+                        Message = await _companyService.CreateCompany(companyData);
+                        NavManager.NavigateTo("/profile");
+                    }
+                    else
+                    {
+                        // Handle the exception and return an error message
+                        Message = $"Error parsing GUID";
+                    }
+                }
+            }
+
+            // Default return statement if conditions are not met
+            Message = $"Unexpected error occurred";
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception and return an error message
+            Message = $"Error: {ex.Message}";
+        }
+    }
+    #endregion
+
+    #region Method to update address suggestions with a delay
+    private async Task UpdateDropdownWithDelay(ChangeEventArgs args)
+    {
+        searchTerm = args.Value?.ToString();
+
+        <!-- Cancel the previous delay if any -->
+        cancellationTokenSource?.Cancel();
+
+        <!-- Create a new cancellation token for the delay -->
+        cancellationTokenSource = new CancellationTokenSource();
+
+        try
+        {
+            <!-- Delay for 300 milliseconds before fetching suggestions -->
+            await Task.Delay(300, cancellationTokenSource.Token);
+        }
+        catch (TaskCanceledException)
+        {
+            <!-- Delay was canceled due to a new input change -->
+            return;
+        }
+
+        <!-- Fetch and update address suggestions based on the searchTerm -->
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            searchTerm = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
+            var updatedAddress = await dawaService.GetAddress(searchTerm);
+            address = updatedAddress ?? new List<AddressModel>();
+            showDropdown = true;
+            <!-- Set showDropdown to true to display the datalist -->
+        }
+        else
+        {
+            <!-- Clear suggestions if searchTerm is empty -->
+            address = new List<AddressModel>();
+            showDropdown = false;
+        }
+
+        <!-- Trigger a re-render to update the UI -->
+        StateHasChanged();
+    }
+    #endregion
+
+    #region file input
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        errors.Clear();
+
+        if (e.FileCount > maxAllowedFiles)
+        {
+            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} files are allowed");
+            return;
+        }
+
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            try
+            {
+                newFileName = Path.ChangeExtension(
+                Path.GetRandomFileName(),
+                Path.GetExtension(file.Name));
+
+                string path = Path.Combine(
+                    Configuration.GetValue<string>("FileStorage")!,
+                    "",
+                    newFileName);
+
+                Directory.CreateDirectory(Path.Combine(
+                    Configuration.GetValue<string>("FileStorage")!,
+                    ""));
+
+                await using FileStream fs = new(path, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"File: {file.Name} Error: {ex.Message}");
+            }
+        }
+    }
+    #endregion
+}
