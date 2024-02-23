@@ -6,7 +6,6 @@
 @using System.Text.Json
 @using System.Threading
 
-@inject HttpClient httpClient
 @inject DawaService dawaService
 
 <div class="container">
@@ -20,9 +19,9 @@
         @foreach (var item in address)
         {
             <!-- Option for each address suggestion -->
-            <option value="@item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.postnr @item.adresse.postnrnavn">
+            <option value="@item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn">
                 <!-- Display street name and house number for each address suggestion -->
-                @item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.postnr @item.adresse.postnrnavn
+                @item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn
             </option>
         }
     </datalist>

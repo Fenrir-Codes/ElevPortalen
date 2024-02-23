@@ -5,7 +5,10 @@
 @using ElevPortalen.Models
 @using ElevPortalen.Services
 @using ElevPortalen.Data;
+@using System.Text.Json
+@using System.Threading
 
+@inject DawaService dawaService
 @inject ElevPortalenDataDbContext _context
 @inject CompanyService _companyService
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -37,8 +40,17 @@
                                     <!-- Form Group (company address)-->
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="inputaddress">Addresse</label>
-                                        <input class="form-control" id="inputaddress" type="text"
-                                               placeholder="Firma Adresse" @bind="_companyAddress">
+                                        <input class="form-control" list="addressSuggestions" @bind="_companyAddress" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
+                                        <datalist id="addressSuggestions">
+                                            @foreach (var item in address)
+                                            {
+                                                <!-- Option for each address suggestion -->
+                                                <option value="@item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn">
+                                                    <!-- Display street name and house number for each address suggestion -->
+                                                    @item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn
+                                                </option>
+                                            }
+                                        </datalist>
                                     </div>
                                 </div>
                                 <!-- Form Row        -->
@@ -64,7 +76,7 @@
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1" for="inputPhone">Phone Number</label>
                                         <input class="form-control" type="tel" id="inputPhone" name="phone"
-                                                placeholder="12345678" @bind="_phoneNumber">
+                                                placeholder="8 cifre" @bind="_phoneNumber">
                                     </div>
                                     <!-- webLink -->
                                     <div class="mb-3 col-md-6">
@@ -129,8 +141,9 @@
 </div>
 
 @code {
-    private AuthenticationState? _authState;
 
+    #region Fields
+    private AuthenticationState? _authState;
     private string _companyName = string.Empty;
     private string _companyAddress = string.Empty;
     private string _region = string.Empty;
@@ -157,10 +170,18 @@
     string.IsNullOrWhiteSpace(_description) ||
     string.IsNullOrWhiteSpace(_phoneNumber.ToString());
 
+    //address lookup
+    private string? searchTerm;
+    private List<AddressModel> address = new List<AddressModel>();
+    private string? selectedAddress;
+    private bool showDropdown;
+    private CancellationTokenSource? cancellationTokenSource;
+
     //Fileupload
     private long maxFileSize = 1024 * 1024 * 1; // represents 3MB
     private int maxAllowedFiles = 1;
     private List<string> errors = new();
+    #endregion
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
@@ -241,6 +262,50 @@
     }
     #endregion
 
+    #region Method to update address suggestions with a delay
+    private async Task UpdateDropdownWithDelay(ChangeEventArgs args)
+    {
+        searchTerm = args.Value?.ToString();
+
+        <!-- Cancel the previous delay if any -->
+        cancellationTokenSource?.Cancel();
+
+        <!-- Create a new cancellation token for the delay -->
+        cancellationTokenSource = new CancellationTokenSource();
+
+        try
+        {
+            <!-- Delay for 300 milliseconds before fetching suggestions -->
+            await Task.Delay(300, cancellationTokenSource.Token);
+        }
+        catch (TaskCanceledException)
+        {
+            <!-- Delay was canceled due to a new input change -->
+            return;
+        }
+
+        <!-- Fetch and update address suggestions based on the searchTerm -->
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            searchTerm = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
+            var updatedAddress = await dawaService.GetAddress(searchTerm);
+            address = updatedAddress ?? new List<AddressModel>();
+            showDropdown = true;
+            <!-- Set showDropdown to true to display the datalist -->
+        }
+        else
+        {
+            <!-- Clear suggestions if searchTerm is empty -->
+            address = new List<AddressModel>();
+            showDropdown = false;
+        }
+
+        <!-- Trigger a re-render to update the UI -->
+        StateHasChanged();
+    }
+    #endregion
+
+    #region File upload
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
         errors.Clear();
@@ -277,5 +342,6 @@
             }
         }
     }
+    #endregion
 
 }
