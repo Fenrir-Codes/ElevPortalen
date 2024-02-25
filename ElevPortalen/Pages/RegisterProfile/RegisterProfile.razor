@@ -15,12 +15,11 @@
 @inject IConfiguration Configuration
 @inject NavigationManager NavManager
 
-
 <div class="container">
 
-        <AuthorizeView Roles="Student">
+    <AuthorizeView Roles="Student">
 
-            <Authorized>
+        <Authorized>
             <div class="container d-flex align-content-center justify-content-center">
                 <div class="col-xl-8">
                     <br />
@@ -95,9 +94,9 @@
                                 <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                             </form>
 
-@*                             <button class="@(IsSubmitButtonDisabled ? "btn btn-outline-success" : "btn btn-success")"
-                                    @onclick="CreateStudentProfile" disabled="@IsSubmitButtonDisabled">
-                                Gem
+                            @*                             <button class="@(IsSubmitButtonDisabled ? "btn btn-outline-success" : "btn btn-success")"
+                            @onclick="CreateStudentProfile" disabled="@IsSubmitButtonDisabled">
+                            Gem
                             </button> *@
 
                             <button class="btn btn-outline-success" @onclick="CreateStudentProfile">Gem</button>
@@ -106,13 +105,13 @@
                     </div>
                 </div>
             </div>
-            </Authorized>
+        </Authorized>
 
-        </AuthorizeView>
+    </AuthorizeView>
 
-        <AuthorizeView Roles="Company">
+    <AuthorizeView Roles="Company">
 
-            <Authorized>
+        <Authorized>
             <div class="container d-flex align-content-center justify-content-center">
                 <div class="col-xl-8">
                     <br />
@@ -210,10 +209,10 @@
                                 </div>
 
                             </form>
-@* 
+                            @*
                             <button class="@(IsSubmitButtonDisabled ? "btn btn-outline-success" : "btn btn-success")"
-                                    @onclick="CreateCompanyProfile"  disabled="@IsSubmitButtonDisabled">
-                                Gem
+                            @onclick="CreateCompanyProfile"  disabled="@IsSubmitButtonDisabled">
+                            Gem
                             </button> *@
 
                             <button class="btn btn-outline-success" @onclick="CreateCompanyProfile">Gem</button>
@@ -222,9 +221,9 @@
                     </div>
                 </div>
             </div>
-            </Authorized>
+        </Authorized>
 
-        </AuthorizeView>
+    </AuthorizeView>
 
 </div>
 

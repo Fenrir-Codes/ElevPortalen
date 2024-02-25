@@ -1,6 +1,7 @@
 ﻿@page "/"
 @*Lavet af Jozsef*@
 
+@using ElevPortalen.Pages.SearchBox
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
@@ -112,7 +113,7 @@
                 isCompany = false;
 
 
-                Message = "Wellcome " + context.User.Identity.Name;
+@*                 Message = "Wellcome " + context.User.Identity.Name; *@
                 <p>@Message</p>
 
             }
@@ -231,28 +232,6 @@
     {
         NavManager.NavigateTo("/profile");
     }
-    #endregion
-
-    #region outcommented code
-    // private async Task HandleInputChange(ChangeEventArgs e)
-    // {
-    //     searchTerm = e.Value.ToString();
-    //     await SearchPostalCodes();
-    // }
-
-    // private async Task SearchPostalCodes()
-    // {
-    //     try
-    //     {
-    //         var text = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
-    //         postalCodes = await PostalCodeService.GetPostalCodes(text);
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         // Handle the exception as needed
-    //         Console.WriteLine(ex.Message);
-    //     }
-    // }
     #endregion
 
     #region opening link in a new window
