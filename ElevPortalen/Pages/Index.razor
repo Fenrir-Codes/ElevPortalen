@@ -113,20 +113,19 @@
                                     </div>
                                 </div>
                             </div>
-
                         }
-                    </div>
+                </div>
             }
             else
             {
                 isStudent = false;
                 isCompany = false;
 
-
-                 Message = "Wellcome " + context.User.Identity.Name;
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                Message = "Loading... ";
                 <p>@Message</p>
-                <p> Studenter i databasen @studentCount</p>
-                <p> Firmaer i databasen @companyCount</p>
 
             }
         </Authorized>
@@ -151,9 +150,6 @@
                     </div>
                 </div>
             </div>
-
-
-
         </NotAuthorized>
 
     </AuthorizeView>
@@ -191,6 +187,10 @@
     {
         today = DateTime.Now;
 
+        //For see the spinner we can simulate the network slownes
+        // await Task.Run(SimulateSlowness);
+
+
         // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
@@ -213,9 +213,17 @@
     }
     #endregion
 
+    #region Slow network simulation function (testing the spinner)
+    private void SimulateSlowness()
+    {
+        System.Threading.Thread.Sleep(2000);
+    }
+    #endregion
+
     #region Reading the data from the database with the user claims
     public async Task ReadAllData()
     {
+        System.Threading.Thread.Sleep(2000);
         if (_authState.User.IsInRole(Student)) // If the role is Student
         {
             //Getting the data

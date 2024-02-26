@@ -5,6 +5,7 @@
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
+@using System.Security.Claims
 
 @inject StudentService _studentService
 @inject CompanyService _companyService
@@ -18,7 +19,7 @@
     <AuthorizeView Roles="Student,Company">
         <Authorized>
             @if (_studentList.Count >= 1)
-            {
+            {          
                 @foreach (var data in _studentList)
                 {
                     <!--Social container on top-->
@@ -396,6 +397,7 @@
                 </p>
                 <br>
                 <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
+           
             }
 
             <!-- DialogModal for update view -->
@@ -416,8 +418,12 @@
 @code {
     // private fields within the scope of the class
     private AuthenticationState? _authState;
+    private ClaimsPrincipal? _user;
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
+    private List<StudentRecoveryModel> _studentRecoveryData = new List<StudentRecoveryModel>();
+    private List<CompanyRecoveryModel> _companyRecoveryData = new List<CompanyRecoveryModel>();
+
     private UpdateModalDialog? DialogModal { get; set; }
 
     private bool isAuthenticated = false;
@@ -466,7 +472,7 @@
         if (_authState != null && _authState.User != null)
         {
             //Authenticating the user
-            var _user = _authState.User;
+            _user = _authState.User;
 
             if (_authState.User.IsInRole(Student)) // If the role is Student
             {
@@ -502,22 +508,6 @@
             }
         }
     }
-    #endregion
-
-    #region outcommented functions
-    // #region Navigate to update page
-    // private void NavigateToUpdate(int studentId)
-    // {
-    //     NavManager.NavigateTo($"/updatestudent/{studentId}");
-    // }
-    // #endregion
-
-    // #region Navigate to update company page
-    // private void NavigateToUpdateCompany(int companyId)
-    // {
-    //     NavManager.NavigateTo($"/updatecompany/{companyId}");
-    // }
-    // #endregion
     #endregion
 
     #region Delete function calls for student and company
