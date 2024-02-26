@@ -19,7 +19,7 @@
     <!-- Authorized Student and Company-->
     <AuthorizeView Roles="Student, Company, Admin">
         <Authorized>
-            @if (_companyList.Count >= 1 && context.User.IsInRole(Student))
+            @if (_companyList.Any() && context.User.IsInRole(Student))
             {
                 isStudent = true;
 
@@ -64,7 +64,7 @@
                     </div>
 
             }
-            else if (_studentList.Count >= 1 && context.User.IsInRole(Company))
+            else if (_studentList.Any() && context.User.IsInRole(Company))
             {
                 isCompany = true;
 
@@ -164,10 +164,8 @@
     private AuthenticationState? _authState;
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
-
     private List<CompanyModel> _companySearchResult = new List<CompanyModel>();
     private List<StudentModel> _studentSearchResult = new List<StudentModel>();
-
 
     private bool isAuthenticated = false;
     private bool isStudent = false;
@@ -189,7 +187,6 @@
 
         //For see the spinner we can simulate the network slownes
         // await Task.Run(SimulateSlowness);
-
 
         // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -223,7 +220,6 @@
     #region Reading the data from the database with the user claims
     public async Task ReadAllData()
     {
-        System.Threading.Thread.Sleep(2000);
         if (_authState.User.IsInRole(Student)) // If the role is Student
         {
             //Getting the data

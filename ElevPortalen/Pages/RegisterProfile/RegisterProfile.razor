@@ -15,6 +15,8 @@
 @inject IConfiguration Configuration
 @inject NavigationManager NavManager
 
+<PageTitle>Register</PageTitle>
+
 <div class="container">
 
     <AuthorizeView Roles="Student">
@@ -106,6 +108,10 @@
                 </div>
             </div>
         </Authorized>
+
+        <NotAuthorized>
+            <p>You are not authorized!</p>
+        </NotAuthorized>
 
     </AuthorizeView>
 
@@ -222,6 +228,10 @@
                 </div>
             </div>
         </Authorized>
+
+        <NotAuthorized>
+            <p>You are not authorized!</p>
+        </NotAuthorized>
 
     </AuthorizeView>
 
