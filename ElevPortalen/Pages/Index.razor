@@ -16,33 +16,37 @@
 
 @* HHTMl and its logic*@
 <div class="container-fluid text-center p-4">
-
     <!-- Authorized Student and Company-->
     <AuthorizeView Roles="Student, Company, Admin">
         <Authorized>
             @if (_companyList.Count >= 1 && context.User.IsInRole(Student))
             {
                 isStudent = true;
-                <!-- this is the searchBox component here-->
-                <div class="d-flex justify-content-center w-100 mb-4">
-                    <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
+
+                <!--Search container on top-->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- this is the searchBox component here-->
+                        <div class="d-flex justify-content-center w-100 mb-4">
+                            <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Display Company-related content -->
                     <div class="row">
                         @foreach (var data in _companySearchResult)
                         {
-                            <div class="col-12 col-sm-12 col-lg-4">
-                                <div class="card mb-3">
+                            <div class="card mb-3 mx-1" style="max-width: 540px;">
                                     <div class="row g-0">
                                         <div class="col-md-4">
                                             @if (data.profileImage != "")
                                             {
-                                                <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage">
+                                                <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
                                             }
                                             else
                                             {
-                                                <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg">
+                                                <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg" style="width: 100%; height: auto;">
                                             }
                                         </div>
                                         <div class="col-md-8">
@@ -54,7 +58,6 @@
                                             </p>
                                         </div>
                                     </div>
-                                </div>
                             </div>
 
                         }
@@ -64,10 +67,17 @@
             else if (_studentList.Count >= 1 && context.User.IsInRole(Company))
             {
                 isCompany = true;
-                <!-- this is the searchBox component here-->
-                <div class="d-flex justify-content-center w-100 mb-4">
-                    <SearchBox Items="_studentList" OnSearch="onSearch"></SearchBox>
+
+                <!--Search container on top-->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- this is the searchBox component here-->
+                        <div class="d-flex justify-content-center w-100 mb-4">
+                            <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
+                        </div>
+                    </div>
                 </div>
+
                 <!-- Display Student-related content -->
                     <div class="row">
                         @foreach (var data in _studentSearchResult)
@@ -113,8 +123,10 @@
                 isCompany = false;
 
 
-@*                 Message = "Wellcome " + context.User.Identity.Name; *@
+                 Message = "Wellcome " + context.User.Identity.Name;
                 <p>@Message</p>
+                <p> Studenter i databasen @studentCount</p>
+                <p> Firmaer i databasen @companyCount</p>
 
             }
         </Authorized>

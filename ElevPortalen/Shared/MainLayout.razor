@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using ElevPortalen.Pages
+@inherits LayoutComponentBase
 
 <PageTitle>ElevPortalen</PageTitle>
 
@@ -11,15 +12,46 @@
 @*         <div class="top-row px-4 auth bg-dark">
             <LoginDisplay />
         </div>    *@    
+        <article>
+            <CustomErrorBoundary @ref="@errorBoundary" Context="Exception">
+                <ChildContent>
+                    @Body
+                </ChildContent>
 
-        @Body
+                <ErrorContent>
+                    <div class="alert bg-danger text-white alert-dismissible m-2">
+                        <p>
+                            Type: @Exception.GetType()
+                        </p>
+                        <p>
+                            Message: @Exception.Message
+                        </p>
+                        <p>
+                            Method: @Exception.TargetSite
+                        </p>
+                        <p>
+                            Help link: @Exception.HelpLink
+                        </p>
+@*                         Type: @Exception.GetType() | Message: @Exception.Message | Method: @Exception.TargetSite | Help link: @Exception.HelpLink *@
+
+                        <button class="btn-close" data-bs-dismiss="alert" onclick="@errorBoundary.Recover"></button>
+                    </div>
+                </ErrorContent>
+            </CustomErrorBoundary>
+        </article>
 
     </main>
 </div>
 
 @code {
+    private ErrorBoundary? errorBoundary;
     private bool _iconMenuActive { get; set; }
     private string? IconMenuCssClass => _iconMenuActive ? "width: 80px;" : null;
+
+    protected override void OnParametersSet()
+    {
+        errorBoundary?.Recover();
+    }
 
     protected void ToggleIconMenu(bool iconMenuActive)
     {
