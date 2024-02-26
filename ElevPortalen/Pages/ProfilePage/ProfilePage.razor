@@ -397,10 +397,16 @@
                 </p>
                 <br>
                 <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
-                @if (hasRecoveryData)
+                @if (hasStudentRecoveryData)
                 {
                     <button class="btn btn-success" @onclick="RecoverStudentData">Recover Your Data</button>
-                    @userIdClaim;
+                    <p>The Student's Guid is : @userIdClaim</p>
+                    ;
+                }
+                else if (hasCompanyRecoveryData)
+                {
+                    <button class="btn btn-success" @onclick="RecoverStudentData">Recover Your Data</button>
+                   <p>The Company's Guid is : @userIdClaim</p>
                 }
            
             }
@@ -421,7 +427,8 @@
 
 
 @code {
-    // private fields within the scope of the class
+
+    #region private fields within the scope of the class
     private AuthenticationState? _authState;
     private ClaimsPrincipal? _user;
     private List<StudentModel> _studentList = new List<StudentModel>();
@@ -442,8 +449,10 @@
 
     // The StudentId 
     private int StudentId { get; set; }
-    private bool hasRecoveryData { get; set; } = false;
+    private bool hasStudentRecoveryData = false;
+    private bool hasCompanyRecoveryData = false;
     private string userIdClaim = "";
+    #endregion
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
@@ -455,12 +464,10 @@
         {
             if (_authState.User.Identity?.IsAuthenticated == true && _authState != null && _authState.User != null)
             {
-                var _user = _authState.User;
+                _user = _authState.User;
                 // If authenticated set the bool to true zhan read the users data from the data table with the help of ReadData function
                 isAuthenticated = true;
-
-                _Name = _user.Identity.Name.ToString();
-
+                _Name = _user.Identity.Name!.ToString();
                 await ReadData();
             }
             else
@@ -482,30 +489,70 @@
             if (_authState.User.IsInRole(Student)) // If the role is Student
             {
                 //Getting the data with the service call from student
-                _studentList = await _studentService.ReadData(_user);
+                await GetStudentData(_user);
 
-                if (_studentList.Count < 1 || _studentList == null)
+                if (_studentList.Any() == false || _studentList == null)
                 {
-                    userIdClaim = _user.Claims.FirstOrDefault().Value;
-                    if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
-                    {
-                        bool recoveryDataExists = await _studentService.CheckRecoveryDataExist(userIdGuid);
-                        hasRecoveryData = recoveryDataExists;
-                    }
-                    else
-                    {
-                        hasRecoveryData = false;
-                    }
+                    await CheckIfStudentHasDataToRecover(_user);
                 }
             }
             else if (_authState.User.IsInRole(Company)) // If the role is Company
             {
                 //Getting the data with the service call from company
-                _companyList = await _companyService.ReadData(_user);
+                await GetCompanyData(_user);
+
+                if (_companyList.Any() == false || _companyList == null)
+                {
+                    await CheckIfCompanyHasDataToRecover(_user);
+                }
             }
             else
             {
                 Message = $"You Have No Role Assigned - Could not read data.";
+            }
+        }
+    }
+    #endregion
+
+    #region Getting the data with the service call from student
+    private async Task GetStudentData(ClaimsPrincipal _user)
+    {
+        _studentList = await _studentService.ReadData(_user);
+    }
+    #endregion
+
+    #region Getting the data with the service call from company
+    private async Task GetCompanyData(ClaimsPrincipal _user)
+    {
+        _companyList = await _companyService.ReadData(_user);
+    }
+    #endregion
+
+    #region Checking is student has recovery data if nothing exist in their profile
+    private async Task CheckIfStudentHasDataToRecover(ClaimsPrincipal _user)
+    {
+        if (_studentList.Any() == false || _studentList == null)
+        {
+            userIdClaim = _user.Claims.FirstOrDefault()!.Value;
+            if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
+            {
+                bool recoveryDataExists = await _studentService.CheckRecoveryDataExist(userIdGuid);
+                hasStudentRecoveryData = recoveryDataExists;
+            }
+        } 
+    }
+    #endregion
+
+    #region Checking is company has recovery data if nothing exist in their profile
+    private async Task CheckIfCompanyHasDataToRecover(ClaimsPrincipal _user)
+    {
+        if (_companyList.Any() == false || _companyList == null)
+        {
+            userIdClaim = _user.Claims.FirstOrDefault()!.Value;
+            if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
+            {
+                bool recoveryDataExists = await _companyService.CheckRecoveryDataExist(userIdGuid);
+                hasCompanyRecoveryData = recoveryDataExists;
             }
         }
     }
@@ -565,13 +612,13 @@
     }
     #endregion
 
-    #region recover student data function
+    #region Recover Student Data with their Guid Function
     private async Task RecoverStudentData()
     {
         if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
         {
             await _studentService.RecoverStudentData(userIdGuid);
-            NavManager.NavigateTo("/profile");
+            await OnInitializedAsync();
         }
     }
     #endregion

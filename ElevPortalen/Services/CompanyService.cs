@@ -229,6 +229,21 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Function to check if Company data exist in the recovery database
+        public async Task<bool> CheckRecoveryDataExist(Guid id)
+        {
+            var data = await _recoveryContext.StudentDataRecovery.Where(s => s.UserId == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+
         #region Recover the data function for Company
         public async Task<string> RecoverCompanyData(Guid id)
         {
