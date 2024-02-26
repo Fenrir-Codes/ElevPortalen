@@ -397,6 +397,11 @@
                 </p>
                 <br>
                 <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
+                @if (hasRecoveryData)
+                {
+                    <button class="btn btn-success" @onclick="RecoverStudentData">Recover Your Data</button>
+                    @userIdClaim;
+                }
            
             }
 
@@ -421,8 +426,6 @@
     private ClaimsPrincipal? _user;
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
-    private List<StudentRecoveryModel> _studentRecoveryData = new List<StudentRecoveryModel>();
-    private List<CompanyRecoveryModel> _companyRecoveryData = new List<CompanyRecoveryModel>();
 
     private UpdateModalDialog? DialogModal { get; set; }
 
@@ -439,6 +442,8 @@
 
     // The StudentId 
     private int StudentId { get; set; }
+    private bool hasRecoveryData { get; set; } = false;
+    private string userIdClaim = "";
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
@@ -478,6 +483,20 @@
             {
                 //Getting the data with the service call from student
                 _studentList = await _studentService.ReadData(_user);
+
+                if (_studentList.Count < 1 || _studentList == null)
+                {
+                    userIdClaim = _user.Claims.FirstOrDefault().Value;
+                    if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
+                    {
+                        bool recoveryDataExists = await _studentService.CheckRecoveryDataExist(userIdGuid);
+                        hasRecoveryData = recoveryDataExists;
+                    }
+                    else
+                    {
+                        hasRecoveryData = false;
+                    }
+                }
             }
             else if (_authState.User.IsInRole(Company)) // If the role is Company
             {
@@ -543,6 +562,17 @@
     {
         string url = "https://" + _companyList[0].Link;
         await jsRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+    #endregion
+
+    #region recover student data function
+    private async Task RecoverStudentData()
+    {
+        if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
+        {
+            await _studentService.RecoverStudentData(userIdGuid);
+            NavManager.NavigateTo("/profile");
+        }
     }
     #endregion
 

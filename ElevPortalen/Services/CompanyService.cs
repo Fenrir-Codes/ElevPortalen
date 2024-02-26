@@ -229,5 +229,59 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Recover the data function for Company
+        public async Task<string> RecoverCompanyData(Guid id)
+        {
+            try
+            {
+                // Retrieve recovery data based on the provided Guid
+                var recoveryData = await _recoveryContext.CompanyDataRecovery
+                    .FirstOrDefaultAsync(s => s.UserId == id);
+
+                if (recoveryData != null)
+                {
+                    var recoveredCompany = new CompanyModel
+                    {
+                        UserId = recoveryData.UserId,
+                        CompanyName = recoveryData.CompanyName,
+                        CompanyAddress = recoveryData.CompanyAddress,
+                        Region = recoveryData.Region,
+                        Email = recoveryData.Email,
+                        Link = recoveryData.Link,
+                        Preferences = recoveryData.Preferences,
+                        Description = recoveryData.Description,
+                        profileImage = recoveryData.profileImage,
+                        PhoneNumber= recoveryData.PhoneNumber,
+                        IsHiring= recoveryData.IsHiring,
+                        IsVisible= recoveryData.IsVisible,
+                        RegisteredDate= recoveryData.RegisteredDate,
+                        UpdatedDate = DateTime.Now
+                    };
+                    // Add the recovered company to the main context
+                    _context.Company.Add(recoveredCompany);
+
+                    // Remove the recovery data from the recovery context
+                    _recoveryContext.CompanyDataRecovery.Remove(recoveryData);
+
+                    // Save changes to both contexts
+                    await _context.SaveChangesAsync();
+                    await _recoveryContext.SaveChangesAsync();
+
+                    return "Data successfully recovered.";
+                }
+                else
+                {
+                    // Return a message indicating that recovery data does not exist
+                    return $"No recovery data found for UserId: {id}.";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Return an error message if an exception occurs
+                return $"Error recovering data: {ex.Message}";
+            }
+        }
+        #endregion
+
     }
 }

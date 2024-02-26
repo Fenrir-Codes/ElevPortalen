@@ -1,11 +1,9 @@
 ﻿using ElevPortalen.Models;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Sockets;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using ElevPortalen.Data;
+using System.Data;
 
 namespace ElevPortalen.Services
 {
@@ -24,7 +22,7 @@ namespace ElevPortalen.Services
             _context = context;
             _applicationDbContext = applicationDbContext;
             _recoveryContext = recoveryContext;
-            _dataProtector = dataProtectionProvider.CreateProtector("ProtectData"); 
+            _dataProtector = dataProtectionProvider.CreateProtector("ProtectData");
             //i just placed it here if need, we can use it to protect data
         }
         #endregion
@@ -256,6 +254,76 @@ namespace ElevPortalen.Services
             {
                 // Handle the exception and return an error message
                 return $"An error has occurred: {ex.Message}";
+            }
+        }
+        #endregion
+
+        #region Function to check if student data exist in the recovery database
+        public async Task<bool> CheckRecoveryDataExist(Guid id)
+        {
+            var data = await _recoveryContext.StudentDataRecovery.Where(s => s.UserId == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+
+        #region Recover the data function for student
+        public async Task<string> RecoverStudentData(Guid id)
+        {
+            try
+            {
+                // Retrieve recovery data based on the provided Guid
+                var recoveryData = await _recoveryContext.StudentDataRecovery
+                    .FirstOrDefaultAsync(s => s.UserId == id);
+
+                if (recoveryData != null)
+                {
+                    // Assuming StudentModel has a constructor that takes StudentRecoveryModel as a parameter
+                    var recoveredStudent = new StudentModel
+                    {
+                        //The StudentId is autoincrement therefor we do not use it otherwise we crash
+                        UserId = recoveryData.UserId,
+                        Title = recoveryData.Title,
+                        FirstName = recoveryData.FirstName,
+                        MiddleName = recoveryData.MiddleName,
+                        LastName = recoveryData.LastName,
+                        Email = recoveryData.Email,
+                        Address = recoveryData.Address,
+                        Description = recoveryData.Description,
+                        profileImage = recoveryData.profileImage,
+                        Speciality = recoveryData.Speciality,
+                        PhoneNumber = recoveryData.PhoneNumber,
+                        RegisteredDate = recoveryData.RegisteredDate,
+                        UpdatedDate = DateTime.Now,
+                    };
+                    // Add the recovered student to the main context
+                    _context.Student.Add(recoveredStudent);
+
+                    // Remove the recovery data from the recovery context
+                    _recoveryContext.StudentDataRecovery.Remove(recoveryData);
+
+                    // Save changes to both contexts
+                    await _context.SaveChangesAsync();
+                    await _recoveryContext.SaveChangesAsync();
+
+                    return "Data successfully recovered.";
+                }
+                else
+                {
+                    // Return a message indicating that recovery data does not exist
+                    return $"No recovery data found for UserId: {id}.";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Return an error message if an exception occurs
+                return $"Error recovering data: {ex.Message}";
             }
         }
         #endregion
