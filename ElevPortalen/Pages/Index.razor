@@ -83,8 +83,7 @@
                 <div class="row">
                     @foreach (var data in _studentSearchResult)
                     {
-                        var studentPrevDate = data.UpdatedDate;
-                        var daysDifference = (today - studentPrevDate.Date).Days;
+                        CalculateDaysDifference(data.UpdatedDate);
 
                         <div class="card m-1 p-0" style="max-width: 420px;">
                             <div class="row g-0">
@@ -109,7 +108,7 @@
                                             @data.LastName
                                         </h4>
                                         <p class="card-text">Specialiseret i @data.Speciality</p>
-                                        <p class="card-text"><small class="text-body-secondary">Sidst opdateret @daysDifference dage siden.</small></p>
+                                        <p class="card-text"><small class="text-body-secondary">Sidst opdateret @dayDifference dage siden.</small></p>
                                     </div>
                                 </div>
                             </div>
@@ -178,13 +177,11 @@
 
     private int studentCount = 0;
     private int companyCount = 0;
-
-    DateTime today;
+    private int dayDifference = 0;
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
-        today = DateTime.Now;
 
         //For see the spinner we can simulate the network slownes
         // await Task.Run(SimulateSlowness);
@@ -207,6 +204,15 @@
                 companyCount = await _companyService.GetCompaniesCountAsync();
             }
         }
+    }
+    #endregion
+
+    #region Checking When The Student Updated The Profile (retuning int as Day)
+    private int CalculateDaysDifference(DateTime studentPrevDate)
+    {
+        var today = DateTime.Now;
+        dayDifference = (today - studentPrevDate.Date).Days;
+        return dayDifference;
     }
     #endregion
 
