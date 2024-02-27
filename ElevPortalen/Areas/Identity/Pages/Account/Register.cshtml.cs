@@ -106,7 +106,7 @@ namespace ElevPortalen.Areas.Identity.Pages.Account
             [Required]
             [DataType(DataType.Text)]
             [StringLength(100, ErrorMessage = "Please choose from below.")]
-            [Display(Name = "Are you a?")]
+            [Display(Name = "Please choose a role.")]
             public string Role { get; set; }
         }
 

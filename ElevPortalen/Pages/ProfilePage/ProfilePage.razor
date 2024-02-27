@@ -27,7 +27,7 @@
                         <h3>@data.FirstName's Profile</h3>
                         <div class="col-lg-12">
                             <div class="card mb-4">
-                                <div class="card-body shadow">
+                                <div class="card-body shadow-sm">
                                     <div class="d-flex align-items-center">
                                         <a href="#" class="mx-2" style="color: black">
                                             <span class="fa-stack fa-sm">
@@ -62,7 +62,7 @@
                     <!--User profile container-->
                     <div class="row">
                         <div class="col-lg-4">
-                            <div class="card mb-4 shadow">
+                            <div class="card mb-4 shadow-sm">
                                 <div class="card-body text-center">
                                     @if (data.profileImage != "")
                                     {
@@ -75,8 +75,8 @@
                                              class="rounded-circle img-fluid" style="width: 150px;">
                                     }
                                     <h5 class="my-3">@data.FirstName @data.LastName</h5>
-                                    <p class="text-muted mb-1">Specialiseret i @data.Speciality</p>
-                                    <p class="text-muted mb-4">@data.Address</p>
+                                    <p class="text-muted mb-4">Specialiseret i @data.Speciality</p>
+@*                                     <p class="text-muted mb-4">@data.Address</p> *@
                                     <div class="d-flex justify-content-center mb-2">
                                         <button type="button" class="btn btn-outline-success"
                                                 @onclick="() => DialogModal?.OpenStudentUpdate(data.StudentId)">
@@ -101,7 +101,7 @@
                         </div>
                         <div class="col-lg-8">
                             <div class="card mb-4">
-                                <div class="card-body shadow">
+                                <div class="card-body shadow-sm">
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <p class="mb-0">Username</p>
@@ -167,7 +167,6 @@
                             </div>
                         </div>
                     </div>
-
 
                 }
             }
