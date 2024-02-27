@@ -15,7 +15,7 @@
 <PageTitle>Home</PageTitle>
 
 @* HHTMl and its logic*@
-<div class="container-fluid text-center p-4">
+<div class="container-fluid text-center p-3">
     <!-- Authorized Student and Company-->
     <AuthorizeView Roles="Student, Company, Admin">
         <Authorized>
@@ -37,7 +37,7 @@
                 <div class="row">
                     @foreach (var data in _companySearchResult)
                     {
-                        <div class="card mb-3 mx-1" style="max-width: 540px;">
+                        <div class="card m-1 p-0" style="max-width: 420px;">
                             <div class="row g-0">
                                 <div class="col-md-4">
                                     @if (data.profileImage != "")
@@ -85,12 +85,12 @@
                         var studentPrevDate = data.UpdatedDate;
                         var daysDifference = (today - studentPrevDate).Days;
 
-                        <div class="card mb-3 mx-1" style="max-width: 540px;">
+                        <div class="card m-1 p-0" style="max-width: 420px;">
                             <div class="row g-0">
                                 <div class="col-md-4">
                                     @if (data.profileImage != "")
                                     {
-                                        <img class="rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
+                                        <img class="rounded-start" src="images/ProfileImages/@data.profileImage" style="max-width: 150px; max-height: 150px;">
                                     }
                                     else
                                     {
