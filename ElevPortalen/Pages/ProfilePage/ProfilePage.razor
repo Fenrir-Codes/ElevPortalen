@@ -76,7 +76,7 @@
                                     }
                                     <h5 class="my-3">@data.FirstName @data.LastName</h5>
                                     <p class="text-muted mb-4">Specialiseret i @data.Speciality</p>
-@*                                     <p class="text-muted mb-4">@data.Address</p> *@
+                                    @*                                     <p class="text-muted mb-4">@data.Address</p> *@
                                     <div class="d-flex justify-content-center mb-2">
                                         <button type="button" class="btn btn-outline-success"
                                                 @onclick="() => DialogModal?.OpenStudentUpdate(data.StudentId)">
@@ -402,7 +402,7 @@
                 {
                     <button class="btn btn-success" @onclick="RecoverStudentData">Recover Your Data</button>
                     <p>The Student's Guid is : @userIdClaim</p>
-                    
+
                 }
                 else if (hasCompanyRecoveryData)
                 {

@@ -5,6 +5,7 @@
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
+@using System;
 
 @inject StudentService _studentService
 @inject CompanyService _companyService
@@ -83,7 +84,7 @@
                     @foreach (var data in _studentSearchResult)
                     {
                         var studentPrevDate = data.UpdatedDate;
-                        var daysDifference = (today - studentPrevDate).Days;
+                        var daysDifference = (today - studentPrevDate.Date).Days;
 
                         <div class="card m-1 p-0" style="max-width: 420px;">
                             <div class="row g-0">
