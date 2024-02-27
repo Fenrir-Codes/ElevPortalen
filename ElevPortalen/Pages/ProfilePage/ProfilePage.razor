@@ -19,12 +19,12 @@
     <AuthorizeView Roles="Student,Company">
         <Authorized>
             @if (_studentList.Count >= 1)
-            {          
+            {
                 @foreach (var data in _studentList)
                 {
                     <!--Social container on top-->
                     <div class="row">
-                        <h2>Social</h2>
+                        <h3>@data.FirstName's Profile</h3>
                         <div class="col-lg-12">
                             <div class="card mb-4">
                                 <div class="card-body shadow">
@@ -61,7 +61,6 @@
 
                     <!--User profile container-->
                     <div class="row">
-                        <h2>User Profile</h2>
                         <div class="col-lg-4">
                             <div class="card mb-4 shadow">
                                 <div class="card-body text-center">
@@ -169,7 +168,7 @@
                         </div>
                     </div>
 
-                   
+
                 }
             }
             else if (_companyList.Count >= 1)
@@ -179,7 +178,7 @@
 
                     <!--Social container on top-->
                     <div class="row">
-                        <h2>Social</h2>
+                        <h3>@data.CompanyName's Profile</h3>
                         <div class="col-lg-12">
                             <div class="card mb-4">
                                 <div class="card-body shadow">
@@ -214,47 +213,47 @@
                         </div>
                     </div>
 
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="card mb-4">
-                                    <div class="card-body text-center shadow">
-                                        @if (data.profileImage != "")
-                                        {
-                                            <img src="images/ProfileImages/@data.profileImage" alt="avatar"
-                                                 class="rounded-circle img-fluid" style="width: 150px;">
-                                        }
-                                        else
-                                        {
-                                            <img src="images/DefaultAvatar.jpg" alt="avatar"
-                                                 class="rounded-circle img-fluid" style="width: 150px;">
-                                        }
-                                        <h5 class="my-3">@data.CompanyName</h5>
-                                        <p class="text-muted mb-4">@data.CompanyAddress</p>
-                                        <div class="d-flex justify-content-center mb-2">
-                                            <button type="button" class="btn btn-outline-success"
-                                                    @onclick="() => DialogModal?.OpenCompanyUpdate(data.CompanyId)">
-                                                Update Profile
-                                            </button>
-                                            <button type="button" class="btn btn-outline-danger ms-1"
-                                                    @onclick="() => DeleteCompanyData(data.CompanyId)" disabled="@(!isConfirmationChecked)">
-                                                Delete Profile
-                                            </button>
-                                        </div>
-                                        <div class="row-lg-4 gx-3 mb-3">
-                                            <input class="form-check-input" type="checkbox" @bind="isConfirmationChecked">
-                                            <label class="form-check-label">
-                                                Confirm Delete
-                                            </label>
-                                        </div>
-                                        <span style="color:red" hidden="@(!isConfirmationChecked)">
-                                            Dette vil slette dine personale data og kan ikke fortrydes!
-                                        </span>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="card mb-4">
+                                <div class="card-body text-center shadow">
+                                    @if (data.profileImage != "")
+                                    {
+                                        <img src="images/ProfileImages/@data.profileImage" alt="avatar"
+                                             class="rounded-circle img-fluid" style="width: 150px;">
+                                    }
+                                    else
+                                    {
+                                        <img src="images/DefaultAvatar.jpg" alt="avatar"
+                                             class="rounded-circle img-fluid" style="width: 150px;">
+                                    }
+                                    <h5 class="my-3">@data.CompanyName</h5>
+                                    <p class="text-muted mb-4">@data.CompanyAddress</p>
+                                    <div class="d-flex justify-content-center mb-2">
+                                        <button type="button" class="btn btn-outline-success"
+                                                @onclick="() => DialogModal?.OpenCompanyUpdate(data.CompanyId)">
+                                            Update Profile
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger ms-1"
+                                                @onclick="() => DeleteCompanyData(data.CompanyId)" disabled="@(!isConfirmationChecked)">
+                                            Delete Profile
+                                        </button>
                                     </div>
+                                    <div class="row-lg-4 gx-3 mb-3">
+                                        <input class="form-check-input" type="checkbox" @bind="isConfirmationChecked">
+                                        <label class="form-check-label">
+                                            Confirm Delete
+                                        </label>
+                                    </div>
+                                    <span style="color:red" hidden="@(!isConfirmationChecked)">
+                                        Dette vil slette dine personale data og kan ikke fortrydes!
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-lg-8">
-                                <div class="card mb-4">
-                                    <div class="card-body shadow">
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="card mb-4">
+                                <div class="card-body shadow">
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <p class="mb-0">Dato for registrering</p>
@@ -264,116 +263,116 @@
                                         </div>
                                     </div>
                                     <hr />
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Username</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">@_Name</p>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Username</p>
                                         </div>
-                                        <hr />
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Region</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">
-                                                    @data.Region
-                                                </p>
-                                            </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@_Name</p>
                                         </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Email</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">
-                                                    @data.Email
-                                                </p>
-                                            </div>
+                                    </div>
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Region</p>
                                         </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Website</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">
-                                                    <button class="btn btn-outline-info" @onclick="NavigateToNewTab">Open Link on new tab</button>
-                                                </p>
-                                            </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @data.Region
+                                            </p>
                                         </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Phone</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">@data.PhoneNumber</p>
-                                            </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Email</p>
                                         </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Leder efter</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">
-                                                    @data.Preferences
-                                                </p>
-                                            </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @data.Email
+                                            </p>
                                         </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Beskrivelse</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">@data.Description</p>
-                                            </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Website</p>
                                         </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Søger Elev</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">
-                                                    @if (data.IsHiring)
-                                                    {
-                                                        <span>Ja</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span>Nej</span>
-                                                    }
-                                                </p>
-                                            </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                <button class="btn btn-outline-info" @onclick="NavigateToNewTab">Open Link on new tab</button>
+                                            </p>
                                         </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Synlig profil</p>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0">
-                                                    @if (data.IsVisible)
-                                                    {
-                                                        <span>Ja</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span>Nej</span>
-                                                    }
-                                                </p>
-                                            </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Phone</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@data.PhoneNumber</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Leder efter</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @data.Preferences
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Beskrivelse</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@data.Description</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Søger Elev</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @if (data.IsHiring)
+                                                {
+                                                    <span>Ja</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Nej</span>
+                                                }
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Synlig profil</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">
+                                                @if (data.IsVisible)
+                                                {
+                                                    <span>Ja</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Nej</span>
+                                                }
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 }
             }
             else
@@ -396,7 +395,7 @@
                     }
                 </p>
                 <br>
-                <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
+                <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button> <br />
                 @if (hasStudentRecoveryData)
                 {
                     <button class="btn btn-success" @onclick="RecoverStudentData">Recover Your Data</button>
@@ -406,9 +405,9 @@
                 else if (hasCompanyRecoveryData)
                 {
                     <button class="btn btn-success" @onclick="RecoverStudentData">Recover Your Data</button>
-                   <p>The Company's Guid is : @userIdClaim</p>
+                    <p>The Company's Guid is : @userIdClaim</p>
                 }
-           
+
             }
 
             <!-- DialogModal for update view -->
@@ -447,7 +446,7 @@
     private string BackgroundColor = "rgba(50, 50, 50,0.8)";
     private string textColor = "white";
 
-    // The StudentId 
+    // The StudentId
     private int StudentId { get; set; }
     private bool hasStudentRecoveryData = false;
     private bool hasCompanyRecoveryData = false;
@@ -539,7 +538,7 @@
                 bool recoveryDataExists = await _studentService.CheckRecoveryDataExist(userIdGuid);
                 hasStudentRecoveryData = recoveryDataExists;
             }
-        } 
+        }
     }
     #endregion
 
