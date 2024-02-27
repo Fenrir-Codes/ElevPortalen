@@ -8,22 +8,19 @@
 <div class="container text-center">
     <div class="row justify-content-center pt-lg-5 pt-md-4 pt-sm-2">
         <div class="col-md-12 col-lg-12">
-            <div class="card shadow">
+            <div class="card shadow-sm">
                 <div class="w-100 bg-dark text-white text-center"> <a class="navbar-brand" href="/" style="color:white; font-size:25px; font-weight:400;">ElevPortalen</a></div>
-                <div class="card-body">
+                <div class="card-body" style="min-height:544px;">
                     <div class="d-md-flex align-items-center">
                         <!-- Image on the left side -->
                         <div class="text-center mb-4 mb-md-0 col-xl-6 col-md-6 col-sm-12">
                             <img src="/images/Logo_ElevPortalen-noback.png" class="img" style="max-width: 95%; height: auto; opacity: 0.1;">
                         </div>
-
                         <!-- Form on the right side -->
-                        <div class="login-wrap p-4 p-md-5 col-xl-6 col-md-6 col-sm-12">
-                            <div class="d-flex">
-                            </div>
+                        <div class="login-wrap p-4 p-md-5 col-xl-6 col-md-6 col-sm-12" style="min-height:512px;">
                             <form id="account" method="post">
-                                <h2>Use a local account to log in.</h2>
-                                <hr /> <br />
+                                <h2>Login</h2>
+                                <hr />
                                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                                 <div class="form-floating mb-3">
                                     <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
@@ -35,16 +32,16 @@
                                     <label asp-for="Input.Password" class="form-label">Password</label>
                                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                                 </div>
-                                <div class="checkbox mb-3">
+                                <div class="checkbox mb-2 mt-2">
                                     <label asp-for="Input.RememberMe" class="form-label">
                                         <input class="form-check-input" asp-for="Input.RememberMe" />
                                         @Html.DisplayNameFor(m => m.Input.RememberMe)
                                     </label>
                                 </div>
                                 <div>
-                                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-outline-success mb-2">Log in</button>
+                                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-outline-success mt-4 mb-4">Log in</button>
                                 </div>
-                                <div>
+                                <div class="mb-4">
                                     <p>
                                         <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
                                     </p>
