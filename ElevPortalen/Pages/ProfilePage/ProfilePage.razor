@@ -394,16 +394,19 @@
                     }
                 </p>
                 <br>
-                <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button> <br />
+                <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
+                ;
+                <br />
+
                 @if (hasStudentRecoveryData)
                 {
                     <button class="btn btn-success" @onclick="RecoverStudentData">Recover Your Data</button>
                     <p>The Student's Guid is : @userIdClaim</p>
-                    ;
+                    
                 }
                 else if (hasCompanyRecoveryData)
                 {
-                    <button class="btn btn-success" @onclick="RecoverStudentData">Recover Your Data</button>
+                    <button class="btn btn-success" @onclick="RecoverCompanyData">Data recovery available</button>
                     <p>The Company's Guid is : @userIdClaim</p>
                 }
 
@@ -610,12 +613,23 @@
     }
     #endregion
 
-    #region Recover Student Data with their Guid Function
+    #region Recover Student Data with their Guid
     private async Task RecoverStudentData()
     {
         if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
         {
             await _studentService.RecoverStudentData(userIdGuid);
+            await OnInitializedAsync();
+        }
+    }
+    #endregion
+
+    #region Recover Companyt Data with their Guid
+    private async Task RecoverCompanyData()
+    {
+        if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
+        {
+            await _companyService.RecoverCompanyData(userIdGuid);
             await OnInitializedAsync();
         }
     }

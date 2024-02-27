@@ -232,7 +232,7 @@ namespace ElevPortalen.Services
         #region Function to check if Company data exist in the recovery database
         public async Task<bool> CheckRecoveryDataExist(Guid id)
         {
-            var data = await _recoveryContext.StudentDataRecovery.Where(s => s.UserId == id).FirstOrDefaultAsync();
+            var data = await _recoveryContext.CompanyDataRecovery.Where(s => s.UserId == id).FirstOrDefaultAsync();
             if (data != null)
             {
                 return true;

@@ -9,9 +9,6 @@
     </div>
 
     <main>
-@*         <div class="top-row px-4 auth bg-dark">
-            <LoginDisplay />
-        </div>    *@    
         <article>
             <CustomErrorBoundary @ref="@errorBoundary" Context="Exception">
                 <ChildContent>
@@ -32,14 +29,13 @@
                         <p>
                             Help link: @Exception.HelpLink
                         </p>
-@*                         Type: @Exception.GetType() | Message: @Exception.Message | Method: @Exception.TargetSite | Help link: @Exception.HelpLink *@
+                        @*                         Type: @Exception.GetType() | Message: @Exception.Message | Method: @Exception.TargetSite | Help link: @Exception.HelpLink *@
 
                         <button class="btn-close" data-bs-dismiss="alert" onclick="@errorBoundary.Recover"></button>
                     </div>
                 </ErrorContent>
             </CustomErrorBoundary>
         </article>
-
     </main>
 </div>
 
