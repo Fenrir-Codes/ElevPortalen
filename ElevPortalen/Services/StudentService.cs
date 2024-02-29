@@ -59,12 +59,12 @@ namespace ElevPortalen.Services
                 }
                 else
                 {
-                    throw new ApplicationException("An error occurred while retrieving student data.");
+                    throw new InvalidOperationException("An error occurred while retrieving student data.");
                 }
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("An error occurred while retrieving student data." + ex.Message);
+                throw new InvalidOperationException("An error occurred while retrieving student data." + ex.Message);
             }
         }
         #endregion
@@ -81,7 +81,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("An error occurred while retrieving Student data." + ex.Message);
+                throw new InvalidOperationException("An error occurred while retrieving Student data." + ex.Message);
             }
         }
         #endregion
@@ -98,7 +98,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("An error occurred while retrieving Student data." + ex.Message);
+                throw new InvalidOperationException("An error occurred while retrieving Student data." + ex.Message);
             }
         }
         #endregion
@@ -135,7 +135,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}"; // Return an error message if an exception occurs
+                throw new InvalidOperationException(ex.Message); // Return an error message if an exception occurs
             }
         }
         #endregion
@@ -168,7 +168,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                return $"An error has occurred: {ex.Message}";
+                throw new InvalidOperationException($"An error has occurred: {ex.Message}");
             }
         }
         #endregion
@@ -187,12 +187,12 @@ namespace ElevPortalen.Services
                 }
                 else
                 {
-                    throw new ApplicationException($"An error occurred while finding user's Id. Or no Id in database.");
+                    throw new InvalidOperationException($"An error occurred while finding user's Id. Or no Id in database.");
                 }
             }
             catch (Exception ex)
             {
-                throw new ApplicationException($"An error occurred while retrieving student data: {ex.Message}");
+                throw new InvalidOperationException($"An error occurred while retrieving student data: {ex.Message}");
             }
         }
         #endregion
@@ -210,13 +210,14 @@ namespace ElevPortalen.Services
                 }
                 else
                 {
-                    throw new ApplicationException($"An error occurred while finding user's Guid. Or no Guid in database.");
+                    throw new InvalidOperationException($"An error occurred while finding user's Guid. Or no Guid in database.");
                 }
             }
             catch (Exception ex)
             {
 
-                throw new ApplicationException($"An error occurred while retrieving student data: {ex.Message}");
+                throw new InvalidOperationException($"An error occurred while retrieving student data: {ex.Message}");
+
             }
         }
         #endregion
@@ -252,7 +253,7 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 // Handle the exception and return an error message
-                return $"An error has occurred: {ex.Message}";
+                throw new InvalidOperationException($"An error has occurred: {ex.Message}");
             }
         }
         #endregion
@@ -322,11 +323,10 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 // Return an error message if an exception occurs
-                return $"Error recovering data: {ex.Message}";
+                throw new InvalidOperationException($"Error recovering data: {ex.Message}");
             }
         }
         #endregion
-
 
     }
 }

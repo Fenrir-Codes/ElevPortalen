@@ -39,7 +39,7 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 // Handle the exception and return an error message
-                return $"An error har ocurred: {ex.Message}";
+                throw new InvalidOperationException($"An error har ocurred: {ex.Message}");
             }
         }
         #endregion
@@ -57,7 +57,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("An error occurred while retrieving Company data." + ex.Message);
+                throw new InvalidOperationException("An error occurred while retrieving Company data." + ex.Message);
             }
         }
         #endregion
@@ -74,7 +74,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("An error occurred while retrieving Company data." + ex.Message);
+                throw new InvalidOperationException("An error occurred while retrieving Company data." + ex.Message);
             }
         }
         #endregion
@@ -114,7 +114,8 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}"; // Return an error message if an exception occurs
+                // Return an error message if an exception occurs
+                throw new InvalidOperationException($"Error occured while update: {ex.Message}");
             }
         }
         #endregion
@@ -147,7 +148,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                return $"An error has occurred: {ex.Message}";
+                throw new InvalidOperationException($"An error has occurred in delete function: {ex.Message}");
             }
         }
         #endregion
@@ -164,13 +165,13 @@ namespace ElevPortalen.Services
                 }
                 else
                 {
-                    throw new ApplicationException("Company not found.");
+                    throw new InvalidOperationException("Company not found.");
                 }
                 
             }
             catch (Exception ex)
             {
-                throw new ApplicationException($"An error occurred while retrieving Company data: {ex.Message}");
+                throw new InvalidOperationException($"An error occurred while retrieving Company data: {ex.Message}");
             }
         }
         #endregion
@@ -187,7 +188,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("An error occurred while retrieving Student data." + ex.Message);
+                throw new InvalidOperationException("An error occurred while retrieving Student data." + ex.Message);
             }
         }
         #endregion
@@ -224,7 +225,7 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 // Handle the exception and return an error message
-                return $"An error has occurred: {ex.Message}";
+                throw new InvalidOperationException($"An error has occurred: {ex.Message}");
             }
         }
         #endregion
@@ -293,7 +294,7 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 // Return an error message if an exception occurs
-                return $"Error recovering data: {ex.Message}";
+                throw new InvalidOperationException($"Error recovering data: {ex.Message}");
             }
         }
         #endregion

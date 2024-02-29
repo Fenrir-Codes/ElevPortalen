@@ -1,3 +1,4 @@
+using ElevPortalen;
 using ElevPortalen.Areas.Identity;
 using ElevPortalen.Areas.Identity.Pages.Account;
 using ElevPortalen.Data;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,8 +60,34 @@ builder.Services.AddDbContext<ElevPortalenDataDbContext>(options =>
 builder.Services.AddDataProtection();
 // End ----
 
-
 var app = builder.Build();
+
+#region Check for Roles Existing
+async Task CheckRolesExisting(WebApplication app)
+{
+    // Create a new scope within the dependency injection container by Jozsef
+    using (var scope = app.Services.CreateScope())
+    {
+        // Obtain an instance of the RoleManager service for managing roles
+        var roleManager =
+            scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+        // Define an array of role names to be created and seeded
+        var roles = new[] { "Admin", "Student", "Company" };
+
+        // Iterate over each role name in the array
+        foreach (var role in roles)
+        {
+            // Check if the role already exists in the system
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                // If the role does not exist, create a new role using RoleManager
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+    }
+}
+#endregion
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -85,26 +113,7 @@ app.MapControllers();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-// Create a new scope within the dependency injection container by Jozsef
-using (var scope = app.Services.CreateScope())
-{
-    // Obtain an instance of the RoleManager service for managing roles
-    var roleManager =
-        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    // Define an array of role names to be created and seeded
-    var roles = new[] { "Admin", "Student", "Company" };
-
-    // Iterate over each role name in the array
-    foreach (var role in roles)
-    {
-        // Check if the role already exists in the system
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            // If the role does not exist, create a new role using RoleManager
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
-}
+//Calling Check Task here
+await CheckRolesExisting(app);
 
 app.Run();

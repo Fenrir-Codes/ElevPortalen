@@ -290,8 +290,13 @@
 
             if (isStudent)
             {
-                _companySearchResult = _companyList.Where(company => company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                _companySearchResult = _companyList
+                    .Where(company =>
+                        company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                        company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                        company.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                        company.CompanyAddress.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
             }
             else if (isCompany)
             {
