@@ -47,6 +47,7 @@ builder.Services.AddScoped<ElevPortalenDataDbContext>();
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<DawaService>();
 builder.Services.AddScoped<RegisterModel>();
+builder.Services.AddScoped<SkillService>();
 builder.Services.AddHttpClient();
 //End ----
 

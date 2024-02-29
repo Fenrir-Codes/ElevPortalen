@@ -11,6 +11,7 @@
 @inject ElevPortalenDataDbContext _context
 @inject CompanyService _companyService
 @inject StudentService _studentService
+@inject SkillService _skillService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IConfiguration Configuration
 @inject NavigationManager NavManager
@@ -87,6 +88,66 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-12 mb-3">
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.CSharp" /> C#
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.Java" /> Java
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.DotNet" /> .Net
+                                    </label>                                    
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.Typescript" /> TypeScript
+                                    </label>                                    
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.Python" /> Python
+                                    </label>                                    
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.PHP" /> PHP
+                                    </label>                                    
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.CPlusPlus" /> C++
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.C" /> C
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.Bootstrap" /> Bootstrap
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.Blazor" /> Blazor
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.JavaScript" /> JavaScript
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.HTML" /> Html
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.CSS" /> CSS
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.SQL" /> SQL
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.MongoDB" /> MongoDB
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.OfficePack" /> Office pakken
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.CloudComputing" /> Cloud technologies
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.VersionControl" /> Git / GitHub
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" @bind="_Skills.OOP" /> OOP
+                                    </label>
+                                </div>
+
                                 <!-- Form Group (Description)-->
                                 <div class="col-md-12 mb-3">
                                     <label for="Description" class="form-label">Beskrivelse</label>
@@ -95,11 +156,6 @@
 
                                 <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                             </form>
-
-                            @*                             <button class="@(IsSubmitButtonDisabled ? "btn btn-outline-success" : "btn btn-success")"
-                            @onclick="CreateStudentProfile" disabled="@IsSubmitButtonDisabled">
-                            Gem
-                            </button> *@
 
                             <button class="btn btn-outline-success" @onclick="CreateStudentProfile">Gem</button>
 
@@ -215,12 +271,7 @@
                                 </div>
 
                             </form>
-                            @*
-                            <button class="@(IsSubmitButtonDisabled ? "btn btn-outline-success" : "btn btn-success")"
-                            @onclick="CreateCompanyProfile"  disabled="@IsSubmitButtonDisabled">
-                            Gem
-                            </button> *@
-
+                            
                             <button class="btn btn-outline-success" @onclick="CreateCompanyProfile">Gem</button>
 
                         </div>
@@ -263,16 +314,6 @@
 
     private string Message = "";
 
-    private bool isAuthenticated = false;
-
-    // private bool IsSubmitButtonDisabled =>
-    // string.IsNullOrWhiteSpace(_title) ||
-    // string.IsNullOrWhiteSpace(_firstName) ||
-    // string.IsNullOrWhiteSpace(_lastName) ||
-    // string.IsNullOrWhiteSpace(_address) ||
-    // string.IsNullOrWhiteSpace(_speciality) ||
-    // string.IsNullOrWhiteSpace(_phoneNumber.ToString());
-
     //Fileupload
     private long maxFileSize = 1024 * 1024 * 1; // represents 3MB
     private int maxAllowedFiles = 1;
@@ -280,9 +321,17 @@
 
     //address lookup
     private string? searchTerm;
-    private List<AddressModel> address = new List<AddressModel>();
     private string? selectedAddress;
+
+    //models
+    private SkillModel _Skills = new SkillModel();
+    private StudentModel _studentData = new StudentModel();
+    private List<AddressModel> address = new List<AddressModel>();
+
+    //booleans
     private bool showDropdown;
+    private bool isAuthenticated = false;
+
     private CancellationTokenSource? cancellationTokenSource;
     #endregion
 
@@ -325,7 +374,7 @@
                     // Convert the string representation to a Guid
                     if (Guid.TryParse(userIdString, out Guid userId))
                     {
-                        StudentModel studentData = new StudentModel
+                        _studentData = new StudentModel
                             {
                                 Title = _title,
                                 FirstName = _firstName,
@@ -341,7 +390,8 @@
                                 UserId = userId // Set the UserId to the user's unique identifier
                             };
 
-                        Message = await _studentService.CreateStudent(studentData);
+                        Message = await _studentService.CreateStudent(_studentData);
+                        await CreateSkills(_studentData.StudentId);
                         NavManager.NavigateTo("/profile");
                     }
                     else
@@ -360,6 +410,13 @@
             // Handle the exception and return an error message
             Message = $"Error: {ex.Message}";
         }
+    }
+    #endregion
+
+    #region Add Skills Function
+    private async Task CreateSkills(int studentId)
+    {
+        var result = await _skillService.CreateSkills(studentId, _Skills);
     }
     #endregion
 
