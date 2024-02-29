@@ -1,6 +1,7 @@
 ﻿@page "/profile"
 @*Lavet af Jozsef*@
 
+@using ElevPortalen.Pages.MessageBox
 @using ElevPortalen.Pages.UpdateProfileModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
@@ -14,7 +15,6 @@
 @inject IJSRuntime jsRuntime
 
 <div class="container p-4">
-
     <!--Autorizeview for Student and Company -->
     <AuthorizeView Roles="Student,Company">
         <Authorized>
