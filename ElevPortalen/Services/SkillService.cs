@@ -1,25 +1,28 @@
 ﻿using ElevPortalen.Data;
+using ElevPortalen.Models;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElevPortalen.Services
 {
     public class SkillService
     {
         private readonly ElevPortalenDataDbContext _context;
-        private readonly DataRecoveryDbContext _recoveryContext;
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IDataProtector? _dataProtector;
 
         #region constructor
-        public SkillService(ElevPortalenDataDbContext context, DataRecoveryDbContext recoveryContext, IDataProtectionProvider dataProtectionProvider, ApplicationDbContext applicationDbContext)
+        public SkillService(ElevPortalenDataDbContext context, IDataProtectionProvider dataProtectionProvider)
         {
             _context = context;
-            _applicationDbContext = applicationDbContext;
-            _recoveryContext = recoveryContext;
             _dataProtector = dataProtectionProvider.CreateProtector("ProtectData");
             //i just placed it here if need, we can use it to protect data
         }
         #endregion
 
+
+        public SkillModel GetSkillsByStudentId(int studentId)
+        {
+            return _context.StudentSkills.FirstOrDefault(s => s.StudentId == studentId);
+        }
     }
 }

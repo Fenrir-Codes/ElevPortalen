@@ -11,6 +11,6 @@ namespace ElevPortalen.Models
         public string? SkillName { get; set; }
 
         [ForeignKey("StudentId")]
-        public virtual StudentModel? Student { get; set; }
+        public virtual StudentModel Student { get; set; }
     }
 }
