@@ -34,7 +34,7 @@
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="title">Title</label>
                                     <input class="form-control" id="title" type="text"
-                                           placeholder="Skriv Din titel" @bind="_title">
+                                           placeholder="Skriv Din titel" @bind="_studentData.Title">
                                 </div>
                                 <!-- Form Row-->
                                 <div class="row gx-3 mb-3">
@@ -42,22 +42,22 @@
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="firstname">Fornavn</label>
                                         <input class="form-control" id="firstname" type="text"
-                                               placeholder="Fornavn" @bind="_firstName">
+                                               placeholder="Fornavn" @bind="_studentData.FirstName">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="middlename">Mellemnavn</label>
                                         <input class="form-control" id="middlename" type="text"
-                                               placeholder="Mellemnavn (hvis du har)" @bind="_middleName">
+                                               placeholder="Mellemnavn (hvis du har)" @bind="_studentData.MiddleName">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="flastname">Efternavn</label>
                                         <input class="form-control" id="lastname" type="text"
-                                               placeholder="Efternavn" @bind="_lastName">
+                                               placeholder="Efternavn" @bind="_studentData.LastName">
                                     </div>
                                     <!-- Form Group (address)-->
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="inputaddress">Addresse</label>
-                                        <input class="form-control" list="addressSuggestions" @bind="_address" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
+                                        <input class="form-control" list="addressSuggestions" @bind="_studentData.Address" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
                                         <datalist id="addressSuggestions">
                                             @foreach (var item in address)
                                             {
@@ -75,12 +75,12 @@
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1" for="inputPhone">Mobil</label>
                                         <input class="form-control" type="tel" id="inputPhone" name="phone"
-                                               placeholder="12 34 56 78" @bind="_phoneNumber" required>
+                                               placeholder="12 34 56 78" @bind="_studentData.PhoneNumber" required>
                                     </div>
 
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="_speciality">Specialisering</label>
-                                        <select class="form-select form-select-md" @bind="_speciality" id="_speciality" aria-label="Region" required>
+                                        <select class="form-select form-select-md" @bind="_studentData.Speciality" id="_speciality" aria-label="Region" required>
                                             <option value="" disabled selected>Vælg dit speciale</option>
                                             <option value="It-Support">It-Supporter</option>
                                             <option value="Infrastrukture">Infrastruktur</option>
@@ -151,7 +151,7 @@
                                 <!-- Form Group (Description)-->
                                 <div class="col-md-12 mb-3">
                                     <label for="Description" class="form-label">Beskrivelse</label>
-                                    <textarea class="form-control" @bind="_description" id="_description" rows="4"></textarea>
+                                    <textarea class="form-control" @bind="_studentData.Description" id="_description" rows="4"></textarea>
                                 </div>
 
                                 <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
@@ -164,10 +164,6 @@
                 </div>
             </div>
         </Authorized>
-
-        <NotAuthorized>
-            <p>You are not authorized!</p>
-        </NotAuthorized>
 
     </AuthorizeView>
 
@@ -188,12 +184,12 @@
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="companyname">Firmanavn</label>
                                         <input class="form-control" id="companyname" type="text"
-                                               placeholder="Firmanavn" @bind="_companyName">
+                                               placeholder="Firmanavn" @bind="_companyData.CompanyName">
                                     </div>
                                     <!-- Form Group (company address)-->
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="inputaddress">Addresse</label>
-                                        <input class="form-control" list="addressSuggestions" @bind="_companyAddress" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
+                                        <input class="form-control" list="addressSuggestions" @bind="_companyData.CompanyAddress" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
                                         <datalist id="addressSuggestions">
                                             @foreach (var item in address)
                                             {
@@ -211,7 +207,7 @@
                                     <!-- Form Group (Region)-->
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1" for="_region">Din Region</label>
-                                        <select class="form-select form-select-md" @bind="_region" id="_region" aria-label="Region">
+                                        <select class="form-select form-select-md" @bind="_companyData.Region" id="_region" aria-label="Region">
                                             <option disabled selected></option>
                                             <option value="Region Nordjylland">Region Nordjylland</option>
                                             <option value="Region Midtjylland">Region Midtjylland</option>
@@ -224,18 +220,18 @@
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="inputEmail">E-Mail Addresse</label>
                                         <input class="form-control" id="inputEmail" type="text"
-                                               placeholder="Firma E-mail" @bind="_email">
+                                               placeholder="Firma E-mail" @bind="_companyData.Email">
                                     </div>
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1" for="inputPhone">Phone Number</label>
                                         <input class="form-control" type="tel" id="inputPhone" name="phone"
-                                               placeholder="8 cifre" @bind="_phoneNumber">
+                                               placeholder="8 cifre" @bind="_companyData.PhoneNumber">
                                     </div>
                                     <!-- webLink -->
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1" for="inputWebsite">Firma link</label>
                                         <input class="form-control" id="inputWebsite" type="text"
-                                               placeholder="Indtast Webstedslink" @bind="_link">
+                                               placeholder="Indtast Webstedslink" @bind="_companyData.Link">
                                     </div>
                                 </div>
                                 <!-- Form Row-->
@@ -243,7 +239,7 @@
                                     <!-- Form Group (preferencesr)-->
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="_preferences">Preference</label>
-                                        <select class="form-select form-select-md" @bind="_preferences" id="_preferences"
+                                        <select class="form-select form-select-md" @bind="_companyData.Preferences" id="_preferences"
                                                 aria-label="Preferences">
                                             <option value="" disabled selected></option>
                                             <option value="It-Supporter">It-Supporter</option>
@@ -255,16 +251,16 @@
                                 <!-- Form Group (Description)-->
                                 <div class="col-md-12 mb-3">
                                     <label for="Description" class="form-label">Beskrivelse</label>
-                                    <textarea class="form-control" @bind="_description" id="_description" rows="4"></textarea>
+                                    <textarea class="form-control" @bind="_companyData.Description" id="_description" rows="4"></textarea>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" @bind="_isHiring">
+                                    <input class="form-check-input" type="checkbox" @bind="_companyData.IsHiring">
                                     <label class="form-check-label">
                                         Hiring Now
                                     </label>
                                 </div>
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" @bind="_isVisible">
+                                    <input class="form-check-input" type="checkbox" @bind="_companyData.IsVisible">
                                     <label class="form-check-label">
                                         Profile Visible
                                     </label>
@@ -280,10 +276,6 @@
             </div>
         </Authorized>
 
-        <NotAuthorized>
-            <p>You are not authorized!</p>
-        </NotAuthorized>
-
     </AuthorizeView>
 
 </div>
@@ -293,28 +285,8 @@
 
     private AuthenticationState? _authState;
 
-    private string _title = string.Empty;
-    private string _firstName = string.Empty;
-    private string _middleName = string.Empty;
-    private string _lastName = string.Empty;
-    private string _address = string.Empty;
-    private string _description = string.Empty;
-    private string _speciality = string.Empty;
-    private string newFileName = string.Empty;
-    private int _phoneNumber;
-
-    private string _companyName = string.Empty;
-    private string _companyAddress = string.Empty;
-    private string _region = string.Empty;
-    private string _email = string.Empty;
-    private string _link = string.Empty;
-    private string _preferences = string.Empty;
-    private bool _isHiring = false;
-    private bool _isVisible = false;
-
-    private string Message = "";
-
     //Fileupload
+    private string? _newFileName = "";
     private long maxFileSize = 1024 * 1024 * 1; // represents 3MB
     private int maxAllowedFiles = 1;
     private List<string> errors = new();
@@ -322,10 +294,12 @@
     //address lookup
     private string? searchTerm;
     private string? selectedAddress;
+    private string Message = "";
 
     //models
     private SkillModel _Skills = new SkillModel();
     private StudentModel _studentData = new StudentModel();
+    private CompanyModel _companyData = new CompanyModel();
     private List<AddressModel> address = new List<AddressModel>();
 
     //booleans
@@ -376,18 +350,20 @@
                     {
                         _studentData = new StudentModel
                             {
-                                Title = _title,
-                                FirstName = _firstName,
-                                MiddleName = _middleName,
-                                LastName = _lastName,
-                                Address = _address,
-                                Description = _description,
-                                Speciality = _speciality,
-                                profileImage = newFileName,
-                                PhoneNumber = _phoneNumber,
+                                UserId = userId, // Set the UserId to the user's unique identifier
+                                Title = _studentData.Title,
+                                FirstName = _studentData.FirstName,
+                                MiddleName = _studentData.MiddleName,
+                                LastName = _studentData.LastName,
+                                Email = _studentData.Email,
+                                Address = _studentData.Address,
+                                Description = _studentData.Description,
+                                profileImage = _newFileName,
+                                Speciality = _studentData.Speciality,
+                                PhoneNumber = _studentData.PhoneNumber,
                                 RegisteredDate = DateTime.Now,
-                                UpdatedDate = DateTime.Now,
-                                UserId = userId // Set the UserId to the user's unique identifier
+                                UpdatedDate = DateTime.Now
+
                             };
 
                         Message = await _studentService.CreateStudent(_studentData);
@@ -439,25 +415,25 @@
                     // Convert the string representation to a Guid
                     if (Guid.TryParse(userIdString, out Guid userId))
                     {
-                        CompanyModel companyData = new CompanyModel
-                            {
-                                CompanyName = _companyName,
-                                CompanyAddress = _companyAddress,
-                                Region = _region,
-                                Email = _email,
-                                Link = _link,
-                                Preferences = _preferences,
-                                Description = _description,
-                                PhoneNumber = _phoneNumber,
-                                profileImage = newFileName,
-                                IsHiring = _isHiring,
-                                IsVisible = _isVisible,
+                        _companyData = new CompanyModel
+                        {
+                                UserId = userId,
+                                CompanyName = _companyData.CompanyName,
+                                CompanyAddress = _companyData.CompanyAddress,
+                                Region = _companyData.Region,
+                                Email = _companyData.Email,
+                                Link = _companyData.Link,
+                                Preferences = _companyData.Preferences,
+                                Description = _companyData.Description,
+                                PhoneNumber = _companyData.PhoneNumber,
+                                profileImage = _newFileName,
+                                IsHiring = _companyData.IsHiring,
+                                IsVisible = _companyData.IsVisible,
                                 UpdatedDate = DateTime.Now,
                                 RegisteredDate = DateTime.Now,
-                                UserId = userId
-                            };
+                        };
 
-                        Message = await _companyService.CreateCompany(companyData);
+                        Message = await _companyService.CreateCompany(_companyData);
                         NavManager.NavigateTo("/profile");
                     }
                     else
@@ -522,7 +498,7 @@
     }
     #endregion
 
-    #region file input
+    #region Picture file input
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
         errors.Clear();
@@ -537,14 +513,14 @@
         {
             try
             {
-                newFileName = Path.ChangeExtension(
+                _newFileName = Path.ChangeExtension(
                 Path.GetRandomFileName(),
                 Path.GetExtension(file.Name));
 
                 string path = Path.Combine(
                     Configuration.GetValue<string>("FileStorage")!,
                     "",
-                    newFileName);
+                    _newFileName);
 
                 Directory.CreateDirectory(Path.Combine(
                     Configuration.GetValue<string>("FileStorage")!,
