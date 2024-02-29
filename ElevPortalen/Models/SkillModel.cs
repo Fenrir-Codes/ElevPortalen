@@ -8,7 +8,34 @@ namespace ElevPortalen.Models
         [Key]
         public int Id { get; set; }
         public int StudentId { get; set; }
-        public string? SkillName { get; set; }
+
+        // Programming languages
+        public bool CSharp { get; set; }
+        public bool Java { get; set; }
+        public bool DotNet { get; set; }
+        public bool Typescript { get; set; }
+        public bool Python { get; set; }
+        public bool PHP { get; set; }
+        public bool CPlusPlus { get; set; }
+        public bool C { get; set; }
+
+        // Web development technologies
+        public bool Bootstrap { get; set; }
+        public bool Blazor { get; set; }
+        public bool JavaScript { get; set; }
+        public bool HTML { get; set; }
+        public bool CSS { get; set; }
+
+        // Database technologies
+        public bool SQL { get; set; }
+        public bool MongoDB { get; set; }
+
+        // Other skills
+        public bool OfficePack { get; set; }
+        public bool CloudComputing { get; set; }
+        public bool VersionControl { get; set; }
+        public bool OOP { get; set; }
+
 
         [ForeignKey("StudentId")]
         public virtual StudentModel Student { get; set; }
