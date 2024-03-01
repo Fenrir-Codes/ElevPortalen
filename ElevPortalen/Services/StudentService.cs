@@ -50,8 +50,12 @@ namespace ElevPortalen.Services
             try
             {
                 //Get all the data
-                var response = await _context.Student.AsNoTracking().Where(user => user.UserId
-                    == Guid.Parse(_user.FindFirstValue(ClaimTypes.NameIdentifier))).ToListAsync();
+                //var response = await _context.Student.AsNoTracking().Where(user => user.UserId
+                //    == Guid.Parse(_user.FindFirstValue(ClaimTypes.NameIdentifier))).ToListAsync();
+
+                //Including theis skills
+                var response = await _context.Student.Include(s => s.Skills).AsNoTracking()
+                    .Where(user => user.UserId == Guid.Parse(_user.FindFirstValue(ClaimTypes.NameIdentifier))).ToListAsync();
 
                 if (response != null)
                 {

@@ -29,39 +29,37 @@ namespace ElevPortalen.Services
 
                 if (existingSkills != null)
                 {
-                    // Student already has skills, consider updating instead of creating
-                    return "Skills already exist for the student. Consider updating instead of creating.";
+                    // Student already has skills, update the existing skills
+                    existingSkills.CSharp = newSkills.CSharp;
+                    existingSkills.Java = newSkills.Java;
+                    existingSkills.DotNet = newSkills.DotNet;
+                    existingSkills.Typescript = newSkills.Typescript;
+                    existingSkills.Python = newSkills.Python;
+                    existingSkills.PHP = newSkills.PHP;
+                    existingSkills.CPlusPlus = newSkills.CPlusPlus;
+                    existingSkills.C = newSkills.C;
+                    existingSkills.Bootstrap = newSkills.Bootstrap;
+                    existingSkills.Blazor = newSkills.Blazor;
+                    existingSkills.JavaScript = newSkills.JavaScript;
+                    existingSkills.HTML = newSkills.HTML;
+                    existingSkills.CSS = newSkills.CSS;
+                    existingSkills.SQL = newSkills.SQL;
+                    existingSkills.OfficePack = newSkills.OfficePack;
+                    existingSkills.CloudComputing = newSkills.CloudComputing;
+                    existingSkills.VersionControl = newSkills.VersionControl;
+                    existingSkills.NetWork = newSkills.NetWork;
+                    existingSkills.ProblemSolving = newSkills.ProblemSolving;
+                    existingSkills.Communikation = newSkills.Communikation;
+                    existingSkills.TeamWorking = newSkills.TeamWorking;
+                    existingSkills.WillingToLearn = newSkills.WillingToLearn;
+
+                    await _context.SaveChangesAsync();
+
+                    return null;
                 }
 
                 // Create new skills entry
-                newSkills = new SkillModel
-                {
-                    StudentId = studentId,
-                    CSharp = newSkills.CSharp,
-                    Java = newSkills.Java,
-                    DotNet = newSkills.DotNet,
-                    Typescript = newSkills.Typescript,
-                    Python = newSkills.Python,
-                    PHP = newSkills.PHP,
-                    CPlusPlus = newSkills.CPlusPlus,
-                    C = newSkills.C,
-                    Bootstrap = newSkills.Bootstrap,
-                    Blazor = newSkills.Blazor,
-                    JavaScript = newSkills.JavaScript,
-                    HTML = newSkills.HTML,
-                    CSS = newSkills.CSS,
-                    SQL = newSkills.SQL,
-                    OfficePack = newSkills.OfficePack,
-                    CloudComputing = newSkills.CloudComputing,
-                    VersionControl = newSkills.VersionControl,
-                    NetWork = newSkills.NetWork,
-                    ProblemSolving = newSkills.ProblemSolving,
-                    Communikation = newSkills.Communikation,
-                    TeamWorking = newSkills.TeamWorking,
-                    WillingToLearn = newSkills.WillingToLearn
-
-                };
-
+                newSkills.StudentId = studentId;
                 _context.StudentSkills.Add(newSkills);
                 await _context.SaveChangesAsync();
 
@@ -69,9 +67,10 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Failed to create skills: {ex.Message}");
+                throw new InvalidOperationException($"Failed to create/update skills: {ex.Message}");
             }
         }
+
 
         #endregion
 

@@ -26,5 +26,8 @@ namespace ElevPortalen.Models
         public DateTime RegisteredDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 
+
+        public virtual SkillModel? Skills { get; set; }
+
     }
 }
