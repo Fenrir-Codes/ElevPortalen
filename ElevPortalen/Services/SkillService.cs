@@ -34,7 +34,7 @@ namespace ElevPortalen.Services
                 }
 
                 // Create new skills entry
-                var newEntry = new SkillModel
+                newSkills = new SkillModel
                 {
                     StudentId = studentId,
                     CSharp = newSkills.CSharp,
@@ -51,15 +51,18 @@ namespace ElevPortalen.Services
                     HTML = newSkills.HTML,
                     CSS = newSkills.CSS,
                     SQL = newSkills.SQL,
-                    MongoDB = newSkills.MongoDB,
                     OfficePack = newSkills.OfficePack,
                     CloudComputing = newSkills.CloudComputing,
                     VersionControl = newSkills.VersionControl,
-                    OOP = newSkills.OOP
+                    NetWork = newSkills.NetWork,
+                    ProblemSolving = newSkills.ProblemSolving,
+                    Communikation = newSkills.Communikation,
+                    TeamWorking = newSkills.TeamWorking,
+                    WillingToLearn = newSkills.WillingToLearn
 
                 };
 
-                _context.StudentSkills.Add(newEntry);
+                _context.StudentSkills.Add(newSkills);
                 await _context.SaveChangesAsync();
 
                 return null;
@@ -97,7 +100,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Update
-        public async Task<string?> UpdateSkills(int studentId,SkillModel updatedSkills)
+        public async Task<string?> UpdateSkills(int studentId, SkillModel updatedSkills)
         {
             try
             {
@@ -122,17 +125,23 @@ namespace ElevPortalen.Services
                     entry.HTML = updatedSkills.HTML;
                     entry.CSS = updatedSkills.CSS;
                     entry.SQL = updatedSkills.SQL;
-                    entry.MongoDB  = updatedSkills.MongoDB;
                     entry.OfficePack = updatedSkills.OfficePack;
                     entry.CloudComputing = updatedSkills.CloudComputing;
                     entry.VersionControl = updatedSkills.VersionControl;
-                    entry.OOP = updatedSkills.OOP;
+                    entry.NetWork = updatedSkills.NetWork;
+                    entry.ProblemSolving = updatedSkills.ProblemSolving;
+                    entry.Communikation = updatedSkills.Communikation;
+                    entry.TeamWorking = updatedSkills.TeamWorking;
+                    entry.WillingToLearn = updatedSkills.WillingToLearn;
+
 
                     _context.Entry(entry).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
 
                     return "Skills updated successfully";
                 }
+
+
                 else
                 {
                     return "Student not found"; // Return a message when the student is not found

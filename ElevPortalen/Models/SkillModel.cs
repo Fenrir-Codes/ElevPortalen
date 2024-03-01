@@ -28,13 +28,16 @@ namespace ElevPortalen.Models
 
         // Database technologies
         public bool SQL { get; set; }
-        public bool MongoDB { get; set; }
 
         // Other skills
         public bool OfficePack { get; set; }
         public bool CloudComputing { get; set; }
         public bool VersionControl { get; set; }
-        public bool OOP { get; set; }
+        public bool ProblemSolving { get; set; }
+        public bool Communikation { get; set; }
+        public bool TeamWorking { get; set; }
+        public bool WillingToLearn { get; set; }
+        public bool NetWork { get; set; }
 
 
         [ForeignKey("StudentId")]
