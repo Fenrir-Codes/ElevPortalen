@@ -10,6 +10,7 @@
 
 @inject StudentService _studentService
 @inject CompanyService _companyService
+@inject SkillService _skillService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavManager
 @inject IJSRuntime jsRuntime
@@ -174,30 +175,28 @@
                             <div class="card mb-4">
                                 <div class="card-body shadow-sm">
                                     <h5>Skills:</h5>
-                                    <ul>
-                                        @if (data != null && data.Skills != null)
-                                        {
-                                            @foreach (var skill in typeof(SkillModel).GetProperties())
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            @if (data != null && data.Skills != null)
                                             {
-                                                if (skill.PropertyType == typeof(bool))
-                                                {
-                                                    var skillName = skill.Name;
-                                                    var skillValue = (bool)skill.GetValue(data.Skills); //getting the value (0 or 1)
+                                                var skills = GetSkills(data);
 
-                                                    if (skillValue) //if value true i mean 1
-                                                    {
-                                                        <li>@skillName</li> //display the name of the skill
-                                                    }
-                                                }
+                                                <div class="col-lg-12">
+                                                    <!--display the names of the skills in a single row-->
+                                                    <h5>
+                                                        @foreach (var skillName in skills)
+                                                        {
+                                                            <span class="badge bg-secondary m-1">@skillName</span>
+                                                        }
+                                                    </h5>
+                                                </div>
                                             }
-                                        }
-                                        else
-                                        {
-                                            <li>No skills available</li>
-                                        }
-                                    </ul>
-
-
+                                            else
+                                            {
+                                                <p>No skills available</p>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -557,6 +556,23 @@
     }
     #endregion
 
+    #region Getting the skills to List
+    private List<string> GetSkills(StudentModel data)
+    {
+        if (data == null || data.Skills == null)
+        {
+            return new List<string>();
+        }
+
+        var skills = typeof(SkillModel).GetProperties()
+            .Where(skill => skill.PropertyType == typeof(bool) && (bool)skill.GetValue(data.Skills))
+            .Select(skill => skill.Name)
+            .ToList();
+
+        return skills;
+    }
+    #endregion
+
     #region Getting the data with the service call from company
     private async Task GetCompanyData(ClaimsPrincipal _user)
     {
@@ -617,6 +633,7 @@
     {
         if (isConfirmationChecked)
         {
+            await _skillService.DeleteSkills(id);
             await _studentService.Delete(id);
             NavManager.NavigateTo("/");
         }
