@@ -186,14 +186,16 @@
                                                     <h5>
                                                         @foreach (var skillName in skills)
                                                         {
-                                                            <span class="badge bg-secondary m-1">@skillName</span>
+                                                            <span class="badge bg-dark m-1">@skillName</span>
                                                         }
                                                     </h5>
                                                 </div>
+                                                <button class="btn btn-outline-success">Update</button>
                                             }
                                             else
                                             {
                                                 <p>No skills available</p>
+                                                <button class="btn btn-outline-success">Add</button>
                                             }
                                         </div>
                                     </div>
@@ -468,6 +470,7 @@
     private ClaimsPrincipal? _user;
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
+    private SkillModel _Skills = new SkillModel();
 
     private UpdateModalDialog? DialogModal { get; set; }
 
