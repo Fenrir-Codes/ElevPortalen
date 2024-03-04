@@ -44,7 +44,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get one Student request
+        #region Get Student request
         public async Task<List<StudentModel>> ReadData(ClaimsPrincipal _user)
         {
             try
@@ -53,7 +53,7 @@ namespace ElevPortalen.Services
                 //var response = await _context.Student.AsNoTracking().Where(user => user.UserId
                 //    == Guid.Parse(_user.FindFirstValue(ClaimTypes.NameIdentifier))).ToListAsync();
 
-                //Including theis skills
+                //Including the skills
                 var response = await _context.Student.Include(s => s.Skills).AsNoTracking()
                     .Where(user => user.UserId == Guid.Parse(_user.FindFirstValue(ClaimTypes.NameIdentifier))).ToListAsync();
 

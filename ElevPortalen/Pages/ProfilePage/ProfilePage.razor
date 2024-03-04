@@ -916,8 +916,9 @@
     private async Task UpdateSkills(int studentId)
     {
         var result = await _skillService.UpdateSkills(studentId, _Skills);
-        await OnInitializedAsync();
         isUpdateSectionVisible = false;
+        await OnInitializedAsync();
+       
     }
     #endregion
 
