@@ -19,7 +19,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Getting the skill Name to List
+        #region Getting the skill Name as string to List
         public async Task<List<string>> GetSkills(StudentModel data)
         {
             if (data == null || data.Skills == null)
@@ -97,17 +97,10 @@ namespace ElevPortalen.Services
         {
             try
             {
-                var student = await _context.StudentSkills
-                    .FirstOrDefaultAsync(s => s.StudentId == studentId);
+                var skills = await _context.StudentSkills
+                    .Where(s => s.StudentId == studentId).FirstAsync();
 
-                if (student != null)
-                {
-                    return student;
-                }
-                else
-                {
-                    throw new InvalidOperationException($"An error occurred while finding user's Id. Or no Id in database.");
-                }
+                return skills;
             }
             catch (Exception ex)
             {
@@ -138,7 +131,6 @@ namespace ElevPortalen.Services
                     entry.Bootstrap = updatedSkills.Bootstrap;
                     entry.Blazor = updatedSkills.Blazor;
                     entry.JavaScript = updatedSkills.JavaScript;
-                    entry.Java = updatedSkills.Java;
                     entry.HTML = updatedSkills.HTML;
                     entry.CSS = updatedSkills.CSS;
                     entry.SQL = updatedSkills.SQL;

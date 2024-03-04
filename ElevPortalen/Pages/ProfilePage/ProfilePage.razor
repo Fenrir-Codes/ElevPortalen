@@ -177,6 +177,7 @@
                                     <h3>Skills:</h3>
                                     <div class="row">
                                         <div class="col-lg-12">
+                                            <!--Show skill names section-->
                                             @if (!isAddSectionVisible && !isUpdateSectionVisible)
                                             {
                                                 @if (data != null && data.Skills != null)
@@ -190,7 +191,7 @@
                                                             }
                                                         </h5>
                                                     </div>
-                                                    <button class="btn btn-outline-success" @onclick="ToggleUpdateSkillsSection">Opdater</button>
+                                                    <button class="btn btn-outline-success" @onclick="() => ToggleUpdateSkillsSection(data.StudentId)">Opdater</button>
                                                 }
                                                 else
                                                 {
@@ -200,6 +201,8 @@
                                             }
                                             else if(isAddSectionVisible)
                                             {
+
+                                                <!--Skills Add section-->
                                                 <div class="row">
                                                     <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
                                                     <div class="col-md-3 mb-2">
@@ -289,17 +292,105 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <button class="btn btn-outline-success" @onclick="() => AddSkills(data.StudentId)">Gem</button>
                                                 <button class="btn btn-outline-danger" @onclick="ToggleAddSkillsSection">Tilbage</button>
                                             }
                                             else
                                             {
+                                                <!--Skills update section-->
+                                                    <div class="row">
+                                                        <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
+                                                        <div class="col-md-3 mb-2">
+                                                            <label class="mb-1 small form-label fw-bold" for="_Skills">Programmeringssprog</label>
 
-                                                <p>Update section</p>
+                                                            <div class="row">
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.CSharp" /> C#
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.Java" /> Java
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.DotNet" /> .Net
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.Typescript" /> TypeScript
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.Python" /> Python
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 mb-2">
+                                                            <div class="row">
+                                                                <label class="mt-4">
+                                                                <input type="checkbox" @bind="_Skills.PHP" /> PHP
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.CPlusPlus" /> C++
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.C" /> C
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.Blazor" /> Blazor
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.JavaScript" /> JavaScript
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 mb-3">
+                                                            <label class="mb-1 small form-label fw-bold" for="_Skills">Web-Udvikling</label>
 
+                                                            <div class="row">
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.Bootstrap" /> Bootstrap
+                                                                </label>
 
-                                                <button class="btn btn-outline-success" @onclick="() => UpdateSkills(data.StudentId)">Gem</button>
-                                                <button class="btn btn-outline-danger" @onclick="ToggleUpdateSkillsSection">Tilbage</button>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.HTML" /> Html
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.CSS" /> CSS
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.SQL" /> SQL
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.NetWork" /> Network
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 mb-2">
+                                                            <label class="mb-1 small form-label fw-bold" for="_Skills">Andet</label>
+
+                                                            <div class="row">
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.OfficePack" /> Office pakken
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.CloudComputing" /> Cloud technologies
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.VersionControl" /> Git / GitHub
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.Communikation" /> Kommunikation
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.ProblemSolving" /> Problemsolving
+                                                                </label>
+                                                                <label>
+                                                                <input type="checkbox" @bind="_Skills.TeamWorking" /> Team work
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                                                       
+                                                <button class="btn btn-outline-success" @onclick="() => UpdateSkills(data.StudentId)">Opdater</button>
+                                                <button class="btn btn-outline-danger" @onclick="HideUpdateSection">Tilbage</button>
                                             }
                                         </div>
                                     </div>
@@ -610,6 +701,7 @@
                 isAuthenticated = true;
                 _Name = _user.Identity.Name!.ToString();
                 await ReadData(); //Read profile data
+
                 //Read skills data connected to the profile 
                 await GetSkills(_studentList);
 
@@ -665,11 +757,11 @@
     }
     #endregion
 
-    #region Getting the skill Name to List
+    #region Getting the skill Name to List (string)
     private async Task GetSkills(List<StudentModel> data)
     {
         foreach (var studentData in _studentList)
-        {
+         {
             _SkillsOfStudent = await _skillService.GetSkills(studentData);
         }
     }
@@ -789,7 +881,7 @@
     }
     #endregion
 
-    #region Toggle button for add skill section
+    #region Toggle Button For Add Section
     void ToggleAddSkillsSection()
     {
         isAddSectionVisible = !isAddSectionVisible;
@@ -797,7 +889,15 @@
     #endregion
 
     #region Toggle button for Update section
-    void ToggleUpdateSkillsSection()
+    private async Task ToggleUpdateSkillsSection(int id)
+    {
+        isUpdateSectionVisible = true;
+        _Skills = await _skillService.GetSkillsByStudentId(id);
+    }
+    #endregion
+
+    #region Toggle For The Update Section
+    void HideUpdateSection()
     {
         isUpdateSectionVisible = !isUpdateSectionVisible;
     }
@@ -817,6 +917,7 @@
     {
         var result = await _skillService.UpdateSkills(studentId, _Skills);
         await OnInitializedAsync();
+        isUpdateSectionVisible = false;
     }
     #endregion
 
