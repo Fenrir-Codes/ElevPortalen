@@ -181,12 +181,10 @@
                                             {
                                                 @if (data != null && data.Skills != null)
                                                 {
-                                                    var skills = GetSkills(data);
-
                                                     <div class="col-lg-12">
                                                         <!--display the names of the skills in a single row-->
                                                         <h5>
-                                                            @foreach (var skillName in skills)
+                                                            @foreach (var skillName in _SkillsOfStudent)
                                                             {
                                                                 <span class="badge bg-dark m-1">@skillName</span>
                                                             }
@@ -298,6 +296,8 @@
                                             {
 
                                                 <p>Update section</p>
+
+
                                                 <button class="btn btn-outline-success" @onclick="() => UpdateSkills(data.StudentId)">Gem</button>
                                                 <button class="btn btn-outline-danger" @onclick="ToggleUpdateSkillsSection">Tilbage</button>
                                             }
@@ -570,6 +570,7 @@
     private List<StudentModel> _studentList = new List<StudentModel>();
     private List<CompanyModel> _companyList = new List<CompanyModel>();
     private SkillModel _Skills = new SkillModel();
+    private List<string> _SkillsOfStudent = new List<string>();
 
     private UpdateModalDialog? DialogModal { get; set; }
 
@@ -608,7 +609,10 @@
                 // If authenticated set the bool to true zhan read the users data from the data table with the help of ReadData function
                 isAuthenticated = true;
                 _Name = _user.Identity.Name!.ToString();
-                await ReadData();
+                await ReadData(); //Read profile data
+                //Read skills data connected to the profile 
+                await GetSkills(_studentList);
+
             }
             else
             {
@@ -661,20 +665,13 @@
     }
     #endregion
 
-    #region Getting the skills to List
-    private List<string> GetSkills(StudentModel data)
+    #region Getting the skill Name to List
+    private async Task GetSkills(List<StudentModel> data)
     {
-        if (data == null || data.Skills == null)
+        foreach (var studentData in _studentList)
         {
-            return new List<string>();
+            _SkillsOfStudent = await _skillService.GetSkills(studentData);
         }
-
-        var skills = typeof(SkillModel).GetProperties()
-            .Where(skill => skill.PropertyType == typeof(bool) && (bool)skill.GetValue(data.Skills))
-            .Select(skill => skill.Name)
-            .ToList();
-
-        return skills;
     }
     #endregion
 
@@ -822,4 +819,6 @@
         await OnInitializedAsync();
     }
     #endregion
+
+
 }
