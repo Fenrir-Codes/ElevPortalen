@@ -81,11 +81,11 @@
                                     <div class="d-flex justify-content-center mb-2">
                                         <button type="button" class="btn btn-outline-success"
                                                 @onclick="() => DialogModal?.OpenStudentUpdate(data.StudentId)">
-                                            Update Profile
+                                            Opdater Profil
                                         </button>
                                         <button type="button" class="btn btn-outline-danger ms-1"
                                                 @onclick="() => DeleteStudentData(data.StudentId)" disabled="@(!isConfirmationChecked)">
-                                            Delete Profile
+                                            Slette profil
                                         </button>
                                     </div>
                                     <div class="row-lg-4 gx-3 mb-3">
@@ -192,12 +192,12 @@
                                                             }
                                                         </h5>
                                                     </div>
-                                                    <button class="btn btn-outline-success" @onclick="ToggleUpdateSkillsSection">Update</button>
+                                                    <button class="btn btn-outline-success" @onclick="ToggleUpdateSkillsSection">Opdater</button>
                                                 }
                                                 else
                                                 {
-                                                    <p>No skills available, you can add your skills.</p>
-                                                    <button class="btn btn-outline-success" @onclick="ToggleAddSkillsSection">Add</button>
+                                                    <p>Ingen tilgængelige færdigheder, du kan tilføje dine færdigheder.</p>
+                                                    <button class="btn btn-outline-success" @onclick="ToggleAddSkillsSection">Tilføj</button>
                                                 }
                                             }
                                             else if(isAddSectionVisible)
@@ -292,14 +292,14 @@
                                                     </div>
                                                 </div>
                                                 <button class="btn btn-outline-success" @onclick="() => AddSkills(data.StudentId)">Gem</button>
-                                                <button class="btn btn-outline-success" @onclick="ToggleAddSkillsSection">Tilbage</button>
+                                                <button class="btn btn-outline-danger" @onclick="ToggleAddSkillsSection">Tilbage</button>
                                             }
                                             else
                                             {
 
                                                 <p>Update section</p>
                                                 <button class="btn btn-outline-success" @onclick="() => UpdateSkills(data.StudentId)">Gem</button>
-                                                <button class="btn btn-outline-success" @onclick="ToggleUpdateSkillsSection">Tilbage</button>
+                                                <button class="btn btn-outline-danger" @onclick="ToggleUpdateSkillsSection">Tilbage</button>
                                             }
                                         </div>
                                     </div>
