@@ -114,7 +114,7 @@ namespace ElevPortalen.Services
         {
             try
             {
-                var entry = await _context.StudentSkills.FindAsync(studentId);
+                var entry = await _context.StudentSkills.FirstOrDefaultAsync(s => s.StudentId == studentId);
 
                 // If the entry is not null
                 if (entry != null)
