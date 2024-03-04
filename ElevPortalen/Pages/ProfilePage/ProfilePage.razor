@@ -174,10 +174,10 @@
                         <div class="col-lg-12">
                             <div class="card mb-4">
                                 <div class="card-body shadow-sm">
-                                    <h5>Skills:</h5>
+                                    <h3>Skills:</h3>
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            @if (!isAddSectionVisible)
+                                            @if (!isAddSectionVisible && !isUpdateSectionVisible)
                                             {
                                                 @if (data != null && data.Skills != null)
                                                 {
@@ -192,15 +192,15 @@
                                                             }
                                                         </h5>
                                                     </div>
-                                                    <button class="btn btn-outline-success">Update</button>
+                                                    <button class="btn btn-outline-success" @onclick="ToggleUpdateSkillsSection">Update</button>
                                                 }
                                                 else
                                                 {
-                                                    <p>No skills available</p>
+                                                    <p>No skills available, you can add your skills.</p>
                                                     <button class="btn btn-outline-success" @onclick="ToggleAddSkillsSection">Add</button>
                                                 }
                                             }
-                                            else
+                                            else if(isAddSectionVisible)
                                             {
                                                 <div class="row">
                                                     <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
@@ -291,7 +291,15 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button class="btn btn-outline-success" @onclick="() => AddSkills(data.StudentId)">Close add</button>
+                                                <button class="btn btn-outline-success" @onclick="() => AddSkills(data.StudentId)">Gem</button>
+                                                <button class="btn btn-outline-success" @onclick="ToggleAddSkillsSection">Tilbage</button>
+                                            }
+                                            else
+                                            {
+
+                                                <p>Update section</p>
+                                                <button class="btn btn-outline-success" @onclick="() => UpdateSkills(data.StudentId)">Gem</button>
+                                                <button class="btn btn-outline-success" @onclick="ToggleUpdateSkillsSection">Tilbage</button>
                                             }
                                         </div>
                                     </div>
@@ -573,6 +581,7 @@
     private bool isAuthenticated = false;
     private bool isConfirmationChecked = false;
     private bool isAddSectionVisible = false;
+    private bool isUpdateSectionVisible = false;
 
     private string Company = "Company";
     private string Student = "Student";
@@ -793,6 +802,13 @@
     void ToggleAddSkillsSection()
     {
         isAddSectionVisible = !isAddSectionVisible;
+    }
+    #endregion
+
+    #region Toggle button for Update section
+    void ToggleUpdateSkillsSection()
+    {
+        isUpdateSectionVisible = !isUpdateSectionVisible;
     }
     #endregion
 
