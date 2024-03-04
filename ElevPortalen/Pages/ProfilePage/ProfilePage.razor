@@ -91,7 +91,7 @@
                                     <div class="row-lg-4 gx-3 mb-3">
                                         <input class="form-check-input" type="checkbox" @bind="isConfirmationChecked">
                                         <label class="form-check-label">
-                                            Confirm Delete
+                                            Bekræft Slet
                                         </label>
                                     </div>
                                     <span style="color:red" hidden="@(!isConfirmationChecked)">
@@ -205,7 +205,7 @@
                                                 <div class="row">
                                                     <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
                                                     <div class="col-md-3 mb-2">
-                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Programming Languages</label>
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Programmeringssprog</label>
 
                                                         <div class="row">
                                                             <label>
@@ -245,7 +245,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3 mb-3">
-                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Web Development</label>
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Web-Udvikling</label>
 
                                                         <div class="row">
                                                             <label>
@@ -267,7 +267,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3 mb-2">
-                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Other Skills</label>
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Andet</label>
 
                                                         <div class="row">
                                                             <label>
@@ -371,17 +371,17 @@
                                     <div class="d-flex justify-content-center mb-2">
                                         <button type="button" class="btn btn-outline-success"
                                                 @onclick="() => DialogModal?.OpenCompanyUpdate(data.CompanyId)">
-                                            Update Profile
+                                           Opdater Profil
                                         </button>
                                         <button type="button" class="btn btn-outline-danger ms-1"
                                                 @onclick="() => DeleteCompanyData(data.CompanyId)" disabled="@(!isConfirmationChecked)">
-                                            Delete Profile
+                                            Slette Profil
                                         </button>
                                     </div>
                                     <div class="row-lg-4 gx-3 mb-3">
                                         <input class="form-check-input" type="checkbox" @bind="isConfirmationChecked">
                                         <label class="form-check-label">
-                                            Confirm Delete
+                                            Bekræft Slet
                                         </label>
                                     </div>
                                     <span style="color:red" hidden="@(!isConfirmationChecked)">
@@ -517,37 +517,32 @@
             else
             {
                 <p>
-                    @if (_authState.User.IsInRole(Student))
+                    @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
                     {
-                        Message = "It seems like no personal data have been added to your profile, click the button to register your data.";
-                        @Message
-                    }
-                    else if (_authState.User.IsInRole(Company))
-                    {
-                        Message = "It seems like no data have been added to your Company profile, click the button to register your data.";
+                        Message = "Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data.";
                         @Message
                     }
                     else
                     {
-                        Message = "You have no Role assigned!";
+                        Message = "Du har ingen rolle tildelt!";
                         @Message
                     }
                 </p>
                 <br>
-                <button class="btn btn-success" @onclick="NavigateToRegister">Go Register Your Data</button>
+                <button class="btn btn-success m-2" @onclick="NavigateToRegister">Go Register Your Data</button>
                 ;
                 <br />
 
                 @if (hasStudentRecoveryData)
                 {
-                    <button class="btn btn-success" @onclick="RecoverStudentData">Recover Your Data</button>
-                    <p>The Student's Guid is : @userIdClaim</p>
+                    <button class="btn btn-success m-2" @onclick="RecoverStudentData">Recover Your Data</button>
+               @*      <p>The Student's Guid is : @userIdClaim</p> *@
 
                 }
                 else if (hasCompanyRecoveryData)
                 {
-                    <button class="btn btn-success" @onclick="RecoverCompanyData">Data recovery available</button>
-                    <p>The Company's Guid is : @userIdClaim</p>
+                    <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Data recovery available</button>
+                   @*  <p>The Company's Guid is : @userIdClaim</p> *@
                 }
 
             }
@@ -559,7 +554,7 @@
 
         <!-- Not authorized view -->
         <NotAuthorized>
-            Message = "Please login first.";
+            Message = "Log ind først.";
             <label>@Message</label>
         </NotAuthorized>
 
@@ -598,7 +593,6 @@
     private bool hasCompanyRecoveryData = false;
     private string userIdClaim = "";
     #endregion
-
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
