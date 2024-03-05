@@ -54,6 +54,12 @@
                                         <input class="form-control" id="lastname" type="text"
                                                placeholder="Efternavn" @bind="_studentData.LastName">
                                     </div>
+                                    <!--Email-->
+                                    <div class="col-md-6">
+                                        <label class="small mb-1 fw-bold" for="Email">Email</label>
+                                        <input class="form-control" id="Email" type="email"
+                                               placeholder="example@example.com" @bind="_studentData.Email">
+                                    </div>
                                     <!-- Form Group (address)-->
                                     <div class="col-md-6">
                                         <label class="small mb-1 fw-bold" for="inputaddress">Addresse</label>
@@ -69,15 +75,15 @@
                                             }
                                         </datalist>
                                     </div>
-                                </div>
-                                <!-- Form Row -->
-                                <div class="row gx-3 mb-3">
+                                    <!--Phone-->
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1 fw-bold" for="inputPhone">Mobil</label>
                                         <input class="form-control" type="tel" id="inputPhone" name="phone"
                                                placeholder="12 34 56 78" @bind="_studentData.PhoneNumber" required>
                                     </div>
-
+                                </div>
+                                <!-- Form Row -->
+                                <div class="row gx-3 mb-3">
                                     <div class="col-md-6">
                                         <label class="small mb-1 fw-bold" for="_speciality">Specialisering</label>
                                         <select class="form-select form-select-md" @bind="_studentData.Speciality" id="_speciality" aria-label="Region" required>
