@@ -116,7 +116,8 @@
                                         <th scope="col">Addresse</th>
                                         <th scope="col">E-mail</th>
                                         <th scope="col">Telefonnummer</th>
-                                        <th scope="col">Specialisering</th>         
+                                        <th scope="col">Specialisering</th>    
+                                        <th scope="col">Operationer</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -129,6 +130,19 @@
                                             <td>@student.Email</td>
                                             <td>@student.PhoneNumber</td>
                                             <td>@student.Speciality</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Operation
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="#">Vis Profil</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item" href="#">Opdater</a></li>
+                                                        <li><a class="dropdown-item" href="#">Fjern</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
@@ -143,6 +157,7 @@
                                         <th scope="col">Firmanavn</th>
                                         <th scope="col">Addresse</th>
                                         <th scope="col">E-mail</th>
+                                        <th scope="col">Operationer</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -153,6 +168,19 @@
                                             <td>@company.CompanyName</td>
                                             <td>@company.CompanyAddress</td>
                                             <td>@company.Email</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Operation
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="#">Vis Profil</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item" href="#">Opdater</a></li>
+                                                        <li><a class="dropdown-item" href="#">Fjern</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
