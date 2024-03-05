@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between small">
-                            <div class="stretched-link">View</div>
+                            <div class="stretched-link" @onclick="ViewStudents">View</div>
                             <div class="" href="#"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
@@ -102,6 +102,32 @@
 
 
             <!--More contect after the hr tag   , it can be a list of users etc...-->
+            @if (_showStudentsTable)
+            {
+                <div class="container-fluid text-center p-4">
+                    <h2>Students</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in _students)
+                            {
+                                <tr>
+                                    <td>@student.StudentId</td>
+                                    <td>@student.FirstName</td>
+                                    <td>@student.Email</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
 
 
 
@@ -130,5 +156,15 @@
         _companyCount = await _companyService.GetCompaniesCountAsync();
 
     }
+
+    bool _showStudentsTable = false;
+    List<StudentModel> _students = new List<StudentModel>();
+
+    async Task ViewStudents()
+    {
+        _students = await _studentService.ReadAllStudentData();
+        _showStudentsTable = true;
+    }
+
 
 }
