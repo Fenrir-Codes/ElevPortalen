@@ -14,6 +14,7 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized>
+
         <!-- Container -->
         <div class="container-fluid text-center">
             <!-- Row with 4 cards -->
@@ -203,6 +204,19 @@
     </NotAuthorized>
 
 </AuthorizeView>
+
+<style>
+    .card-footer {
+        transition: transform 0.2s ease;
+    }
+
+    .card-footer:hover {
+        border-radius:5px;
+        transform: scale(0.98);
+        color: greenyellow;
+
+    }
+</style>
 
 @code {
 
