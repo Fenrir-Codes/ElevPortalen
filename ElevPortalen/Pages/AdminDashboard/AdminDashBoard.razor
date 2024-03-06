@@ -33,9 +33,9 @@
                                 <i class="fa-solid fa-user-check fa-2xl"></i>
                             </div>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            <div class="stretched-link" @onclick="ViewStudents">View</div>
-                            <div class="" href="#"><i class="fas fa-angle-right"></i></div>
+                        <div class="card-footer d-flex align-items-center justify-content-between small bg-dark" style="cursor:pointer; " @onclick="GetAllStudent">
+                            <div>View</div>
+                            <div><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -54,8 +54,8 @@
                                 <i class="fa-solid fa-building-circle-check fa-2xl"></i>
                             </div>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            <div class="text-white stretched-link">View</div>
+                        <div class="card-footer d-flex align-items-center justify-content-between small bg-dark" style="cursor:pointer" @onclick="GetAllCompany">
+                            <div>View</div>
                             <div class="text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
@@ -72,8 +72,8 @@
                                 <i class="fa-solid fa-square-check fa-2xl"></i>
                             </div>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            <div class="text-white stretched-link">View</div>
+                        <div class="card-footer d-flex align-items-center justify-content-between small bg-dark" style="cursor:pointer">
+                            <div>View</div>
                             <div class="text-white" href="#"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
@@ -90,8 +90,8 @@
                                 <i class="fa-solid fa-comment fa-2xl"></i>
                             </div>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small">
-                            <div class="text-white stretched-link">View</div>
+                        <div class="card-footer d-flex align-items-center justify-content-between small bg-dark" style="cursor:pointer">
+                            <div>View</div>
                             <div class="text-white" href="#"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
@@ -99,37 +99,100 @@
             </div>
             <hr />
 
-
-
             <!--More contect after the hr tag   , it can be a list of users etc...-->
-            @if (_showStudentsTable)
+            @if (_listOfStudents.Any() || _listOfConpanies.Any())
             {
-                <div class="container-fluid text-center p-4">
-                    <h2>Students</h2>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
+                <div class="card bg-secondary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">@_tableName</h5>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var student in _students)
-                            {
-                                <tr>
-                                    <td>@student.StudentId</td>
-                                    <td>@student.FirstName</td>
-                                    <td>@student.Email</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                        @if (_listOfStudents.Any())
+                        {
+                            <table class="table table-striped table-dark text-white">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Navn</th>
+                                        <th scope="col">Addresse</th>
+                                        <th scope="col">E-mail</th>
+                                        <th scope="col">Telefonnummer</th>
+                                        <th scope="col">Specialisering</th>    
+                                        <th scope="col">Operationer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var student in _listOfStudents)
+                                    {
+                                        <tr>
+                                            <th scope="row">@student.StudentId</th>
+                                            <td>@student.FirstName @student.MiddleName @student.LastName</td>
+                                            <td>@student.Address</td>
+                                            <td>@student.Email</td>
+                                            <td>@student.PhoneNumber</td>
+                                            <td>@student.Speciality</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Operation
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="#">Vis Profil</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item" href="#">Opdater</a></li>
+                                                        <li><a class="dropdown-item" href="#">Fjern</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else if (_listOfConpanies.Any())
+                        {
+                            <table class="table table-striped table-dark text-white">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Firmanavn</th>
+                                        <th scope="col">Addresse</th>
+                                        <th scope="col">E-mail</th>
+                                        <th scope="col">Operationer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var company in _listOfConpanies)
+                                    {
+                                        <tr>
+                                            <th scope="row">@company.CompanyId</th>
+                                            <td>@company.CompanyName</td>
+                                            <td>@company.CompanyAddress</td>
+                                            <td>@company.Email</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Operation
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="#">Vis Profil</a></li>
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li><a class="dropdown-item" href="#">Opdater</a></li>
+                                                        <li><a class="dropdown-item" href="#">Fjern</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <h5 class="card-title fw-bold">No data recieved!</h5>
+                        }
+                    </div>
                 </div>
             }
-
-
 
         </div>
       
@@ -142,20 +205,47 @@
 </AuthorizeView>
 
 @code {
+
+    private List<StudentModel> _listOfStudents = new List<StudentModel>();
+    private List<CompanyModel> _listOfConpanies = new List<CompanyModel>();
+    private string _tableName = "";
     int _studentCount = 0;
     int _companyCount = 0;
 
+    #region initialize
     protected override async Task OnInitializedAsync()
     {
+        _listOfConpanies.Clear();
+        _listOfStudents.Clear();
         await GetCount();
     }
+    #endregion
 
+    #region GetCount
     public async Task GetCount()
     {
         _studentCount = await _studentService.GetStudentCountAsync();
         _companyCount = await _companyService.GetCompaniesCountAsync();
-
     }
+    #endregion
+
+    #region Get all Student to a table
+    private async Task GetAllStudent()
+    {
+        _tableName = "Elever i Databasen";
+        _listOfConpanies.Clear();
+        _listOfStudents = await _studentService.ReadAllStudentData();
+    }
+    #endregion
+
+    #region Get all Company to a table
+    private async Task GetAllCompany()
+    {
+        _tableName = "Firmaer i Databasen";
+        _listOfStudents.Clear();
+        _listOfConpanies = await _companyService.ReadAllCompanyData();
+    }
+    #endregion
 
     bool _showStudentsTable = false;
     List<StudentModel> _students = new List<StudentModel>();
