@@ -34,7 +34,7 @@
                                 <i class="fa-solid fa-user-check fa-2xl"></i>
                             </div>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small bg-dark" style="cursor:pointer; " @onclick="GetAllStudent">
+                        <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer; " @onclick="GetAllStudent">
                             <div>View</div>
                             <div><i class="fas fa-angle-right"></i></div>
                         </div>
@@ -55,9 +55,9 @@
                                 <i class="fa-solid fa-building-circle-check fa-2xl"></i>
                             </div>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small bg-dark" style="cursor:pointer" @onclick="GetAllCompany">
+                        <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer" @onclick="GetAllCompany">
                             <div>View</div>
-                            <div class="text-white"><i class="fas fa-angle-right"></i></div>
+                            <div><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -73,9 +73,9 @@
                                 <i class="fa-solid fa-square-check fa-2xl"></i>
                             </div>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small bg-dark" style="cursor:pointer">
+                        <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer">
                             <div>View</div>
-                            <div class="text-white" href="#"><i class="fas fa-angle-right"></i></div>
+                            <div><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -91,9 +91,9 @@
                                 <i class="fa-solid fa-comment fa-2xl"></i>
                             </div>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small bg-dark" style="cursor:pointer">
+                        <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer">
                             <div>View</div>
-                            <div class="text-white" href="#"><i class="fas fa-angle-right"></i></div>
+                            <div href="#"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
@@ -205,18 +205,6 @@
 
 </AuthorizeView>
 
-<style>
-    .card-footer {
-        transition: transform 0.2s ease;
-    }
-
-    .card-footer:hover {
-        border-radius:5px;
-        transform: scale(0.98);
-        color: greenyellow;
-
-    }
-</style>
 
 @code {
 

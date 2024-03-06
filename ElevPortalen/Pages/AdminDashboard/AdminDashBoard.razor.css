@@ -1,0 +1,10 @@
+﻿
+.card-footer {
+    background-color: black;
+    transition: .3s;
+}
+
+.card-footer:hover {
+    background-color: yellowgreen;
+    color:black;
+}
