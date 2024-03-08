@@ -121,7 +121,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var student in _pagedStudents)
+                                    @foreach (var student in studentsToPage())
                                     {
                                         <tr>
                                             <th scope="row">@student.StudentId</th>
@@ -175,7 +175,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var company in _pagedCompanies)
+                                    @foreach (var company in companiesToPage())
                                     {
                                         <tr>
                                             <th scope="row">@company.CompanyId</th>
@@ -237,9 +237,6 @@
     // List of studentmodel and companymodel
     private List<StudentModel> _listOfStudents = new List<StudentModel>();
     private List<CompanyModel> _listOfConpanies = new List<CompanyModel>();
-    //Collection of Studentmodel and Companymodel
-    private IEnumerable<StudentModel> _pagedStudents => _listOfStudents.Skip((currentPage - 1) * PageSize).Take(PageSize); 
-    private IEnumerable<CompanyModel> _pagedCompanies => _listOfConpanies.Skip((currentPage - 1) * PageSize).Take(PageSize);
 
     //Table name
     private string _tableName = "";
@@ -248,10 +245,10 @@
     int _companyCount = 0;
 
     //Pagination
-    private const int PageSize = 10;  // Constant representing the number of items to display per page.
+    private const int PageSize = 1;  // Constant representing the number of items to display per page.
     private int currentPage = 1; //Current page set to 1
-    private int TotalPagesStudents => (int)Math.Ceiling((double)_listOfStudents.Count / PageSize); //Count the totalpages of studentdata
-    private int TotalPagesCompanies => (int)Math.Ceiling((double)_listOfConpanies.Count / PageSize); //Count the totalpages of companydata
+    private int TotalPagesStudents = 0; //Count the totalpages of studentdata
+    private int TotalPagesCompanies = 0; //Count the totalpages of companydata
 
     #region initialize
     protected override async Task OnInitializedAsync()
@@ -274,6 +271,7 @@
         _tableName = "Elever i Databasen";
         _listOfConpanies.Clear();
         _listOfStudents = await _studentService.ReadAllStudentData();
+        currentPage = 1;
     }
     #endregion
 
@@ -283,13 +281,31 @@
         _tableName = "Firmaer i Databasen";
         _listOfStudents.Clear();
         _listOfConpanies = await _companyService.ReadAllCompanyData();
+        currentPage = 1;
     }
     #endregion
 
-    #region Pagination Change Page Function
+    #region Pagination Collections and change page function
+    IEnumerable<StudentModel> studentsToPage()
+    {
+        TotalPagesStudents = (int)Math.Ceiling((double)_listOfStudents.Count / PageSize);
+        return _listOfStudents.Skip((currentPage - 1) * PageSize).Take(PageSize);
+    }
+
+    IEnumerable<CompanyModel> companiesToPage()
+    {
+        TotalPagesCompanies = (int)Math.Ceiling((double)_listOfConpanies.Count / PageSize);
+        return _listOfConpanies.Skip((currentPage - 1) * PageSize).Take(PageSize);
+    }
+
+    // Pagination Change Page Function
     private void ChangePage(int newPage)
     {
         if (newPage >= 1 && newPage <= TotalPagesStudents)
+        {
+            currentPage = newPage;
+        }
+        else if (newPage >= 1 && newPage <= TotalPagesCompanies)
         {
             currentPage = newPage;
         }
