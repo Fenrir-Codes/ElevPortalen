@@ -1,22 +1,58 @@
 ﻿@if (IsVisible)
 {
-    <div class="container-fluid">
-        <div class="message-content">
-            @Message
+    @if (isDanger)
+    {
+        <div class="container-fluid">
+            <div class="alert alert-danger" role="alert">
+                @Message
+            </div>
         </div>
-    </div>
+    }
+    else if (isSuccess)
+    {
+        <div class="container-fluid">
+            <div class="alert alert-success" role="alert">
+                @Message
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container-fluid">
+            <div class="alert alert-primary" role="alert">
+                @Message
+            </div>
+        </div>
+    }
 }
 
 @code {
     [Parameter]
-    public bool IsVisible { get; set; }
-
+    public bool IsVisible { get; set; } = false;
     [Parameter]
-    public string? Message { get; set; } = "TestMessage";
+    public string? Message { get; set; } = "";
+    [Parameter]
+    public bool isDanger { get; set; } = false;
+    [Parameter]
+    public bool isSuccess { get; set; } = false;
+    [Parameter]
+    public int waitForSeconds { get; set; } = 0;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // // Hide the component after 3 seconds
-       await Task.Delay(3000).ContinueWith(_ => IsVisible = false);
+        if (firstRender)
+        {
+            // Let the component render first
+            await Task.Delay(1);
+
+            // Hide the component after waitForSeconds given parameter
+            await Task.Delay(waitForSeconds);
+
+            // Update IsVisible after the delay
+            IsVisible = false;
+
+            // Trigger a re-render to apply the changes
+            StateHasChanged();
+        }
     }
 }

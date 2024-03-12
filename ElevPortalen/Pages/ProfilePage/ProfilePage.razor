@@ -199,7 +199,7 @@
                                                     <button class="btn btn-outline-success" @onclick="ToggleAddSkillsSection">Tilføj</button>
                                                 }
                                             }
-                                            else if(isAddSectionVisible)
+                                            else if (isAddSectionVisible)
                                             {
 
                                                 <!--Skills Add section-->
@@ -299,96 +299,96 @@
                                             else
                                             {
                                                 <!--Skills update section-->
-                                                    <div class="row">
-                                                        <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
-                                                        <div class="col-md-3 mb-2">
-                                                            <label class="mb-1 small form-label fw-bold" for="_Skills">Programmeringssprog</label>
+                                                <div class="row">
+                                                    <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Programmeringssprog</label>
 
-                                                            <div class="row">
-                                                                <label>
+                                                        <div class="row">
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.CSharp" /> C#
-                                                                </label>
-                                                                <label>
+                                                            </label>
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.Java" /> Java
-                                                                </label>
-                                                                <label>
+                                                            </label>
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.DotNet" /> .Net
-                                                                </label>
-                                                                <label>
+                                                            </label>
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.Typescript" /> TypeScript
-                                                                </label>
-                                                                <label>
+                                                            </label>
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.Python" /> Python
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3 mb-2">
-                                                            <div class="row">
-                                                                <label class="mt-4">
-                                                                <input type="checkbox" @bind="_Skills.PHP" /> PHP
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.CPlusPlus" /> C++
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.C" /> C
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.Blazor" /> Blazor
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.JavaScript" /> JavaScript
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3 mb-3">
-                                                            <label class="mb-1 small form-label fw-bold" for="_Skills">Web-Udvikling</label>
-
-                                                            <div class="row">
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.Bootstrap" /> Bootstrap
-                                                                </label>
-
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.HTML" /> Html
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.CSS" /> CSS
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.SQL" /> SQL
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.NetWork" /> Network
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3 mb-2">
-                                                            <label class="mb-1 small form-label fw-bold" for="_Skills">Andet</label>
-
-                                                            <div class="row">
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.OfficePack" /> Office pakken
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.CloudComputing" /> Cloud technologies
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.VersionControl" /> Git / GitHub
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.Communikation" /> Kommunikation
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.ProblemSolving" /> Problemsolving
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.TeamWorking" /> Team work
-                                                                </label>
-                                                            </div>
+                                                            </label>
                                                         </div>
                                                     </div>
-                                                                                       
+                                                    <div class="col-md-3 mb-2">
+                                                        <div class="row">
+                                                            <label class="mt-4">
+                                                                <input type="checkbox" @bind="_Skills.PHP" /> PHP
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CPlusPlus" /> C++
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.C" /> C
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Blazor" /> Blazor
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.JavaScript" /> JavaScript
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Web-Udvikling</label>
+
+                                                        <div class="row">
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Bootstrap" /> Bootstrap
+                                                            </label>
+
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.HTML" /> Html
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CSS" /> CSS
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.SQL" /> SQL
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.NetWork" /> Network
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Andet</label>
+
+                                                        <div class="row">
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.OfficePack" /> Office pakken
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CloudComputing" /> Cloud technologies
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.VersionControl" /> Git / GitHub
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Communikation" /> Kommunikation
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.ProblemSolving" /> Problemsolving
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.TeamWorking" /> Team work
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <button class="btn btn-outline-success" @onclick="() => UpdateSkills(data.StudentId)">Opdater</button>
                                                 <button class="btn btn-outline-danger" @onclick="HideUpdateSection">Tilbage</button>
                                             }
@@ -462,7 +462,7 @@
                                     <div class="d-flex justify-content-center mb-2">
                                         <button type="button" class="btn btn-outline-success"
                                                 @onclick="() => DialogModal!.OpenCompanyUpdate(data.CompanyId)">
-                                           Opdater Profil
+                                            Opdater Profil
                                         </button>
                                         <button type="button" class="btn btn-outline-danger ms-1"
                                                 @onclick="() => DeleteCompanyData(data.CompanyId)" disabled="@(!isConfirmationChecked)">
@@ -627,13 +627,13 @@
                 @if (hasStudentRecoveryData)
                 {
                     <button class="btn btn-success m-2" @onclick="RecoverStudentData">Recover Your Data</button>
-               @*      <p>The Student's Guid is : @userIdClaim</p> *@
+                    @*      <p>The Student's Guid is : @userIdClaim</p> *@
 
                 }
                 else if (hasCompanyRecoveryData)
                 {
                     <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Data recovery available</button>
-                   @*  <p>The Company's Guid is : @userIdClaim</p> *@
+                    @*  <p>The Company's Guid is : @userIdClaim</p> *@
                 }
 
             }
@@ -645,8 +645,7 @@
 
         <!-- Not authorized view -->
         <NotAuthorized>
-            Message = "Log ind først.";
-            <label>@Message</label>
+            <MessageBox IsVisible=true Message="Log ind først." isDanger=true waitForSeconds="60000"></MessageBox>
         </NotAuthorized>
 
     </AuthorizeView>
@@ -672,7 +671,7 @@
 
     private string Company = "Company";
     private string Student = "Student";
-    private string Message = "";
+    private string Message = "Log ind først.";
     private string _Name = "Default";
     private string _registeredDate = "";
 
@@ -702,7 +701,7 @@
                 _Name = _user.Identity.Name!.ToString();
                 await ReadData(); //Read profile data
 
-                //Read skills data connected to the profile 
+                //Read skills data connected to the profile
                 await GetSkills(_studentList);
 
             }
@@ -761,7 +760,7 @@
     private async Task GetSkills(List<StudentModel> data)
     {
         foreach (var studentData in _studentList)
-         {
+        {
             _SkillsOfStudent = await _skillService.GetSkills(studentData);
         }
     }
@@ -918,7 +917,7 @@
         var result = await _skillService.UpdateSkills(studentId, _Skills);
         isUpdateSectionVisible = false;
         await OnInitializedAsync();
-       
+
     }
     #endregion
 
