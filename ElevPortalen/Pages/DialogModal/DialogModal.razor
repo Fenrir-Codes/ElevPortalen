@@ -182,7 +182,7 @@
                         }
                         else
                         {
-                            <MessageBox IsVisible=@showMessage Message=@_Message waitForSeconds="10000"></MessageBox>
+                            _Message = $"No role assigned!";
                         }
 
                     </div>
@@ -238,7 +238,6 @@
     private bool isStudent = false;
     private bool isCompany = false;
     private bool showMessage = false;
-    private int successDelay = 5000;
 
 
     #region Handle validation submit (SubmitUpdate for Student)
@@ -253,7 +252,7 @@
         catch (Exception ex)
         {
             _Message = $"An error occurred sucessfully - " + ex.Message;
-            _messagebox.SetMessage(true, _Message,0, danger: true);
+            _messagebox.SetMessage(true, _Message,2000, danger: true);
         }
     }
     #endregion
