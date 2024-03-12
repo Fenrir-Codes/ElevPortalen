@@ -7,8 +7,10 @@
 
 <AuthorizeView Roles="Student, Company, Admin">
     <Authorized>
+
+        <!-- Modal -->
         <div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@DisplayStyle" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-body p-0" style="background-color:@ModalBgColor; color:@textColor;">
                         @if (isStudent)
@@ -20,26 +22,31 @@
                                 <div class="card-body">
                                     <!-- Row -->
                                     <div class="row gx-3 mb-3 px-4">
-                                        <div class="col-md-12">
-                                            <label for="title" class="form-label">Title</label>
+                                        <div class="col-md-6">
+                                            <label for="title" class="mb-1 fw-bold">Title</label>
                                             <input id="title" class="form-control" @bind="@_studentToUpdate.Title" placeholder="Title" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="mb-1 fw-bold" for="Email">Email</label>
+                                            <input class="form-control" id="Email" type="email"
+                                                   placeholder="example@example.com" @bind="@_studentToUpdate.Email">
                                         </div>
                                     </div>
                                     <!-- Row -->
                                     <div class="row gx-3 mb-3 px-4">
                                         <!-- Firstname -->
                                         <div class="col-md-4">
-                                            <label for="firstname" class="form-label">Fornavn</label>
+                                            <label for="firstname" class="mb-1 fw-bold">Fornavn</label>
                                             <input id="firstname" type="text" @bind="@_studentToUpdate.FirstName" class="form-control" placeholder="Fornavn" />
                                         </div>
                                         <!-- Middlename -->
                                         <div class="col-md-4">
-                                            <label for="Dmiddlename" class="form-label">Mellemnavn</label>
+                                            <label for="Dmiddlename" class="mb-1 fw-bold">Mellemnavn</label>
                                             <input id="middlename" type="text" @bind="@_studentToUpdate.MiddleName" class="form-control" placeholder="Mellemnavn" />
                                         </div>
                                         <!-- Lastname -->
                                         <div class="col-md-4">
-                                            <label for="lastname" class="form-label">Efternavn</label>
+                                            <label for="lastname" class="mb-1 fw-bold">Efternavn</label>
                                             <input id="lastname" type="text" @bind="@_studentToUpdate.LastName" class="form-control" placeholder="Efternavn" />
                                         </div>
                                     </div>
@@ -47,12 +54,12 @@
                                     <div class="row gx-3 mb-3 px-4">
                                         <!-- Address -->
                                         <div class="col-md-4">
-                                            <label for="address" class="form-label">Adresse</label>
+                                            <label for="address" class="mb-1 fw-bold">Adresse</label>
                                             <input id="address" type="text" @bind="@_studentToUpdate.Address" class="form-control" placeholder="Adresse" />
                                         </div>
                                         <!-- Select speciality -->
                                         <div class="col-md-4">
-                                            <label for="Dregion" class="form-label">Specialisering</label>
+                                            <label for="Dregion" class="mb-1 fw-bold">Specialisering</label>
                                             <select id="region" class="form-select form-select-md" @bind="@_studentToUpdate.Speciality" aria-label="Region">
                                                 <option value="" disabled selected>Vælg dit speciale</option>
                                                 <option value="It-Support">It-Supporter</option>
@@ -62,15 +69,15 @@
                                         </div>
                                         <!-- Phone number-->
                                         <div class="col-md-4">
-                                            <label for="phone" class="form-label">Mobile</label>
+                                            <label for="phone" class="mb-1 fw-bold">Mobile</label>
                                             <input id="phone" type="text" @bind="@_studentToUpdate.PhoneNumber" class="form-control" placeholder="Telefonnummer" />
                                         </div>
                                     </div>
                                     <!-- Description Textarea -->
                                     <div class="row gx-3 mb-0 px-4">
                                         <div class="col-md-12">
-                                            <label for="Description" class="form-label">Beskrivelse</label>
-                                            <textarea class="form-control" @bind="_studentToUpdate.Description" id="_description" rows="16"></textarea>
+                                            <label for="Description" class="mb-1 fw-bold">Beskrivelse</label>
+                                            <textarea class="form-control" @bind="_studentToUpdate.Description" id="_description" rows="12"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -84,7 +91,7 @@
 
                                     <!--Header of the update page-->
                                     <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
-                                        <h3>Opdater Dine Oplysninger</h3>
+                                        Opdater Dine Oplysninger
                                     </div>
                                     <!--body of the update page-->
                                     <div class="card-body">
@@ -92,12 +99,12 @@
                                         <div class="row gx-3 mb-3 px-4">
                                             <!-- Company name -->
                                             <div class="col-md-4 mb-2">
-                                                <label for="companyname" class="form-label">Firmanavn</label>
+                                                <label for="companyname" class="mb-1 fw-bold">Firmanavn</label>
                                                 <input id="companyname" type="text" @bind="@_companyToUpdate.CompanyName" class="form-control" placeholder="Firmanavn" />
                                             </div>
                                             <!-- Address -->
-                                            <div class="col-md-8 mb-2">
-                                                <label for="address" class="form-label">Adresse</label>
+                                            <div class="col-md-4 mb-2">
+                                                <label for="address" class="mb-1 fw-bold">Adresse</label>
                                                 <input id="address" type="text" @bind="@_companyToUpdate.CompanyAddress" class="form-control" placeholder="Adresse" />
                                             </div>
                                         </div>
@@ -105,7 +112,7 @@
                                         <!-- Row -->
                                         <div class="row gx-3 mb-3 px-4">
                                             <div class="col-md-4 mb-2">
-                                                <label class="mb-2" for="_region">Region</label>
+                                                <label class="mb-1 fw-bold" for="_region">Region</label>
                                                 <select class="form-select form-select-md" @bind="_companyToUpdate.Region" id="_region" aria-label="Region">
                                                     <option disabled selected></option>
                                                     <option value="Region Nordjylland">Region Nordjylland</option>
@@ -117,20 +124,20 @@
                                             </div>
                                             <!-- Email -->
                                             <div class="col-md-4 mb-2">
-                                                <label for="email" class="form-label">E-mail</label>
+                                                <label for="email" class="mb-1 fw-bold">E-mail</label>
                                                 <input id="email" type="email" @bind="@_companyToUpdate.Email" class="form-control" placeholder="Email" />
                                             </div>
                                             <!-- Link -->
                                             <div class="col-md-4">
-                                                <label for="link" class="form-label">Website link</label>
-                                                <input id="link" type="text" @bind="@_companyToUpdate.Link" class="form-control" placeholder="Link" />
+                                                <label for="link" class="mb-1 fw-bold">Website link</label>
+                                                <input id="link" type="text" @bind="@_companyToUpdate.Link" class="form-control" placeholder="example@example.com" />
                                             </div>
                                         </div>
                                         <!-- Row -->
                                         <div class="row gx-3 mb-3 px-4">
                                             <!--select preferences-->
                                             <div class="col-md-4">
-                                                <label class="small mb-1" for="_preferences">Preference</label>
+                                                <label class="mb-1 fw-bold" for="_preferences">Preference</label>
                                                 <select class="form-select form-select-md" @bind="_companyToUpdate.Preferences" id="_preferences"
                                                         aria-label="Preferences">
                                                     <option value="" disabled selected></option>
@@ -144,7 +151,7 @@
                                         <!-- Row -->
                                         <div class="row gx-3 mb-1 px-4">
                                             <div class="col-md-12 mb-3">
-                                                <label for="Description" class="form-label">Beskrivelse</label>
+                                                <label for="Description" class="mb-1 fw-bold">Beskrivelse</label>
                                                 <textarea class="form-control" @bind="_companyToUpdate.Description" id="_description" rows="12"></textarea>
                                             </div>
                                         </div>

@@ -172,8 +172,10 @@
                                         <th class="tableheader" scope="col">Addresse</th>
                                         <th class="tableheader" scope="col">E-mail</th>
                                         <th class="tableheader" scope="col">Telefonnummer</th>
-                                        <th class="tableheader" scope="col">Operationer</th>
                                         <th class="tableheader" scope="col">Leder efter</th>
+                                        <th class="tableheader" scope="col">Ansatter nu</th>
+                                        <th class="tableheader" scope="col">Synlig</th>
+                                        <th class="tableheader" scope="col">Operationer</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -186,6 +188,26 @@
                                             <td>@company.Email</td>
                                             <td>@company.PhoneNumber</td>
                                             <td>@company.Preferences</td>
+                                            <td>
+                                                @if (company.IsHiring)
+                                                {
+                                                    <span>Ja</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Nej</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (company.IsVisible)
+                                                {
+                                                    <span>Ja</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Nej</span>
+                                                }
+                                            </td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn dropdown-toggle btn-operation" data-bs-toggle="dropdown" aria-expanded="false">
@@ -227,7 +249,7 @@
 
         </div>
 
-          <UpdateModalDialog @ref="DialogModal" profileId="@Id" OnClose="ReRenderTable"></UpdateModalDialog>
+          <DialogModal @ref="DialogModal" profileId="@Id" OnClose="ReRenderTable"></DialogModal>
     </Authorized>
 
     <NotAuthorized>
@@ -254,7 +276,7 @@
     private int TotalPagesStudents = 0; //Count the totalpages of studentdata
     private int TotalPagesCompanies = 0; //Count the totalpages of companydata
 
-    private UpdateModalDialog? DialogModal { get; set; }
+    private DialogModal? DialogModal { get; set; }
     private int Id { get; set; }
     private bool isStudent = false;
     private bool isCompany = false;

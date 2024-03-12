@@ -80,7 +80,7 @@
                                     @*                                     <p class="text-muted mb-4">@data.Address</p> *@
                                     <div class="d-flex justify-content-center mb-2">
                                         <button type="button" class="btn btn-outline-success"
-                                                @onclick="() => DialogModal?.OpenStudentUpdate(data.StudentId)">
+                                                @onclick="() => DialogModal!.OpenStudentUpdate(data.StudentId)">
                                             Opdater Profil
                                         </button>
                                         <button type="button" class="btn btn-outline-danger ms-1"
@@ -461,7 +461,7 @@
                                     <p class="text-muted mb-4">@data.CompanyAddress</p>
                                     <div class="d-flex justify-content-center mb-2">
                                         <button type="button" class="btn btn-outline-success"
-                                                @onclick="() => DialogModal?.OpenCompanyUpdate(data.CompanyId)">
+                                                @onclick="() => DialogModal!.OpenCompanyUpdate(data.CompanyId)">
                                            Opdater Profil
                                         </button>
                                         <button type="button" class="btn btn-outline-danger ms-1"
@@ -639,7 +639,7 @@
             }
 
             <!-- DialogModal for update view -->
-            <UpdateModalDialog @ref="DialogModal" StudentId="@StudentId" OnClose="ReRenderPage"></UpdateModalDialog>
+            <DialogModal @ref="DialogModal" profileId="@Id" OnClose="ReRenderPage"></DialogModal>
 
         </Authorized>
 
@@ -663,7 +663,7 @@
     private SkillModel _Skills = new SkillModel();
     private List<string> _SkillsOfStudent = new List<string>();
 
-    private UpdateModalDialog? DialogModal { get; set; }
+    private DialogModal? DialogModal { get; set; }
 
     private bool isAuthenticated = false;
     private bool isConfirmationChecked = false;
@@ -680,7 +680,7 @@
     private string textColor = "white";
 
     // The StudentId
-    private int StudentId { get; set; }
+    private int Id { get; set; }
     private bool hasStudentRecoveryData = false;
     private bool hasCompanyRecoveryData = false;
     private string userIdClaim = "";
@@ -921,6 +921,5 @@
        
     }
     #endregion
-
 
 }
