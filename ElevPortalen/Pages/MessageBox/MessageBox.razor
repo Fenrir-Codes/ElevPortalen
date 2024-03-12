@@ -1,42 +1,44 @@
 ﻿@if (IsVisible)
 {
-    @if (isDanger)
-    {
+    <div class="container fixed-bottom" style="max-width:600px">
+        @if (isDanger)
+        {
 
-        <div class="alert alert-danger d-flex align-items-center" role="alert">
-            <i class="fa-solid fa-triangle-exclamation m-2 fs-5"></i>
-            <span class="fs-5">@Message</span>
-        </div>
+            <div class="alert alert-danger d-flex align-items-center shadow-sm" role="alert">
+                <i class="fa-solid fa-triangle-exclamation m-2 fs-5"></i>
+                <span class="fs-5">@Message</span>
+            </div>
 
-    }
-    else if (isSuccess)
-    {
+        }
+        else if (isSuccess)
+        {
 
-        <div class="alert alert-success d-flex align-items-center" role="alert">
-            <i class="fa-solid fa-circle-check m-2 fs-5"></i>
-            <span class="fs-5">@Message</span>
-        </div>
+            <div class="alert alert-success d-flex align-items-center shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-check m-2 fs-5"></i>
+                <span class="fs-5">@Message</span>
+            </div>
 
-    }
-    else if (isWarning)
-    {
+        }
+        else if (isWarning)
+        {
 
-        <div class="alert alert-warning d-flex align-items-center" role="alert">
-            <i class="fa-solid fa-circle-info m-2 fs-5"></i>
-            <span class="fs-5">@Message</span>
-        </div>
+            <div class="alert alert-warning d-flex align-items-center shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-info m-2 fs-5"></i>
+                <span class="fs-5">@Message</span>
+            </div>
 
-    }
-    else
-    {
+        }
+        else
+        {
 
-        <div class="alert alert-primary d-flex align-items-center" role="alert">
-            <i class="fa-solid fa-circle-info m-2 fs-5"></i>
-            <span class="fs-5">@Message</span>
-            @IsVisible @waitForSeconds
-        </div>
+            <div class="alert alert-primary d-flex align-items-center shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-info m-2 fs-5"></i>
+                <span class="fs-5">@Message</span>
+                @IsVisible @waitForSeconds
+            </div>
 
-    }
+        }
+    </div>
 }
 
 @code {

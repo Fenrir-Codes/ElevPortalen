@@ -1,8 +1,8 @@
 ﻿@page "/profile"
 @*Lavet af Jozsef*@
 
+@using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Pages.MessageBox
-@using ElevPortalen.Pages.UpdateProfileModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
@@ -410,7 +410,7 @@
                         <h3>@data.CompanyName's Profile</h3>
                         <div class="col-lg-12">
                             <div class="card mb-4">
-                                <div class="card-body shadow">
+                                <div class="card-body shadow-sm">
                                     <div class="d-flex align-items-center">
                                         <a href="#" class="mx-2" style="color: black">
                                             <span class="fa-stack fa-sm">
@@ -445,7 +445,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="card mb-4">
-                                <div class="card-body text-center shadow">
+                                <div class="card-body text-center shadow-sm">
                                     @if (data.profileImage != "")
                                     {
                                         <img src="images/ProfileImages/@data.profileImage" alt="avatar"
@@ -482,7 +482,7 @@
                         </div>
                         <div class="col-lg-8">
                             <div class="card mb-4">
-                                <div class="card-body shadow">
+                                <div class="card-body shadow-sm">
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <p class="mb-0">Dato for registrering</p>

@@ -213,9 +213,7 @@
 
 </AuthorizeView>
 
-<div class="container fixed-bottom" style="max-width:600px">
-    <MessageBox @ref=_messagebox />
-</div>
+ <MessageBox @ref=_messagebox />
 
 @if (ShowBackdrop)
 {
@@ -254,8 +252,8 @@
         }
         catch (Exception ex)
         {
-            showMessage = true;
             _Message = $"An error occurred sucessfully - " + ex.Message;
+            _messagebox.SetMessage(true, _Message,0, danger: true);
         }
     }
     #endregion
@@ -266,13 +264,13 @@
         try
         {
             _Message = await _companyService.Update(_companyToUpdate); //calling update from service
-            showMessage = true;
+            _messagebox.SetMessage(true, _Message, 2000, success: true);
             await Close();
         }
         catch (Exception ex)
-        {
-            showMessage = true;
+        {          
             _Message = $"An error occurred sucessfully - " + ex.Message;
+            _messagebox.SetMessage(true, _Message,0, danger: true);
         }
     }
     #endregion
