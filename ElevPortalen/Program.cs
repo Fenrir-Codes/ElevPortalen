@@ -2,6 +2,7 @@ using ElevPortalen;
 using ElevPortalen.Areas.Identity;
 using ElevPortalen.Areas.Identity.Pages.Account;
 using ElevPortalen.Data;
+using ElevPortalen.Pages.MessageBox;
 using ElevPortalen.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -48,6 +49,8 @@ builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<DawaService>();
 builder.Services.AddScoped<RegisterModel>();
 builder.Services.AddScoped<SkillService>();
+builder.Services.AddScoped<MessageBox>();
+
 builder.Services.AddHttpClient();
 //End ----
 

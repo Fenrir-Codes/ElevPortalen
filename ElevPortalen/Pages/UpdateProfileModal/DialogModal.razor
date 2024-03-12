@@ -1,9 +1,10 @@
 ﻿@using ElevPortalen.Models;﻿
+@using ElevPortalen.Pages.MessageBox;
 @using ElevPortalen.Services;
 
 @inject StudentService _studentService
 @inject CompanyService _companyService
-
+@inject MessageBox _messagebox
 
 <AuthorizeView Roles="Student, Company, Admin">
     <Authorized>
@@ -181,7 +182,7 @@
                         }
                         else
                         {
-                            <p>@_errorMessage</p>
+                            <MessageBox IsVisible=@showMessage Message=@_Message waitForSeconds="10000"></MessageBox>
                         }
 
                     </div>
@@ -207,10 +208,14 @@
     </Authorized>
 
     <NotAuthorized>
-        <p>You are not authorized!</p>
+        <MessageBox IsVisible=true isWarning=true Message="You are not authorized user!" waitForSeconds="0"></MessageBox>
     </NotAuthorized>
 
 </AuthorizeView>
+
+<div class="container fixed-bottom" style="max-width:600px">
+    <MessageBox @ref=_messagebox />
+</div>
 
 @if (ShowBackdrop)
 {
@@ -224,30 +229,33 @@
     private StudentModel _studentToUpdate = new StudentModel();
     private CompanyModel _companyToUpdate = new CompanyModel();
 
-    private string _errorMessage = "";
+    private string _Message = "";
 
     public string DisplayStyle = "none;";
     public string ModalClass = "";
     private string ModalBgColor = "rgba(50, 50, 50,0.8)";
     private string textColor = "white";
 
-    private bool showErrorMessage = false;
     public bool ShowBackdrop = false;
     private bool isStudent = false;
     private bool isCompany = false;
+    private bool showMessage = false;
+    private int successDelay = 5000;
+
 
     #region Handle validation submit (SubmitUpdate for Student)
     private async Task SubmitUpdateStudent()
     {
         try
         {
-            await _studentService.Update(_studentToUpdate); //calling update from service
+            _Message = await _studentService.Update(_studentToUpdate); //calling update from service
+            _messagebox.SetMessage(true, _Message, 2000, success:true);
             await Close();
         }
         catch (Exception ex)
         {
-            showErrorMessage = true;
-            _errorMessage = $"An error occurred sucessfully - " + ex.Message;
+            showMessage = true;
+            _Message = $"An error occurred sucessfully - " + ex.Message;
         }
     }
     #endregion
@@ -257,13 +265,14 @@
     {
         try
         {
-            await _companyService.Update(_companyToUpdate); //calling update from service
+            _Message = await _companyService.Update(_companyToUpdate); //calling update from service
+            showMessage = true;
             await Close();
         }
         catch (Exception ex)
         {
-            showErrorMessage = true;
-            _errorMessage = $"An error occurred sucessfully - " + ex.Message;
+            showMessage = true;
+            _Message = $"An error occurred sucessfully - " + ex.Message;
         }
     }
     #endregion

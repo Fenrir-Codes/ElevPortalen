@@ -77,7 +77,6 @@
                                     }
                                     <h5 class="my-3">@data.FirstName @data.LastName</h5>
                                     <p class="text-muted mb-4">Specialiseret i @data.Speciality</p>
-                                    @*                                     <p class="text-muted mb-4">@data.Address</p> *@
                                     <div class="d-flex justify-content-center mb-2">
                                         <button type="button" class="btn btn-outline-success"
                                                 @onclick="() => DialogModal!.OpenStudentUpdate(data.StudentId)">
@@ -530,7 +529,7 @@
                                         </div>
                                         <div class="col-sm-9">
                                             <p class="text-muted mb-0">
-                                                <button class="btn btn-outline-info" @onclick="NavigateToNewTab">Open Link on new tab</button>
+                                                <button class="btn btn-outline-info" @onclick="NavigateToNewTab">Åbn link på ny fane</button>
                                             </p>
                                         </div>
                                     </div>
@@ -610,29 +609,28 @@
                 <p>
                     @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
                     {
-                        Message = "Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data.";
-                        @Message
+                        <MessageBox IsVisible=true Message="Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data."
+                                    isWarning=true waitForSeconds="0"></MessageBox>
                     }
                     else
                     {
-                        Message = "Du har ingen rolle tildelt!";
-                        @Message
+                        <MessageBox IsVisible=true Message="Du har ingen rolle tildelt!" isDanger=true waitForSeconds="0"></MessageBox>
                     }
                 </p>
                 <br>
-                <button class="btn btn-success m-2" @onclick="NavigateToRegister">Go Register Your Data</button>
+                <button class="btn btn-success m-2" @onclick="NavigateToRegister">Registrer dine data</button>
                 ;
                 <br />
 
                 @if (hasStudentRecoveryData)
                 {
-                    <button class="btn btn-success m-2" @onclick="RecoverStudentData">Recover Your Data</button>
+                    <button class="btn btn-success m-2" @onclick="RecoverStudentData">Gendan data</button>
                     @*      <p>The Student's Guid is : @userIdClaim</p> *@
 
                 }
                 else if (hasCompanyRecoveryData)
                 {
-                    <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Data recovery available</button>
+                    <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Gendan Firma data</button>
                     @*  <p>The Company's Guid is : @userIdClaim</p> *@
                 }
 
@@ -645,10 +643,11 @@
 
         <!-- Not authorized view -->
         <NotAuthorized>
-            <MessageBox IsVisible=true Message="Log ind først." isDanger=true waitForSeconds="60000"></MessageBox>
+            <MessageBox IsVisible=true Message="Please log in first." isDanger=true waitForSeconds="0"></MessageBox>
         </NotAuthorized>
 
     </AuthorizeView>
+
 </div>
 
 
@@ -663,6 +662,7 @@
     private List<string> _SkillsOfStudent = new List<string>();
 
     private DialogModal? DialogModal { get; set; }
+    private MessageBox? _messageBox { get; set; }
 
     private bool isAuthenticated = false;
     private bool isConfirmationChecked = false;
@@ -671,7 +671,7 @@
 
     private string Company = "Company";
     private string Student = "Student";
-    private string Message = "Log ind først.";
+    private string Message = "";
     private string _Name = "Default";
     private string _registeredDate = "";
 
@@ -917,8 +917,8 @@
         var result = await _skillService.UpdateSkills(studentId, _Skills);
         isUpdateSectionVisible = false;
         await OnInitializedAsync();
-
     }
     #endregion
+
 
 }

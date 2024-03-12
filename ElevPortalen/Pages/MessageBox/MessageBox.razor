@@ -2,27 +2,40 @@
 {
     @if (isDanger)
     {
-        <div class="container-fluid">
-            <div class="alert alert-danger" role="alert">
-                @Message
-            </div>
+
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <i class="fa-solid fa-triangle-exclamation m-2 fs-5"></i>
+            <span class="fs-5">@Message</span>
         </div>
+
     }
     else if (isSuccess)
     {
-        <div class="container-fluid">
-            <div class="alert alert-success" role="alert">
-                @Message
-            </div>
+
+        <div class="alert alert-success d-flex align-items-center" role="alert">
+            <i class="fa-solid fa-circle-check m-2 fs-5"></i>
+            <span class="fs-5">@Message</span>
         </div>
+
+    }
+    else if (isWarning)
+    {
+
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="fa-solid fa-circle-info m-2 fs-5"></i>
+            <span class="fs-5">@Message</span>
+        </div>
+
     }
     else
     {
-        <div class="container-fluid">
-            <div class="alert alert-primary" role="alert">
-                @Message
-            </div>
+
+        <div class="alert alert-primary d-flex align-items-center" role="alert">
+            <i class="fa-solid fa-circle-info m-2 fs-5"></i>
+            <span class="fs-5">@Message</span>
+            @IsVisible @waitForSeconds
         </div>
+
     }
 }
 
@@ -36,11 +49,51 @@
     [Parameter]
     public bool isSuccess { get; set; } = false;
     [Parameter]
+    public bool isWarning { get; set; } = false;
+    [Parameter]
     public int waitForSeconds { get; set; } = 0;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
+        {
+            await HandleVisibility();
+        }
+    }
+
+    public void SetMessage(bool isVisible, string message, int delayInMillisec, bool danger = false, bool success = false, bool warning = false)
+    {
+        IsVisible = isVisible;
+        Message = message;
+        waitForSeconds = delayInMillisec;
+        isDanger = danger;
+        isSuccess = success;
+        isWarning = warning;
+
+        // Check if waitForSeconds is greater than 0 to avoid unnecessary delays
+        if (waitForSeconds > 0)
+        {
+            TurnOffAfterDelay(waitForSeconds);
+        }
+
+        StateHasChanged();
+    }
+
+    private async void TurnOffAfterDelay(int delayInMillisec)
+    {
+        await Task.Delay(delayInMillisec);
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    private async Task HandleVisibility()
+    {
+        if (waitForSeconds == 0)
+        {
+            IsVisible = true;
+        }
+        else
         {
             // Let the component render first
             await Task.Delay(1);
@@ -48,11 +101,13 @@
             // Hide the component after waitForSeconds given parameter
             await Task.Delay(waitForSeconds);
 
-            // Update IsVisible after the delay
-            IsVisible = false;
-
-            // Trigger a re-render to apply the changes
-            StateHasChanged();
+            await InvokeAsync(() =>
+            {
+                IsVisible = false;
+                StateHasChanged();
+            });
         }
     }
+
+
 }
