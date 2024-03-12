@@ -1,6 +1,7 @@
 ﻿@page "/admindashboard"
 @attribute [Authorize(Roles = "Admin")]
 
+@using ElevPortalen.Pages.UpdateProfileModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
@@ -138,7 +139,7 @@
                                                     <ul class="dropdown-menu">
                                                         <li><a class="dropdown-item" href="#">Vis Profil</a></li>
                                                         <li><hr class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item" href="#">Opdater</a></li>
+                                                        <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenStudentUpdate(student.StudentId)">Opdater</a></li>
                                                         <li><a class="dropdown-item" href="#">Fjern</a></li>
                                                     </ul>
                                                 </div>
@@ -172,6 +173,7 @@
                                         <th class="tableheader" scope="col">E-mail</th>
                                         <th class="tableheader" scope="col">Telefonnummer</th>
                                         <th class="tableheader" scope="col">Operationer</th>
+                                        <th class="tableheader" scope="col">Leder efter</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -183,6 +185,7 @@
                                             <td>@company.CompanyAddress</td>
                                             <td>@company.Email</td>
                                             <td>@company.PhoneNumber</td>
+                                            <td>@company.Preferences</td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn dropdown-toggle btn-operation" data-bs-toggle="dropdown" aria-expanded="false">
@@ -191,7 +194,7 @@
                                                     <ul class="dropdown-menu">
                                                         <li><a class="dropdown-item" href="#">Vis Profil</a></li>
                                                         <li><hr class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item" href="#">Opdater</a></li>
+                                                        <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenCompanyUpdate(company.CompanyId)">Opdater</a></li>
                                                         <li><a class="dropdown-item" href="#">Fjern</a></li>
                                                     </ul>
                                                 </div>
@@ -223,7 +226,8 @@
             }
 
         </div>
-      
+
+          <UpdateModalDialog @ref="DialogModal" profileId="@Id" OnClose="ReRenderTable"></UpdateModalDialog>
     </Authorized>
 
     <NotAuthorized>
@@ -250,6 +254,11 @@
     private int TotalPagesStudents = 0; //Count the totalpages of studentdata
     private int TotalPagesCompanies = 0; //Count the totalpages of companydata
 
+    private UpdateModalDialog? DialogModal { get; set; }
+    private int Id { get; set; }
+    private bool isStudent = false;
+    private bool isCompany = false;
+
     #region initialize
     protected override async Task OnInitializedAsync()
     {
@@ -268,6 +277,8 @@
     #region Get all Student to a table
     private async Task GetAllStudent()
     {
+        isStudent = true;
+        isCompany = false;
         _tableName = "Elever i Databasen";
         _listOfConpanies.Clear();
         _listOfStudents = await _studentService.ReadAllStudentData();
@@ -278,6 +289,8 @@
     #region Get all Company to a table
     private async Task GetAllCompany()
     {
+        isCompany = true;
+        isStudent = false;
         _tableName = "Firmaer i Databasen";
         _listOfStudents.Clear();
         _listOfConpanies = await _companyService.ReadAllCompanyData();
@@ -311,5 +324,21 @@
         }
     }
     #endregion
+
+    #region ReRenderTable function for re-renderint the Table on chages
+    private async void ReRenderTable()
+    {
+        if (isStudent)
+        {
+            await GetAllStudent();
+        }
+        else if (isCompany)
+        {
+            await GetAllCompany();
+        }
+        StateHasChanged();
+    }
+    #endregion
+
 
 }

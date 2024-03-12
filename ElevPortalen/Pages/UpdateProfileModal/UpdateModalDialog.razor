@@ -11,73 +11,72 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-body p-0" style="background-color:@ModalBgColor; color:@textColor;">
-
-                        @if (context.User.IsInRole("Student"))
+                        @if (isStudent)
                         {
-                                <div class="col-xl-12 col-md-12 col-sm-12">
-                                    <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
-                                        Opdater Dine Oplysninger
+                            <div class="col-xl-12 col-md-12 col-sm-12">
+                                <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
+                                    Opdater Dine Oplysninger
+                                </div>
+                                <div class="card-body">
+                                    <!-- Row -->
+                                    <div class="row gx-3 mb-3 px-4">
+                                        <div class="col-md-12">
+                                            <label for="title" class="form-label">Title</label>
+                                            <input id="title" class="form-control" @bind="@_studentToUpdate.Title" placeholder="Title" />
                                         </div>
-                                    <div class="card-body">
-                                        <!-- Row -->
-                                        <div class="row gx-3 mb-3 px-4">
-                                            <div class="col-md-12">
-                                                <label for="title" class="form-label">Title</label>
-                                                <input id="title" class="form-control" @bind="@_studentToUpdate.Title" placeholder="Title" />
-                                            </div>
+                                    </div>
+                                    <!-- Row -->
+                                    <div class="row gx-3 mb-3 px-4">
+                                        <!-- Firstname -->
+                                        <div class="col-md-4">
+                                            <label for="firstname" class="form-label">Fornavn</label>
+                                            <input id="firstname" type="text" @bind="@_studentToUpdate.FirstName" class="form-control" placeholder="Fornavn" />
                                         </div>
-                                        <!-- Row -->
-                                        <div class="row gx-3 mb-3 px-4">
-                                            <!-- Firstname -->
-                                            <div class="col-md-4">
-                                                <label for="firstname" class="form-label">Fornavn</label>
-                                                <input id="firstname" type="text" @bind="@_studentToUpdate.FirstName" class="form-control" placeholder="Fornavn" />
-                                            </div>
-                                            <!-- Middlename -->
-                                            <div class="col-md-4">
-                                                <label for="Dmiddlename" class="form-label">Mellemnavn</label>
-                                                <input id="middlename" type="text" @bind="@_studentToUpdate.MiddleName" class="form-control" placeholder="Mellemnavn" />
-                                            </div>
-                                            <!-- Lastname -->
-                                            <div class="col-md-4">
-                                                <label for="lastname" class="form-label">Efternavn</label>
-                                                <input id="lastname" type="text" @bind="@_studentToUpdate.LastName" class="form-control" placeholder="Efternavn" />
-                                            </div>
+                                        <!-- Middlename -->
+                                        <div class="col-md-4">
+                                            <label for="Dmiddlename" class="form-label">Mellemnavn</label>
+                                            <input id="middlename" type="text" @bind="@_studentToUpdate.MiddleName" class="form-control" placeholder="Mellemnavn" />
                                         </div>
-                                        <!-- Row -->
-                                        <div class="row gx-3 mb-3 px-4">
+                                        <!-- Lastname -->
+                                        <div class="col-md-4">
+                                            <label for="lastname" class="form-label">Efternavn</label>
+                                            <input id="lastname" type="text" @bind="@_studentToUpdate.LastName" class="form-control" placeholder="Efternavn" />
+                                        </div>
+                                    </div>
+                                    <!-- Row -->
+                                    <div class="row gx-3 mb-3 px-4">
                                         <!-- Address -->
-                                            <div class="col-md-4">
-                                                <label for="address" class="form-label">Adresse</label>
-                                                <input id="address" type="text" @bind="@_studentToUpdate.Address" class="form-control" placeholder="Adresse" />
-                                            </div>
-                                            <!-- Select speciality -->
-                                            <div class="col-md-4">
-                                                <label for="Dregion" class="form-label">Specialisering</label>
-                                                <select id="region" class="form-select form-select-md" @bind="@_studentToUpdate.Speciality" aria-label="Region">
-                                                    <option value="" disabled selected>Vælg dit speciale</option>
-                                                    <option value="It-Support">It-Supporter</option>
-                                                    <option value="Infrastrukture">Infrastruktur</option>
-                                                    <option value="Programmering">Programmering</option>
-                                                </select>
-                                            </div>
-                                            <!-- Phone number-->
-                                            <div class="col-md-4">
-                                                <label for="phone" class="form-label">Mobile</label>
-                                                <input id="phone" type="text" @bind="@_studentToUpdate.PhoneNumber" class="form-control" placeholder="Telefonnummer" />
-                                            </div>
+                                        <div class="col-md-4">
+                                            <label for="address" class="form-label">Adresse</label>
+                                            <input id="address" type="text" @bind="@_studentToUpdate.Address" class="form-control" placeholder="Adresse" />
                                         </div>
-                                        <!-- Description Textarea -->
-                                        <div class="row gx-3 mb-0 px-4">
-                                            <div class="col-md-12">
-                                                <label for="Description" class="form-label">Beskrivelse</label>
-                                                <textarea class="form-control" @bind="_studentToUpdate.Description" id="_description" rows="16"></textarea>
-                                            </div>
+                                        <!-- Select speciality -->
+                                        <div class="col-md-4">
+                                            <label for="Dregion" class="form-label">Specialisering</label>
+                                            <select id="region" class="form-select form-select-md" @bind="@_studentToUpdate.Speciality" aria-label="Region">
+                                                <option value="" disabled selected>Vælg dit speciale</option>
+                                                <option value="It-Support">It-Supporter</option>
+                                                <option value="Infrastrukture">Infrastruktur</option>
+                                                <option value="Programmering">Programmering</option>
+                                            </select>
+                                        </div>
+                                        <!-- Phone number-->
+                                        <div class="col-md-4">
+                                            <label for="phone" class="form-label">Mobile</label>
+                                            <input id="phone" type="text" @bind="@_studentToUpdate.PhoneNumber" class="form-control" placeholder="Telefonnummer" />
+                                        </div>
+                                    </div>
+                                    <!-- Description Textarea -->
+                                    <div class="row gx-3 mb-0 px-4">
+                                        <div class="col-md-12">
+                                            <label for="Description" class="form-label">Beskrivelse</label>
+                                            <textarea class="form-control" @bind="_studentToUpdate.Description" id="_description" rows="16"></textarea>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                         }
-                        else if (context.User.IsInRole("Company"))
+                        else if (isCompany)
                         {
                             <!--container of the update page-->
                             <div class="container-fluid d-flex p-0 align-content-center justify-content-center">
@@ -183,7 +182,7 @@
                     <!--Footer of the update page-->
                     <div class="modal-footer d-flex justify-content-center" style="background-color:@ModalBgColor;">
 
-                        @if(context.User.IsInRole("Student"))
+                        @if (isStudent)
                         {
                             <button type="button" class="btn btn-success" @onclick=@SubmitUpdateStudent>Update</button>
                         }
@@ -211,9 +210,8 @@
     <div class="modal-backdrop fade show"></div>
 }
 
-@code{
-    [Parameter] public int StudentId { get; set; }
-    [Parameter] public int CompanyId { get; set; }
+@code {
+    [Parameter] public int profileId { get; set; }
     [Parameter] public EventCallback<bool> OnClose { get; set; }
 
     private StudentModel _studentToUpdate = new StudentModel();
@@ -228,6 +226,8 @@
 
     private bool showErrorMessage = false;
     public bool ShowBackdrop = false;
+    private bool isStudent = false;
+    private bool isCompany = false;
 
     #region Handle validation submit (SubmitUpdate for Student)
     private async Task SubmitUpdateStudent()
@@ -264,30 +264,33 @@
     #region Open and close the modal Tasks
     public async Task OpenStudentUpdate(int Id)
     {
+        isStudent = true;
         DisplayStyle = "block;";
         ModalClass = "show";
         ShowBackdrop = true;
 
-        StudentId = Id;
+        profileId = Id;
 
-        _studentToUpdate = await _studentService.GetStudentById(StudentId);
+        _studentToUpdate = await _studentService.GetStudentById(profileId);
     }
 
     public async Task OpenCompanyUpdate(int Id)
     {
+        isCompany = true;
         DisplayStyle = "block;";
         ModalClass = "show";
         ShowBackdrop = true;
 
-        CompanyId = Id;
+        profileId = Id;
 
-        _companyToUpdate = await _companyService.GetCompanyById(CompanyId);
+        _companyToUpdate = await _companyService.GetCompanyById(profileId);
     }
-
-
 
     public Task Close()
     {
+        isCompany = false;
+        isStudent = false;
+
         DisplayStyle = "none";
         ModalClass = "";
         ShowBackdrop = false;
