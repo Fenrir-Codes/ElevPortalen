@@ -44,7 +44,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get Student request
+        #region Get Student request (Read Data)
         public async Task<List<StudentModel>> ReadData(ClaimsPrincipal _user)
         {
             try

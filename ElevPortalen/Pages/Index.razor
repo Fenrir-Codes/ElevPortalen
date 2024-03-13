@@ -42,7 +42,7 @@
                         <div class="card m-1 p-0" style="max-width: 420px;">
                             <div class="row g-0">
                                 <div class="col-md-4">
-                                    @if (data.profileImage != "")
+                                    @if (!string.IsNullOrEmpty(data.profileImage))
                                     {
                                         <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
                                     }

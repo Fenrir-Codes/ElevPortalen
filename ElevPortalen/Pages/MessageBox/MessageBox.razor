@@ -1,28 +1,28 @@
 ﻿@if (IsVisible)
 {
     <div class="container fixed-bottom" style="max-width:600px">
-        @if (isDanger)
+        @if (isDanger && !string.IsNullOrWhiteSpace(Message))
         {
 
-            <div class="alert alert-danger d-flex align-items-center shadow-sm" role="alert">
+            <div class="alert alert-danger d-flex align-items-center shadow" role="alert">
                 <i class="fa-solid fa-triangle-exclamation m-2 fs-5"></i>
                 <span class="fs-5">@Message</span>
             </div>
 
         }
-        else if (isSuccess)
+        else if (isSuccess && !string.IsNullOrWhiteSpace(Message))
         {
 
-            <div class="alert alert-success d-flex align-items-center shadow-sm" role="alert">
+            <div class="alert alert-success d-flex align-items-center shadow" role="alert">
                 <i class="fa-solid fa-circle-check m-2 fs-5"></i>
                 <span class="fs-5">@Message</span>
             </div>
 
         }
-        else if (isWarning)
+        else if (isWarning && !string.IsNullOrWhiteSpace(Message))
         {
 
-            <div class="alert alert-warning d-flex align-items-center shadow-sm" role="alert">
+            <div class="alert alert-warning d-flex align-items-center shadow" role="alert">
                 <i class="fa-solid fa-circle-info m-2 fs-5"></i>
                 <span class="fs-5">@Message</span>
             </div>
@@ -30,12 +30,14 @@
         }
         else
         {
-
-            <div class="alert alert-primary d-flex align-items-center shadow-sm" role="alert">
-                <i class="fa-solid fa-circle-info m-2 fs-5"></i>
-                <span class="fs-5">@Message</span>
-                @IsVisible @waitForSeconds
-            </div>
+            if (!string.IsNullOrWhiteSpace(Message))
+            {
+                <div class="alert alert-primary d-flex align-items-center shadow" role="alert">
+                    <i class="fa-solid fa-circle-info m-2 fs-5"></i>
+                    <span class="fs-5">@Message</span>
+                    @IsVisible @waitForSeconds
+                </div>
+            }
 
         }
     </div>

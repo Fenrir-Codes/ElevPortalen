@@ -648,6 +648,8 @@
 
     </AuthorizeView>
 
+    <MessageBox @ref="_messageBox" />
+
 </div>
 
 
@@ -662,7 +664,7 @@
     private List<string> _SkillsOfStudent = new List<string>();
 
     private DialogModal? DialogModal { get; set; }
-    private MessageBox? _messageBox { get; set; }
+    private MessageBox? _messageBox = new MessageBox();
 
     private bool isAuthenticated = false;
     private bool isConfirmationChecked = false;
@@ -671,7 +673,7 @@
 
     private string Company = "Company";
     private string Student = "Student";
-    private string Message = "";
+    private string? Message = "";
     private string _Name = "Default";
     private string _registeredDate = "";
 
@@ -743,7 +745,7 @@
             }
             else
             {
-                Message = $"You Have No Role Assigned - Could not read data.";
+                _messageBox.SetMessage(true, $"You Have No Role Assigned - Could not read data.", 0, danger: true);
             }
         }
     }
@@ -863,8 +865,13 @@
     {
         if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
         {
-            await _studentService.RecoverStudentData(userIdGuid);
+            Message = await _studentService.RecoverStudentData(userIdGuid);
+            _messageBox.SetMessage(true, Message, 2000, success: true);
             await OnInitializedAsync();
+        }
+        else
+        {
+            _messageBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
         }
     }
     #endregion
@@ -874,8 +881,13 @@
     {
         if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
         {
-            await _companyService.RecoverCompanyData(userIdGuid);
+            Message = await _companyService.RecoverCompanyData(userIdGuid);
+            _messageBox.SetMessage(true, Message, 2000, success: true);
             await OnInitializedAsync();
+        }
+        else
+        {
+            _messageBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
         }
     }
     #endregion
@@ -905,7 +917,8 @@
     #region Add Skills Function
     private async Task AddSkills(int studentId)
     {
-        var result = await _skillService.CreateSkills(studentId, _Skills);
+        Message = await _skillService.CreateSkills(studentId, _Skills);
+        _messageBox.SetMessage(true, Message, 2000, success: true);
         await OnInitializedAsync();
         isAddSectionVisible = false;
     }
@@ -914,7 +927,8 @@
     #region Update Skills Function
     private async Task UpdateSkills(int studentId)
     {
-        var result = await _skillService.UpdateSkills(studentId, _Skills);
+        Message = await _skillService.UpdateSkills(studentId, _Skills);
+        _messageBox.SetMessage(true, Message, 2000, success: true);
         isUpdateSectionVisible = false;
         await OnInitializedAsync();
     }

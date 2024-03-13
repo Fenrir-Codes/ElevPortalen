@@ -61,14 +61,24 @@
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             searchTerm = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
-            var updatedAddress = await dawaService.GetAddress(searchTerm);
-            address = updatedAddress ?? new List<AddressModel>();
-            showDropdown = true;
-            <!-- Set showDropdown to true to display the datalist -->
+            var (addresses, errorMessage) = await dawaService.GetAddress(searchTerm);
+
+            if (addresses != null)
+            {
+                address = addresses;
+                showDropdown = true;
+            }
+            else
+            {
+                // Handle the error case, show a message to the user
+                Console.WriteLine($"Error: {errorMessage}");
+                showDropdown = false; // Assuming you want to hide the dropdown on error
+            }
         }
         else
         {
-            <!-- Clear suggestions if searchTerm is empty -->
+            // Handle the case where the search term is empty, show a message to the user
+            Console.WriteLine("Please enter a search term.");
             address = new List<AddressModel>();
             showDropdown = false;
         }
