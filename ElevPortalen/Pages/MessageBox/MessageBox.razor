@@ -1,11 +1,11 @@
 ﻿@if (IsVisible)
 {
-    <div class="container fixed-bottom" style="max-width:600px">
+    <div class="container fixed-bottom" style="max-width:600px;">
         @if (isDanger && !string.IsNullOrWhiteSpace(Message))
         {
 
-            <div class="alert alert-danger d-flex align-items-center shadow" role="alert">
-                <i class="fa-solid fa-triangle-exclamation m-2 fs-5"></i>
+            <div class="alert alert-danger d-flex align-items-center justify-content-center shadow" role="alert">
+                <i class="fa-solid fa-triangle-exclamation me-3 fa-xl"></i>
                 <span class="fs-5">@Message</span>
             </div>
 
@@ -13,8 +13,8 @@
         else if (isSuccess && !string.IsNullOrWhiteSpace(Message))
         {
 
-            <div class="alert alert-success d-flex align-items-center shadow" role="alert">
-                <i class="fa-solid fa-circle-check m-2 fs-5"></i>
+            <div class="alert alert-success d-flex align-items-center justify-content-center shadow" role="alert">
+                <i class="fa-solid fa-circle-check me-3 fa-xl"></i>
                 <span class="fs-5">@Message</span>
             </div>
 
@@ -22,8 +22,8 @@
         else if (isWarning && !string.IsNullOrWhiteSpace(Message))
         {
 
-            <div class="alert alert-warning d-flex align-items-center shadow" role="alert">
-                <i class="fa-solid fa-circle-info m-2 fs-5"></i>
+            <div class="alert alert-warning d-flex align-items-center justify-content-center shadow" role="alert">
+                <i class="fa-solid fa-circle-info fa-xl me-3"></i>
                 <span class="fs-5">@Message</span>
             </div>
 
@@ -32,8 +32,8 @@
         {
             if (!string.IsNullOrWhiteSpace(Message))
             {
-                <div class="alert alert-primary d-flex align-items-center shadow" role="alert">
-                    <i class="fa-solid fa-circle-info m-2 fs-5"></i>
+                <div class="alert alert-primary d-flex align-items-center justify-content-center shadow" role="alert">
+                    <i class="fa-solid fa-circle-info me-3 fa-xl"></i>
                     <span class="fs-5">@Message</span>
                     @IsVisible @waitForSeconds
                 </div>
