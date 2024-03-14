@@ -1,8 +1,8 @@
 ﻿@page "/profile"
 @*Lavet af Jozsef*@
 
+@using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Pages.DialogModal
-@using ElevPortalen.Pages.MessageBox
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
@@ -609,12 +609,12 @@
                 <p>
                     @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
                     {
-                        <MessageBox IsVisible=true Message="Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data."
-                                    isWarning=true waitForSeconds="0"></MessageBox>
+                        <AlertBox IsVisible=true Message="Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data."
+                                    isWarning=true waitForSeconds="0"></AlertBox>
                     }
                     else
                     {
-                        <MessageBox IsVisible=true Message="Du har ingen rolle tildelt!" isDanger=true waitForSeconds="0"></MessageBox>
+                        <AlertBox IsVisible=true Message="Du har ingen rolle tildelt!" isDanger=true waitForSeconds="0"></AlertBox>
                     }
                 </p>
                 <br>
@@ -643,12 +643,12 @@
 
         <!-- Not authorized view -->
         <NotAuthorized>
-            <MessageBox IsVisible=true Message="Please log in first." isDanger=true waitForSeconds="0"></MessageBox>
+            <AlertBox IsVisible=true Message="Please log in first." isDanger=true waitForSeconds="0"></AlertBox>
         </NotAuthorized>
 
     </AuthorizeView>
 
-    <MessageBox @ref="_messageBox" />
+    <AlertBox @ref="_aletBox" />
 
 </div>
 
@@ -664,7 +664,7 @@
     private List<string> _SkillsOfStudent = new List<string>();
 
     private DialogModal? DialogModal { get; set; }
-    private MessageBox? _messageBox = new MessageBox();
+    private AlertBox? _aletBox = new AlertBox();
 
     private bool isAuthenticated = false;
     private bool isConfirmationChecked = false;
@@ -745,7 +745,7 @@
             }
             else
             {
-                _messageBox.SetMessage(true, $"You Have No Role Assigned - Could not read data.", 0, danger: true);
+                _aletBox.SetMessage(true, $"You Have No Role Assigned - Could not read data.", 0, danger: true);
             }
         }
     }
@@ -866,12 +866,12 @@
         if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
         {
             Message = await _studentService.RecoverStudentData(userIdGuid);
-            _messageBox.SetMessage(true, Message, 2000, success: true);
+            _aletBox.SetMessage(true, Message, 2000, success: true);
             await OnInitializedAsync();
         }
         else
         {
-            _messageBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
+            _aletBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
         }
     }
     #endregion
@@ -882,12 +882,12 @@
         if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
         {
             Message = await _companyService.RecoverCompanyData(userIdGuid);
-            _messageBox.SetMessage(true, Message, 2000, success: true);
+            _aletBox.SetMessage(true, Message, 2000, success: true);
             await OnInitializedAsync();
         }
         else
         {
-            _messageBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
+            _aletBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
         }
     }
     #endregion
@@ -918,7 +918,7 @@
     private async Task AddSkills(int studentId)
     {
         Message = await _skillService.CreateSkills(studentId, _Skills);
-        _messageBox.SetMessage(true, Message, 2000, success: true);
+        _aletBox.SetMessage(true, Message, 2000, success: true);
         await OnInitializedAsync();
         isAddSectionVisible = false;
     }
@@ -928,7 +928,7 @@
     private async Task UpdateSkills(int studentId)
     {
         Message = await _skillService.UpdateSkills(studentId, _Skills);
-        _messageBox.SetMessage(true, Message, 2000, success: true);
+        _aletBox.SetMessage(true, Message, 2000, success: true);
         isUpdateSectionVisible = false;
         await OnInitializedAsync();
     }

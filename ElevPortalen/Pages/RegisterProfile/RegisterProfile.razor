@@ -2,7 +2,7 @@
 
 @*Lavet af Jozsef*@
 @using ElevPortalen.Models
-@using ElevPortalen.Pages.MessageBox
+@using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Services
 @using ElevPortalen.Data;
 @using System.Text.Json
@@ -94,6 +94,10 @@
                                             <option value="Infrastrukture">Infrastruktur</option>
                                             <option value="Programmering">Programmering</option>
                                         </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1 fw-bold" for="_picture">Image</label>
+                                        <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -192,7 +196,6 @@
                                     <textarea class="form-control" @bind="_studentData.Description" id="_description" rows="4"></textarea>
                                 </div>
 
-                                <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                             </form>
 
                             <button class="btn btn-outline-success mt-2" @onclick="CreateStudentProfile">Gem</button>
@@ -316,7 +319,7 @@
 
     </AuthorizeView>
 
-    <MessageBox @ref="_messageBox"/>
+    <AlertBox @ref="_alertBox"/>
 
 </div>
 
@@ -341,7 +344,8 @@
     private StudentModel _studentData = new StudentModel();
     private CompanyModel _companyData = new CompanyModel();
     private List<AddressModel> address = new List<AddressModel>();
-    private MessageBox _messageBox = new MessageBox();
+    //Messagebox
+    private AlertBox _alertBox = new AlertBox();
 
     //booleans
     private bool isAuthenticated = false;
@@ -408,24 +412,24 @@
 
                         Message = await _studentService.CreateStudent(_studentData); //create student data
                         await CreateSkills(_studentData.StudentId); //add the student skills
-                        _messageBox.SetMessage(true, Message, 2000, success: true);
+                        _alertBox.SetMessage(true, Message, 2000, success: true);
                         NavManager.NavigateTo("/profile"); // return to profile
                     }
                     else
                     {
                         // Handle the exception and return an error message
-                        _messageBox.SetMessage(true, "Error parsing GUID", 0, danger: true);
+                        _alertBox.SetMessage(true, "Error parsing GUID", 0, danger: true);
                     }
                 }
             }
 
             // Default return statement if conditions are not met
-            _messageBox.SetMessage(true, "Unexpected error occurred", 0, danger: true);
+            _alertBox.SetMessage(true, "Unexpected error occurred", 0, danger: true);
         }
         catch (Exception ex)
         {
             // Handle the exception and return an error message
-            _messageBox.SetMessage(true, $"Error: {ex.Message}", 0, danger: true);
+            _alertBox.SetMessage(true, $"Error: {ex.Message}", 0, danger: true);
         }
     }
     #endregion
@@ -434,7 +438,7 @@
     private async Task CreateSkills(int studentId)
     {
         Message = await _skillService.CreateSkills(studentId, _Skills);
-        _messageBox.SetMessage(true, Message, 5000, success: true);
+        _alertBox.SetMessage(true, Message!, 5000, success: true);
     }
     #endregion
 
@@ -476,24 +480,24 @@
                         };
 
                         Message = await _companyService.CreateCompany(_companyData);
-                        _messageBox.SetMessage(true, Message, 5000, success: true);
+                        _alertBox.SetMessage(true, Message, 5000, success: true);
                         NavManager.NavigateTo("/profile");
                     }
                     else
                     {
                         // Handle the exception and return an error message
-                        _messageBox.SetMessage(true, "Error parsing GUID", 10000, danger: true);
+                        _alertBox.SetMessage(true, "Error parsing GUID", 10000, danger: true);
                     }
                 }
             }
 
             // Default return statement if conditions are not met
-            _messageBox.SetMessage(true, "Unexpected error occurred", 10000, danger: true);
+            _alertBox.SetMessage(true, "Unexpected error occurred", 10000, danger: true);
         }
         catch (Exception? ex)
         {
             // Handle the exception and return an error message
-            _messageBox.SetMessage(true, $"Error: {ex.Message}", 10000, danger: true);
+            _alertBox.SetMessage(true, $"Error: {ex.Message}", 10000, danger: true);
         }
     }
     #endregion
@@ -533,13 +537,13 @@
             else
             {
                 // Handle the error case, show a message to the user
-                _messageBox.SetMessage(true, errorMessage,10000, warning:true);
+                _alertBox.SetMessage(true, errorMessage,10000, warning:true);
             }
         }
         else
         {
             // Handle the case where the search term is empty, show a message to the user
-            _messageBox.SetMessage(true, "Please type your address.", 5000, warning: true);
+            _alertBox.SetMessage(true, "Please type your address.", 5000, warning: true);
             address = new List<AddressModel>();
         }
 
@@ -555,7 +559,7 @@
 
         if (e.FileCount > maxAllowedFiles)
         {
-            _messageBox.SetMessage(true, $"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} files are allowed", 10000, warning: true);
+            _alertBox.SetMessage(true, $"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} files are allowed", 10000, warning: true);
             return;
         }
 
@@ -581,7 +585,7 @@
             }
             catch (Exception ex)
             {
-                _messageBox.SetMessage(true, $"File: {file.Name} Error: {ex.Message}", 10000, warning: true);
+                _alertBox.SetMessage(true, $"File: {file.Name} Error: {ex.Message}", 10000, warning: true);
             }
         }
     }
