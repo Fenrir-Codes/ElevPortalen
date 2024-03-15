@@ -702,10 +702,6 @@
                 isAuthenticated = true;
                 _Name = _user.Identity.Name!.ToString();
                 await ReadData(); //Read profile data
-
-                //Read skills data connected to the profile
-                await GetSkills(_studentList);
-
             }
             else
             {
@@ -727,6 +723,8 @@
             {
                 //Getting the data with the service call from student
                 await GetStudentData(_user);
+                //Read skills data connected to the profile
+                await GetSkills(_studentList);
 
                 if (_studentList.Any() == false || _studentList == null)
                 {

@@ -397,7 +397,7 @@
                     if (Guid.TryParse(userIdString, out Guid userId))
                     {
                         _studentData = new StudentModel
-                            {
+                        {
                                 UserId = userId, // Set the UserId to the user's unique identifier
                                 Title = _studentData.Title,
                                 FirstName = _studentData.FirstName,
@@ -412,7 +412,7 @@
                                 RegisteredDate = DateTime.Now,
                                 UpdatedDate = DateTime.Now
 
-                            };
+                        };
 
                         Message = await _studentService.CreateStudent(_studentData); //create student data
                         await CreateSkills(_studentData.StudentId); //add the student skills

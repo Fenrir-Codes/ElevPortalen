@@ -10,6 +10,7 @@
 
 @inject StudentService _studentService
 @inject CompanyService _companyService
+@inject SkillService _skillService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavManager
 @inject IJSRuntime jsRuntime
@@ -114,8 +115,27 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <p class="card-text">Skills will be added here</p>                          
+                            <div class="card-footer d-flex justify-content-center align-items-center">
+                                @if (_skillsDictionary.TryGetValue(data.StudentId, out var skills))
+                                {
+                                    <div class="col-lg-12 skills-container">
+                                        <!-- Display the names of the skills in a single row -->
+                                        <h6 class="skills-list m-0">
+                                            @foreach (var skillName in skills.Take(4))
+                                            {
+                                                <span class="badge bg-dark m-1">@skillName</span>
+                                            }
+                                            @if (skills.Count > 3)
+                                            {
+                                                <span class="fw-bold"> ... </span> <!-- Display ellipsis if more skills -->
+                                            }
+                                        </h6>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p class="card-text">Skills cannot be displayed.</p>
+                                }
                             </div>
                         </div>
                     }
@@ -184,6 +204,7 @@
     private List<CompanyModel> _companyList = new List<CompanyModel>();
     private List<CompanyModel> _companySearchResult = new List<CompanyModel>();
     private List<StudentModel> _studentSearchResult = new List<StudentModel>();
+    private Dictionary<int, List<string>> _skillsDictionary = new Dictionary<int, List<string>>();
 
     private bool isAuthenticated = false;
     private bool isStudent = false;
@@ -246,19 +267,21 @@
     {
         if (_authState.User.IsInRole(Student)) // If the role is Student
         {
+            _companySearchResult.Clear();
             //Getting the data
             _companyList = await _companyService.ReadAllCompanyData();
-
-            _companySearchResult.Clear();
+            // Filling up the searchresult with list
             _companySearchResult = _companyList;
         }
         else if (_authState.User.IsInRole(Company)) // If the role is Company
         {
+            _studentSearchResult.Clear();
             //Getting the data with the service call from company
             _studentList = await _studentService.ReadAllStudentData();
-
-            _studentSearchResult.Clear();
+            // Filling up the searchresult with list
             _studentSearchResult = _studentList;
+            //get skill for each student with thir StudentId to dictionary
+            await GetSkills(_studentList);
         }
         else
         {
@@ -332,6 +355,17 @@
                 _studentSearchResult.Clear();
                 _companySearchResult.Clear();
             }
+        }
+    }
+    #endregion
+
+    #region Getting the skills to dictionary for all students to view their skill serapately
+    private async Task GetSkills(List<StudentModel> list)
+    {
+        foreach (var student in list)
+        {
+            var skills = await _skillService.GetSkillsById(student.StudentId);
+            _skillsDictionary[student.StudentId] = skills;
         }
     }
     #endregion

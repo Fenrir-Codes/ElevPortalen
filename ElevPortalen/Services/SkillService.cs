@@ -37,6 +37,26 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Getting the skill Name as string to List
+        public async Task<List<string>> GetSkillsById(int id)
+        {
+            var skilldata = await _context.StudentSkills.FirstOrDefaultAsync(s => s.StudentId == id);
+
+            if (skilldata == null)
+            {
+                return null!;
+            }
+
+            List<string> skills = await Task.Run(() =>
+                typeof(SkillModel).GetProperties()
+                    .Where(skill => skill.PropertyType == typeof(bool) && (bool)skill.GetValue(skilldata))
+                    .Select(skill => skill.Name)
+                    .ToList());
+
+            return skills;
+        }
+        #endregion
+
         #region Create Skills
         public async Task<string?> CreateSkills(int studentId, SkillModel newSkills)
         {
