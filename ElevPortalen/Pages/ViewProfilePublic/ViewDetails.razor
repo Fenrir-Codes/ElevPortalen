@@ -16,7 +16,10 @@
     <AuthorizeView Roles="Company,Student,Admin">
 
         <Authorized>
-            @if (_student.Any())
+
+            @isStudent;
+            @isCompany;
+            @if (isCompany && _student.Any())
             {
                 @foreach (var data in _student)
                 {
@@ -178,10 +181,27 @@
 
                 }
             }
+            else if (isStudent && _company.Any())
+            {
+                <p>the company deatiled view will be here...</p>
+            }
+            else if (isStudent && !_company.Any())
+            {
+                _alertBox.SetMessage(true, "No company data found!", 0, warning: true);
+            }
+            else if(isCompany && !_student.Any())
+            {
+                _alertBox.SetMessage(true, "No student data found!", 0, warning: true);
+            }
+            else if (!isStudent && !isCompany)
+            {
+                _alertBox.SetMessage(true, "No Role assugned to user!", 0, warning: true);
+            }
+
         </Authorized>
 
         <NotAuthorized>
-            <AlertBox IsVisible=true Message="You have to log in to visit this page." isDanger=true waitForSeconds="0"></AlertBox>
+            <AlertBox IsVisible=true Message="You need to log in first." isDanger=true waitForSeconds="0"></AlertBox>
         </NotAuthorized>
 
     </AuthorizeView>
@@ -205,9 +225,20 @@
     private string Company = "Company";
     private string Student = "Student";
     private string _Name = "Default";
+    private string Message = "";
 
+    private bool isStudent = false;
+    private bool isCompany = false;
 
+    #region Oninitialize
     protected override async Task OnInitializedAsync()
+    {
+        await AuthenticateAndGetData();
+    }
+    #endregion
+
+    #region Authentivate user and read data according to Role
+    private async Task AuthenticateAndGetData()
     {
         // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -221,28 +252,39 @@
 
                 if (_authState.User.IsInRole(Company))
                 {
-                    await viewStudentProfile(Id);
-                    await GetSkills(_student);
+                    await GetStudentProfile(Id);
                 }
-                else if (_authState.User.IsInRole(Company))
+                else if (_authState.User.IsInRole(Student))
                 {
-                    return;
+                    await GetCompanyProfile(Id);
                 }
                 else
                 {
                     _alertBox.SetMessage(true, "Authentication failed!", 0, danger: true);
                 }
-
             }
-
         }
     }
+    #endregion
 
     #region Getting the data with the service call from student
-    public async Task viewStudentProfile(int id)
+    public async Task GetStudentProfile(int id)
     {
+        isCompany = true;
+        isStudent = false;
+
         _student = await _studentService.GetStudentByIdToList(id);
         await GetSkills(_student);
+    }
+    #endregion
+
+    #region Getting the data with the service call from student
+    public async Task GetCompanyProfile(int id)
+    {
+        isCompany = false;
+        isStudent = true;
+
+        _company = await _companyService.GetCompanyByIdToList(id);
     }
     #endregion
 
@@ -255,4 +297,5 @@
         }
     }
     #endregion
+
 }

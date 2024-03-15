@@ -153,7 +153,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get Company by Id
+        #region Get Company by Id (Model)
         public async Task<CompanyModel> GetCompanyById(int companyId)
         {
             try
@@ -172,6 +172,31 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"An error occurred while retrieving Company data: {ex.Message}");
+            }
+        }
+        #endregion
+
+        #region Get Student by Id to list
+        public async Task<List<CompanyModel>> GetCompanyByIdToList(int Id)
+        {
+            try
+            {
+                var company = await _context.Company
+                    .Where(c => c.CompanyId == Id).ToListAsync();
+
+                if (company != null)
+                {
+                    return company;
+                }
+                else
+                {
+                    // Throw an exception if no student found
+                    throw new InvalidOperationException($"No company found with Id: {Id}");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
         #endregion

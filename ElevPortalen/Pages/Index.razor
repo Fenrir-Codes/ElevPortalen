@@ -198,7 +198,7 @@
 @code {
 
     #region Initializing objects and variables
-    
+
     // private fields within the scope of the class
     private AuthenticationState? _authState;
     private List<StudentModel> _studentList = new List<StudentModel>(); //List of Students
@@ -226,7 +226,13 @@
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
+       await AuthenticateAndReadData();
+    }
+    #endregion
 
+    #region Authenticate and read the data
+    private async Task AuthenticateAndReadData()
+    {
         //For see the spinner we can simulate the network slownes
         // await Task.Run(SimulateSlowness);
 
