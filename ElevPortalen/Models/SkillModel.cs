@@ -41,6 +41,6 @@ namespace ElevPortalen.Models
 
 
         [ForeignKey("StudentId")]
-        public virtual StudentModel Student { get; set; }
+        public virtual StudentModel? Student { get; set; }
     }
 }
