@@ -29,7 +29,7 @@
                     <br />
                     <!-- Account details card-->
                     <div class="card mb-4">
-                        <div class="card-header fw-bold">Registrer Kontooplysninger</div>
+                        <div class="card-header fw-bold text-white bg-dark">Registrer Kontooplysninger</div>
                         <div class="card-body">
                             <form>
                                 <div class="col-md-6">
@@ -216,7 +216,7 @@
                     <br />
                     <!-- Account details card-->
                     <div class="card mb-4">
-                        <div class="card-header">Registrer Kontooplysninger For Dit Firma</div>
+                        <div class="card-header text-white bg-dark fw-bold">Registrer Kontooplysninger For Dit Firma</div>
                         <div class="card-body">
                             <form>
                                 <!-- Form Row-->
@@ -244,12 +244,12 @@
                                     </div>
                                 </div>
                                 <!-- Form Row        -->
-                                <div class="row gx-3 mb-3">
+                                <div class="row gx-3 mb-">
                                     <!-- Form Group (Region)-->
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1 fw-bold" for="_region">Din Region</label>
                                         <select class="form-select form-select-md" @bind="_companyData.Region" id="_region" aria-label="Region">
-                                            <option disabled selected></option>
+                                           @*<option disabled selected></option> *@
                                             <option value="Region Nordjylland">Region Nordjylland</option>
                                             <option value="Region Midtjylland">Region Midtjylland</option>
                                             <option value="Region Syddanmark">Region Syddanmark</option>
@@ -266,13 +266,13 @@
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1 fw-bold" for="inputPhone">Phone Number</label>
                                         <input class="form-control" type="tel" id="inputPhone" name="phone"
-                                               placeholder="8 cifre" @bind="_companyData.PhoneNumber">
+                                               placeholder="8 cifre" @bind="_companyData.PhoneNumber" maxlength="8" pattern="[0-9]{8}" required>
                                     </div>
                                     <!-- webLink -->
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1 fw-bold" for="inputWebsite">Firma link</label>
                                         <input class="form-control" id="inputWebsite" type="text"
-                                               placeholder="Indtast Webstedslink" @bind="_companyData.Link">
+                                               placeholder="pattern: www.example.dk" @bind="_companyData.Link">
                                     </div>
                                 </div>
                                 <!-- Form Row-->
@@ -282,17 +282,21 @@
                                         <label class="small mb-1 fw-bold" for="_preferences">Preference</label>
                                         <select class="form-select form-select-md" @bind="_companyData.Preferences" id="_preferences"
                                                 aria-label="Preferences">
-                                            <option value="" disabled selected></option>
+                                           @*<option value="" disabled selected></option> *@
                                             <option value="It-Supporter">It-Supporter</option>
                                             <option value="Infrastructure">Infrastruktur</option>
                                             <option value="Programmer">Programmør</option>
                                         </select>
                                     </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1 fw-bold" for="_picture">Image</label>
+                                        <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
+                                    </div>
                                 </div>
                                 <!-- Form Group (Description)-->
                                 <div class="col-md-12 mb-3">
                                     <label for="Description" class="form-label fw-bold">Beskrivelse</label>
-                                    <textarea class="form-control" @bind="_companyData.Description" id="_description" rows="4"></textarea>
+                                    <textarea class="form-control" @bind="_companyData.Description" id="_description" rows="8"></textarea>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" @bind="_companyData.IsHiring">
