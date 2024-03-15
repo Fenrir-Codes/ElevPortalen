@@ -127,7 +127,7 @@
                                             }
                                             @if (skills.Count > 3)
                                             {
-                                                <span class="fw-bold"> ... </span> <!-- Display ellipsis if more skills -->
+                                                <span class="fw-bold"> ... </span> <!-- Display dots if more skills -->
                                             }
                                         </h6>
                                     </div>
@@ -198,25 +198,32 @@
 
 
 @code {
+
+    #region Initializing objects and variables
+    
     // private fields within the scope of the class
     private AuthenticationState? _authState;
-    private List<StudentModel> _studentList = new List<StudentModel>();
-    private List<CompanyModel> _companyList = new List<CompanyModel>();
-    private List<CompanyModel> _companySearchResult = new List<CompanyModel>();
-    private List<StudentModel> _studentSearchResult = new List<StudentModel>();
-    private Dictionary<int, List<string>> _dictionaryOfSkills = new Dictionary<int, List<string>>();
+    private List<StudentModel> _studentList = new List<StudentModel>(); //List of Students
+    private List<CompanyModel> _companyList = new List<CompanyModel>(); //List of Companies
+    private List<CompanyModel> _companySearchResult = new List<CompanyModel>(); // List for searchresult
+    private List<StudentModel> _studentSearchResult = new List<StudentModel>(); // List of searchresult
+    private Dictionary<int, List<string>> _dictionaryOfSkills = new Dictionary<int, List<string>>(); // Dictionary for skills list with id pair
 
+    //booleans
     private bool isAuthenticated = false;
     private bool isStudent = false;
     private bool isCompany = false;
+    // Strings
     private string Company = "Company";
     private string Student = "Student";
     private string Admin = "Admin";
     private string Message = "Loading...";
-
+    //integers
     private int studentCount = 0;
     private int companyCount = 0;
     private int dayDifference = 0;
+
+    #endregion
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
