@@ -118,25 +118,37 @@
                             <div class="card-footer d-flex justify-content-center align-items-center">
                                 @if (data != null && _dictionaryOfSkills.TryGetValue(data.StudentId, out var skills))
                                 {
-                                    <div class="col-lg-12 skills-container">
-                                        <!-- Display the names of the skills in a single row -->
-                                        <h6 class="skills-list m-0">
-                                            @foreach (var skillName in skills.Take(4))
-                                            {
-                                                <span class="badge bg-dark m-1">@skillName</span>
-                                            }
-                                            @if (skills.Count > 3)
-                                            {
-                                                <span class="fw-bold"> ... </span> <!-- Display dots if more skills -->
-                                            }
-                                        </h6>
-                                    </div>
+                                    @if (skills != null)
+                                    {
+                                        <div class="col-lg-12 skills-container">
+                                            <!-- Display the names of the skills in a single row -->
+                                            <h6 class="skills-list m-0">
+                                                @foreach (var skillName in skills.Take(4))
+                                                {
+                                                    // Check if the length of the skill name exceeds a certain threshold
+                                                    @if (skillName.Length > 10)
+                                                    {
+                                                        <span class="badge bg-dark m-1" title="@skillName">@skillName.Substring(0, 10)...</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-dark m-1">@skillName</span>
+                                                    }
+                                                }
+                                            </h6>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <p class="card-text">Eleven har endnu ingen færdigheder tilføjet.</p>
+                                    }
                                 }
                                 else
                                 {
-                                    <p class="card-text">Skills cannot be displayed.</p>
+                                    <p class="card-text">Eleven har endnu ingen færdigheder tilføjet.</p>
                                 }
                             </div>
+
                         </div>
                     }
                 </div>
