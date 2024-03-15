@@ -19,9 +19,9 @@
     <!--Autorizeview for Student and Company -->
     <AuthorizeView Roles="Student,Company,Admin">
         <Authorized>
-            @if (_studentList.Any())
+            @if (_student.Any())
             {
-                @foreach (var data in _studentList)
+                @foreach (var data in _student)
                 {
                     <!--Social container on top-->
                     <div class="row">
@@ -400,9 +400,9 @@
 
                 }
             }
-            else if (_companyList.Any())
+            else if (_company.Any())
             {
-                @foreach (var data in _companyList)
+                @foreach (var data in _company)
                 {
 
                     <!--Social container on top-->
@@ -658,8 +658,8 @@
     #region private fields within the scope of the class
     private AuthenticationState? _authState;
     private ClaimsPrincipal? _user;
-    private List<StudentModel> _studentList = new List<StudentModel>();
-    private List<CompanyModel> _companyList = new List<CompanyModel>();
+    private List<StudentModel> _student = new List<StudentModel>();
+    private List<CompanyModel> _company = new List<CompanyModel>();
     private SkillModel _Skills = new SkillModel();
     private List<string> _SkillsOfStudent = new List<string>();
 
@@ -724,9 +724,9 @@
                 //Getting the data with the service call from student
                 await GetStudentData(_user);
                 //Read skills data connected to the profile
-                await GetSkills(_studentList);
+                await GetSkills(_student);
 
-                if (_studentList.Any() == false || _studentList == null)
+                if (_student.Any() == false || _student == null)
                 {
                     await CheckIfStudentHasDataToRecover(_user);
                 }
@@ -736,7 +736,7 @@
                 //Getting the data with the service call from company
                 await GetCompanyData(_user);
 
-                if (_companyList.Any() == false || _companyList == null)
+                if (_company.Any() == false || _company == null)
                 {
                     await CheckIfCompanyHasDataToRecover(_user);
                 }
@@ -752,14 +752,14 @@
     #region Getting the data with the service call from student
     private async Task GetStudentData(ClaimsPrincipal _user)
     {
-        _studentList = await _studentService.ReadData(_user);
+        _student = await _studentService.ReadData(_user);
     }
     #endregion
 
     #region Getting the skill Name to List (string)
     private async Task GetSkills(List<StudentModel> data)
     {
-        foreach (var studentData in _studentList)
+        foreach (var studentData in _student)
         {
             _SkillsOfStudent = await _skillService.GetSkills(studentData);
         }
@@ -769,14 +769,14 @@
     #region Getting the data with the service call from company
     private async Task GetCompanyData(ClaimsPrincipal _user)
     {
-        _companyList = await _companyService.ReadData(_user);
+        _company = await _companyService.ReadData(_user);
     }
     #endregion
 
     #region Checking is student has recovery data if nothing exist in their profile
     private async Task CheckIfStudentHasDataToRecover(ClaimsPrincipal _user)
     {
-        if (_studentList.Any() == false || _studentList == null)
+        if (_student.Any() == false || _student == null)
         {
             userIdClaim = _user.Claims.FirstOrDefault()!.Value;
             if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
@@ -791,7 +791,7 @@
     #region Checking is company has recovery data if nothing exist in their profile
     private async Task CheckIfCompanyHasDataToRecover(ClaimsPrincipal _user)
     {
-        if (_companyList.Any() == false || _companyList == null)
+        if (_company.Any() == false || _company == null)
         {
             userIdClaim = _user.Claims.FirstOrDefault()!.Value;
             if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
@@ -853,7 +853,7 @@
     #region Navigate to company website Link with opening new window
     public async Task NavigateToNewTab()
     {
-        string url = "https://" + _companyList[0].Link;
+        string url = "https://" + _company[0].Link;
         await jsRuntime.InvokeVoidAsync("open", url, "_blank");
     }
     #endregion
@@ -931,6 +931,5 @@
         await OnInitializedAsync();
     }
     #endregion
-
 
 }

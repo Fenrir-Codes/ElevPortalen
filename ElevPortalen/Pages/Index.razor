@@ -88,7 +88,7 @@
                         <!--Calling function to check the days since the student updated the profile-->
                         CalculateDaysDifference(data.UpdatedDate);
 
-                        <div class="card m-2 p-0" style="max-width: 450px;">
+                        <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToStudentDetails(data!.StudentId)">
                             <div class="row g-0">
                                 <div class="col-md-4">
                                     @if (!string.IsNullOrEmpty(data.profileImage))
@@ -104,7 +104,7 @@
                                     <div class="card-body">
                                         <h4 class="fw-bold">
                                             @data.FirstName <span> </span>
-                                            @if (data.MiddleName != null)
+                                            @if (!string.IsNullOrEmpty(data.MiddleName))
                                             {
                                                 @data.MiddleName <span> </span>
                                             }
@@ -116,7 +116,7 @@
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-center align-items-center">
-                                @if (_dictionaryOfSkills.TryGetValue(data.StudentId, out var skills))
+                                @if (data != null && _dictionaryOfSkills.TryGetValue(data.StudentId, out var skills))
                                 {
                                     <div class="col-lg-12 skills-container">
                                         <!-- Display the names of the skills in a single row -->
@@ -193,8 +193,6 @@
     </AuthorizeView>
 
 </div>
-
-
 
 
 @code {
@@ -374,6 +372,13 @@
             var skills = await _skillService.GetSkillsById(student.StudentId);
             _dictionaryOfSkills[student.StudentId] = skills;
         }
+    }
+    #endregion
+
+    #region navigate to detailed Public profile view with Id (StudentId)
+    private void NavigateToStudentDetails(int studentId)
+    {
+        NavManager.NavigateTo($"/detailedview/{studentId}");
     }
     #endregion
 
