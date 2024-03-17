@@ -37,10 +37,10 @@
                 </div>
 
                 <!-- Display Company-related content -->
-                <div class="row">
+                <div class="row d-flex justify-content-center">
                     @foreach (var data in _companySearchResult)
                     {
-                        <div class="card m-1 p-0" style="max-width: 420px;" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
+                        <div class="card m-1 p-0" style="max-width: 420px; cursor:pointer;" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
                             <div class="row g-0">
                                 <div class="col-md-4">
                                     @if (!string.IsNullOrEmpty(data.profileImage))
@@ -57,7 +57,7 @@
                                         <h5>@data.CompanyName</h5>
                                     </div>
                                     <p class="card-text">
-                                        <button class="btn btn-outline-info" @onclick="() => NavigateToNewTab(data.Link)">Visit hjemmeside</button>
+                                        Card text here
                                     </p>
                                 </div>
                             </div>
