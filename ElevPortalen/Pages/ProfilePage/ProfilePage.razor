@@ -78,7 +78,7 @@
                                     <h5 class="my-3">@data.FirstName @data.LastName</h5>
                                     <p class="text-muted mb-4">Specialiseret i @data.Speciality</p>
                                     <div class="d-flex justify-content-center mb-2">
-                                        <button type="button" class="btn btn-outline-success"
+                                        <button type="button" class="btn btn-outline-success mx-2"
                                                 @onclick="() => DialogModal!.OpenStudentUpdate(data.StudentId)">
                                             Opdater Profil
                                         </button>
@@ -87,14 +87,14 @@
                                             Slette profil
                                         </button>
                                     </div>
-                                    <div class="row-lg-4 gx-3 mb-3">
+                                    <div class="row-lg-4 gx-3">
                                         <input class="form-check-input" type="checkbox" @bind="isConfirmationChecked">
                                         <label class="form-check-label">
                                             Bekræft Slet
                                         </label>
                                     </div>
                                     <span style="color:red" hidden="@(!isConfirmationChecked)">
-                                        Dette vil slette dine personale data og kan ikke fortrydes!
+                                        Dette vil slette dine data, men det kan gendannes senere, hvis du ikke sletter registreringen.
                                     </span>
                                 </div>
                             </div>
@@ -102,6 +102,15 @@
                         <div class="col-lg-8">
                             <div class="card mb-4">
                                 <div class="card-body shadow-sm">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Dato for registrering</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@data.RegisteredDate.ToString("dd, MMMM, yyyy")</p>
+                                        </div>
+                                    </div>
+                                    <hr />
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <p class="mb-0">Username</p>
@@ -147,20 +156,11 @@
                                     </div>
                                     <hr>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 mb-3">
                                             <p class="mb-0">Adresse</p>
                                         </div>
                                         <div class="col-sm-9">
                                             <p class="text-muted mb-0">@data.Address</p>
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Beskrivelse</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">@data.Description</p>
                                         </div>
                                     </div>
                                 </div>
@@ -168,12 +168,25 @@
                         </div>
                     </div>
 
+                    <!--Description-->
+                     <div class="row">
+                        <div class="col-lg-12">
+                          @*   <p class="mb-2 fw-bold">Beskrivelse</p> *@
+                            <div class="card mb-3">
+                                <div class="card-body shadow-sm">
+                                    <p class="text-muted mb-0">@data.Description</p>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+
                     <!-- Skills section -->
                     <div class="row">
                         <div class="col-lg-12">
+                       @*      <p class="fw-bold">Skills:</p> *@
                             <div class="card mb-4">
                                 <div class="card-body shadow-sm">
-                                    <h3>Skills:</h3>
+                                
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <!--Show skill names section-->

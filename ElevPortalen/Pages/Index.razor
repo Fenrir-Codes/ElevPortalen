@@ -40,7 +40,7 @@
                 <div class="row">
                     @foreach (var data in _companySearchResult)
                     {
-                        <div class="card m-1 p-0" style="max-width: 420px;">
+                        <div class="card m-1 p-0" style="max-width: 420px;" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
                             <div class="row g-0">
                                 <div class="col-md-4">
                                     @if (!string.IsNullOrEmpty(data.profileImage))
@@ -397,6 +397,13 @@
     private void NavigateToStudentDetails(int studentId)
     {
         NavManager.NavigateTo($"/detailedview/{studentId}");
+    }
+    #endregion
+
+    #region navigate to detailed Public profile view with Id (StudentId)
+    private void NavigateToCompanytDetails(int companyId)
+    {
+        NavManager.NavigateTo($"/detailedview/{companyId}");
     }
     #endregion
 

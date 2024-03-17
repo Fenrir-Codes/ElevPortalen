@@ -176,7 +176,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get Student by Id to list
+        #region Get Company by Id to list
         public async Task<List<CompanyModel>> GetCompanyByIdToList(int Id)
         {
             try
