@@ -1,0 +1,193 @@
+﻿@*Lavet af Jozsef*@
+
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.SearchBox
+@using ElevPortalen.Services;
+@using ElevPortalen.Data;
+@using ElevPortalen.Models;
+@using System;
+
+@inject StudentService _studentService
+@inject SkillService _skillService
+@inject NavigationManager NavManager
+
+<PageTitle>Students</PageTitle>
+
+@if (_studentList.Any())
+{
+    isLoaded = true;
+
+    <!--Search container on top-->
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- this is the searchBox component here-->
+            <div class="d-flex justify-content-center w-100 mb-4">
+                <SearchBox Items="_studentList" OnSearch="onSearch"></SearchBox>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Student-related content -->
+    <div class="row d-flex justify-content-center">
+        @foreach (var data in _studentSearchResult)
+        {
+            <!--Calling function to check the days since the student updated the profile-->
+            CalculateDaysDifference(data.UpdatedDate);
+
+            <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToStudentDetails(data!.StudentId)">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(data.profileImage))
+                        {
+                            <img class="rounded-start" src="images/ProfileImages/@data.profileImage" style="max-width: 150px; max-height: 150px;">
+                        }
+                        else
+                        {
+                            <img class="rounded-start" src="images/DefaultAvatar.jpg" style="max-width: 150px; max-height: 150px;">
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h4 class="fw-bold">
+                                @data.FirstName <span> </span>
+                                @if (!string.IsNullOrEmpty(data.MiddleName))
+                                {
+                                    @data.MiddleName <span> </span>
+                                }
+                                @data.LastName
+                            </h4>
+                            <p class="card-text">Specialiseret i @data.Speciality</p>
+                            <p class="card-text"><small class="text-body-secondary">Sidst opdateret @dayDifference dage siden.</small></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-center align-items-center">
+                    @if (data != null && _dictionaryOfSkills.TryGetValue(data.StudentId, out var skills))
+                    {
+                        @if (skills != null)
+                        {
+                            <div class="col-lg-12 skills-container">
+                                <!-- Display the names of the skills in a single row -->
+                                <h6 class="skills-list m-0">
+                                    @foreach (var skillName in skills.Take(4))
+                                    {
+                                        // Check if the length of the skill name exceeds a certain threshold
+                                        @if (skillName.Length > 10)
+                                        {
+                                            <span class="badge bg-dark m-1" title="@skillName">@skillName.Substring(0, 10)...</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-dark m-1">@skillName</span>
+                                        }
+                                    }
+                                </h6>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="card-text">Eleven har endnu ingen færdigheder tilføjet.</p>
+                        }
+                    }
+                    else
+                    {
+                        <p class="card-text">Eleven har endnu ingen færdigheder tilføjet.</p>
+                    }
+                </div>
+
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+    <div>
+        <span class="">Loading...</span>
+    </div>
+} 
+
+<AlertBox @ref="_alertBox" />
+
+@code {
+    #region Initialize
+
+    private List<StudentModel> _studentList = new List<StudentModel>(); //List of Students
+    private List<StudentModel> _studentSearchResult = new List<StudentModel>(); // List searchresult
+    private Dictionary<int, List<string>> _dictionaryOfSkills = new Dictionary<int, List<string>>(); // Dictionary for skills list with id
+    private AlertBox _alertBox = new AlertBox(); //AlertBox
+    private int dayDifference = 0;
+    private bool isLoaded = false;
+
+    #endregion
+
+    #region OnInitialize
+    protected override async Task OnInitializedAsync()
+    {
+        await ReadStudentsData();
+    }
+    #endregion
+
+    #region Read the data from student database
+    public async Task ReadStudentsData()
+    {
+        isLoaded = false;
+
+        _studentSearchResult.Clear();
+        //Getting the data
+        _studentList = await _studentService.ReadAllStudentData();
+        // Filling up the searchresult with list
+        _studentSearchResult = _studentList;
+        //get skill for each student with thir StudentId to dictionary
+        await GetSkills(_studentList);
+    }
+    #endregion
+
+    #region Getting the skills to dictionary for all students to view their skill serapately
+    private async Task GetSkills(List<StudentModel> list)
+    {
+        foreach (var student in list)
+        {
+            var skills = await _skillService.GetSkillsById(student.StudentId);
+            _dictionaryOfSkills[student.StudentId] = skills;
+        }
+    }
+    #endregion
+
+    #region search function
+    void onSearch(string searchTerm)
+    {
+        // if the input field empty
+        if (string.IsNullOrEmpty(searchTerm))
+        {
+            _studentSearchResult = _studentList;
+        }
+        else
+        {
+            _studentSearchResult = _studentList.Where(student => student.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+             student.Speciality.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+             student.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+             student.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+    }
+    #endregion
+
+    #region Checking When The Student Updated The Profile (retuning int as Day)
+    private int CalculateDaysDifference(DateTime studentPrevDate)
+    {
+        var today = DateTime.Now;
+        dayDifference = (today - studentPrevDate.Date).Days;
+        return dayDifference;
+    }
+    #endregion
+
+    #region navigate to detailed Public profile view with Id (StudentId)
+    private void NavigateToStudentDetails(int studentId)
+    {
+        NavManager.NavigateTo($"/viewdetails/{studentId}");
+    }
+    #endregion
+
+}

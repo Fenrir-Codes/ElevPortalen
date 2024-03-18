@@ -2,15 +2,14 @@
 @*Lavet af Jozsef*@
 
 @using ElevPortalen.Pages.AlertBox
-@using ElevPortalen.Pages.SearchBox
+@using ElevPortalen.Pages.Home.HomeForAdmin
+@using ElevPortalen.Pages.Home.HomeForCompanies
+@using ElevPortalen.Pages.Home.HomeForStudents
 @using ElevPortalen.Services;
-@using ElevPortalen.Data;
-@using ElevPortalen.Models;
 @using System;
 
 @inject StudentService _studentService
 @inject CompanyService _companyService
-@inject SkillService _skillService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavManager
 @inject IJSRuntime jsRuntime
@@ -22,160 +21,27 @@
     <!-- Authorized Student and Company-->
     <AuthorizeView Roles="Student, Company, Admin">
         <Authorized>
-            @if (_companyList.Any() && context.User.IsInRole(Student))
+            @if (context.User.IsInRole(Student))
             {
-                isStudent = true;
-
-                <!--Search container on top-->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <!-- this is the searchBox component here-->
-                        <div class="d-flex justify-content-center w-100 mb-4">
-                            <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Display Company-related content -->
-                <div class="row d-flex justify-content-center">
-                    @foreach (var data in _companySearchResult)
-                    {
-                        <div class="card m-1 p-0" style="max-width: 420px; cursor:pointer;" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    @if (!string.IsNullOrEmpty(data.profileImage))
-                                    {
-                                        <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
-                                    }
-                                    else
-                                    {
-                                        <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg" style="width: 100%; height: auto;">
-                                    }
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5>@data.CompanyName</h5>
-                                    </div>
-                                    <p class="card-text">
-                                        Card text here
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                    }
-                </div>
-
+                //Listing the available companies for students
+                <HomeForStudents></HomeForStudents>
             }
-            else if (_studentList.Any() && context.User.IsInRole(Company))
+            else if (context.User.IsInRole(Company))
             {
-                isCompany = true;
-
-                <!--Search container on top-->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <!-- this is the searchBox component here-->
-                        <div class="d-flex justify-content-center w-100 mb-4">
-                            <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Display Student-related content -->
-                <div class="row d-flex justify-content-center">
-                    @foreach (var data in _studentSearchResult)
-                    {
-                        <!--Calling function to check the days since the student updated the profile-->
-                        CalculateDaysDifference(data.UpdatedDate);
-
-                        <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToStudentDetails(data!.StudentId)">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    @if (!string.IsNullOrEmpty(data.profileImage))
-                                    {
-                                        <img class="rounded-start" src="images/ProfileImages/@data.profileImage" style="max-width: 150px; max-height: 150px;">
-                                    }
-                                    else
-                                    {
-                                        <img class="rounded-start" src="images/DefaultAvatar.jpg" style="max-width: 150px; max-height: 150px;">
-                                    }
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h4 class="fw-bold">
-                                            @data.FirstName <span> </span>
-                                            @if (!string.IsNullOrEmpty(data.MiddleName))
-                                            {
-                                                @data.MiddleName <span> </span>
-                                            }
-                                            @data.LastName
-                                        </h4>                                   
-                                        <p class="card-text">Specialiseret i @data.Speciality</p>
-                                        <p class="card-text"><small class="text-body-secondary">Sidst opdateret @dayDifference dage siden.</small></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer d-flex justify-content-center align-items-center">
-                                @if (data != null && _dictionaryOfSkills.TryGetValue(data.StudentId, out var skills))
-                                {
-                                    @if (skills != null)
-                                    {
-                                        <div class="col-lg-12 skills-container">
-                                            <!-- Display the names of the skills in a single row -->
-                                            <h6 class="skills-list m-0">
-                                                @foreach (var skillName in skills.Take(4))
-                                                {
-                                                    // Check if the length of the skill name exceeds a certain threshold
-                                                    @if (skillName.Length > 10)
-                                                    {
-                                                        <span class="badge bg-dark m-1" title="@skillName">@skillName.Substring(0, 10)...</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="badge bg-dark m-1">@skillName</span>
-                                                    }
-                                                }
-                                            </h6>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <p class="card-text">Eleven har endnu ingen færdigheder tilføjet.</p>
-                                    }
-                                }
-                                else
-                                {
-                                    <p class="card-text">Eleven har endnu ingen færdigheder tilføjet.</p>
-                                }
-                            </div>
-
-                        </div>
-                    }
-                </div>
+                //Listing the available students for companies
+                <HomeForCompanies></HomeForCompanies>
             }
             else if (context.User.IsInRole(Admin))
             {
-                <div class="container-fluid d-flex flex-column align-items-center justify-content-center position-relative">
-                    <div class="bg-image-container text-center position-absolute top-100 start-50 translate-middle-x" style="z-index: 1;">
-                        <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width: 75%; height: auto; opacity: 0.1;">
-                    </div>
-
-                    <div class="text-container mb-5" style="text-align: center; z-index: 2;">
-                        <h3 class="w-100"><span class="badge bg-secondary m-5">Welkommen @_authState.User.Identity.Name</span></h3>
-                    </div>
-                </div>
-
+                //Render admin index page
+                <HomeForAdmin></HomeForAdmin>
             }
             else
             {
-                isStudent = false;
-                isCompany = false;
-  
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
                 <p>@Message</p>
-
             }
         </Authorized>
 
@@ -210,19 +76,10 @@
 @code {
 
     #region Initializing objects and variables
-
     // private fields within the scope of the class
     private AuthenticationState? _authState;
-    private List<StudentModel> _studentList = new List<StudentModel>(); //List of Students
-    private List<CompanyModel> _companyList = new List<CompanyModel>(); //List of Companies
-    private List<CompanyModel> _companySearchResult = new List<CompanyModel>(); // List for searchresult
-    private List<StudentModel> _studentSearchResult = new List<StudentModel>(); // List of searchresult
-    private Dictionary<int, List<string>> _dictionaryOfSkills = new Dictionary<int, List<string>>(); // Dictionary for skills list with id pair
-
     //booleans
     private bool isAuthenticated = false;
-    private bool isStudent = false;
-    private bool isCompany = false;
     // Strings
     private string Company = "Company";
     private string Student = "Student";
@@ -238,12 +95,12 @@
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
-       await AuthenticateAndReadData();
+        await Authenticate();
     }
     #endregion
 
     #region Authenticate and read the data
-    private async Task AuthenticateAndReadData()
+    private async Task Authenticate()
     {
         //For see the spinner we can simulate the network slownes
         // await Task.Run(SimulateSlowness);
@@ -257,7 +114,6 @@
             {
                 // If authenticated set the bool to true than read the users data from the data table with the help of ReadData function
                 isAuthenticated = true;
-                await ReadAllData();
             }
             else
             {
@@ -269,141 +125,10 @@
     }
     #endregion
 
-    #region Checking When The Student Updated The Profile (retuning int as Day)
-    private int CalculateDaysDifference(DateTime studentPrevDate)
-    {
-        var today = DateTime.Now;
-        dayDifference = (today - studentPrevDate.Date).Days;
-        return dayDifference;
-    }
-    #endregion
-
     #region Slow network simulation function (testing the spinner)
     private void SimulateSlowness()
     {
         System.Threading.Thread.Sleep(2000);
-    }
-    #endregion
-
-    #region Reading the data from the database with the user claims
-    public async Task ReadAllData()
-    {
-        if (_authState.User.IsInRole(Student)) // If the role is Student
-        {
-            _companySearchResult.Clear();
-            //Getting the data
-            _companyList = await _companyService.ReadAllCompanyData();
-            // Filling up the searchresult with list
-            _companySearchResult = _companyList;
-        }
-        else if (_authState.User.IsInRole(Company)) // If the role is Company
-        {
-            _studentSearchResult.Clear();
-            //Getting the data with the service call from company
-            _studentList = await _studentService.ReadAllStudentData();
-            // Filling up the searchresult with list
-            _studentSearchResult = _studentList;
-            //get skill for each student with thir StudentId to dictionary
-            await GetSkills(_studentList);
-        }
-        else
-        {
-            return;
-        }
-    }
-    #endregion
-
-    #region Navigate to profile function
-    private void GoToProfile()
-    {
-        NavManager.NavigateTo("/profile");
-    }
-    #endregion
-
-    #region opening link in a new window
-    public async Task NavigateToNewTab(string weblink)
-    {
-        string url = "https://" + weblink;
-        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
-    }
-    #endregion
-
-    #region search function
-    void onSearch(string searchTerm)
-    {
-        // if the input field empty
-        if (string.IsNullOrEmpty(searchTerm))
-        {
-            // if student loggied in
-            if (isStudent)
-            {
-                _companySearchResult = _companyList; // list companies
-            }
-            else if (isCompany)
-            {
-                _studentSearchResult = _studentList;
-            }
-            else
-            {
-                _studentSearchResult.Clear();
-                _companySearchResult.Clear();
-            }
-        }
-        else
-        {
-
-            if (isStudent)
-            {
-                _companySearchResult = _companyList
-                    .Where(company =>
-                        company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                        company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-                        company.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-                        company.CompanyAddress.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
-            else if (isCompany)
-            {
-                _studentSearchResult = _studentList
-                    .Where(student =>
-                        student.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                        student.Speciality.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                        student.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                        student.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-
-            }
-            else
-            {
-                _studentSearchResult.Clear();
-                _companySearchResult.Clear();
-            }
-        }
-    }
-    #endregion
-
-    #region Getting the skills to dictionary for all students to view their skill serapately
-    private async Task GetSkills(List<StudentModel> list)
-    {
-        foreach (var student in list)
-        {
-            var skills = await _skillService.GetSkillsById(student.StudentId);
-            _dictionaryOfSkills[student.StudentId] = skills;
-        }
-    }
-    #endregion
-
-    #region navigate to detailed Public profile view with Id (StudentId)
-    private void NavigateToStudentDetails(int studentId)
-    {
-        NavManager.NavigateTo($"/viewdetails/{studentId}");
-    }
-    #endregion
-
-    #region navigate to detailed Public profile view with Id (StudentId)
-    private void NavigateToCompanytDetails(int companyId)
-    {
-        NavManager.NavigateTo($"/viewdetails/{companyId}");
     }
     #endregion
 

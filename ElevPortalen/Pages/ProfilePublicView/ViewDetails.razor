@@ -1,5 +1,6 @@
 ﻿@page "/viewdetails/{Id:int}"
 
+@*Lavet af Jozsef*@
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Pages.ProfilePublicView.CompanyView
 @using ElevPortalen.Pages.ProfilePublicView.StudentView
@@ -30,7 +31,7 @@
         </Authorized>
 
         <NotAuthorized>
-            <AlertBox IsVisible=true Message="You need to log in first." isDanger=true waitForSeconds="0"></AlertBox>
+            <AlertBox IsVisible=true Message="You need to log in first." isWarning=true waitForSeconds="0"></AlertBox>
         </NotAuthorized>
 
     </AuthorizeView>
@@ -43,8 +44,7 @@
     [Parameter]
     public int Id { get; set; }
     private AuthenticationState? _authState;
-    private ClaimsPrincipal? _user;
-    private AlertBox _alertBox = new AlertBox();
+    private AlertBox _alertBox = new AlertBox(); //AlertBox
 
     private string Company = "Company";
     private string Student = "Student";
@@ -52,7 +52,7 @@
     #region Oninitialize
     protected override async Task OnInitializedAsync()
     {
-        await Authenticate();
+         await Authenticate();
     }
     #endregion
 
