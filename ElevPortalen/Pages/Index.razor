@@ -2,14 +2,12 @@
 @*Lavet af Jozsef*@
 
 @using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.Home.HomeDefault
 @using ElevPortalen.Pages.Home.HomeForAdmin
 @using ElevPortalen.Pages.Home.HomeForCompanies
 @using ElevPortalen.Pages.Home.HomeForStudents
-@using ElevPortalen.Services;
 @using System;
 
-@inject StudentService _studentService
-@inject CompanyService _companyService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavManager
 @inject IJSRuntime jsRuntime
@@ -38,34 +36,14 @@
             }
             else
             {
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p>@Message</p>
+                // If components can not be renderet for some reason, show the alerbox with the message.
+                <AlertBox IsVisible=true isDanger=true Message="An error occurred in rendering one of the components." waitForSeconds="0"></AlertBox>
             }
         </Authorized>
 
         <NotAuthorized>
-            <div class="container-fluid d-flex flex-column align-items-center justify-content-center position-relative">
-                <div class="bg-image-container text-center position-absolute top-50 start-50 translate-middle-x" style="z-index: 1;">
-                    <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width: 75%; height: auto; opacity: 0.1;">
-                </div>
-
-                <div class="text-container mb-5" style="text-align: center; z-index: 2;">
-                    <h1>Velkommen til ElevPortalen</h1>
-                    <div class="d-inline-flex align-items-center">
-                        <a href="/Identity/Account/Login" class="btn mb-3" role="button">Login</a>
-                        <p> eller </p>
-                        <a href="/Identity/Account/Register" class="btn mb-3" role="button">Registrer</a>
-                        <p> dig først</p>
-
-                    </div>
-                    <div>
-                        <p> Studenter i databasen @studentCount</p>
-                        <p> Firmaer i databasen @companyCount</p>
-                    </div>
-                </div>
-            </div>
+            <!-- Rendering the default home page with the logo and login, register buttons.-->
+            <HomeDefault></HomeDefault>
         </NotAuthorized>
 
     </AuthorizeView>
@@ -76,59 +54,29 @@
 @code {
 
     #region Initializing objects and variables
+
     // private fields within the scope of the class
     private AuthenticationState? _authState;
-    //booleans
-    private bool isAuthenticated = false;
     // Strings
-    private string Company = "Company";
-    private string Student = "Student";
-    private string Admin = "Admin";
+    private readonly string Company = "Company";
+    private readonly string Student = "Student";
+    private readonly string Admin = "Admin";
     private string Message = "Loading...";
-    //integers
-    private int studentCount = 0;
-    private int companyCount = 0;
-    private int dayDifference = 0;
 
     #endregion
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
-        await Authenticate();
+        await Authorize();
     }
     #endregion
 
     #region Authenticate and read the data
-    private async Task Authenticate()
+    private async Task Authorize()
     {
-        //For see the spinner we can simulate the network slownes
-        // await Task.Run(SimulateSlowness);
-
         // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-        if (_authState != null)
-        {
-            if (_authState.User.Identity?.IsAuthenticated == true)
-            {
-                // If authenticated set the bool to true than read the users data from the data table with the help of ReadData function
-                isAuthenticated = true;
-            }
-            else
-            {
-                isAuthenticated = false;
-                studentCount = await _studentService.GetStudentCountAsync();
-                companyCount = await _companyService.GetCompaniesCountAsync();
-            }
-        }
-    }
-    #endregion
-
-    #region Slow network simulation function (testing the spinner)
-    private void SimulateSlowness()
-    {
-        System.Threading.Thread.Sleep(2000);
     }
     #endregion
 

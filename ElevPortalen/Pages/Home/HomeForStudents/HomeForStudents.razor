@@ -59,8 +59,9 @@
 }
 else
 {
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden"></span>
+    <div class="spinner-border mt-5"
+         style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
     </div>
     <div>
         <span class="">Loading...</span>
@@ -97,6 +98,7 @@ else
         _companyList = await _companyService.ReadAllCompanyData();
         // Filling up the searchresult with list
         _companySearchResult = _companyList;
+        // _companyList.Clear();
     }
     #endregion
 
@@ -114,7 +116,8 @@ else
             company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
             company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
             company.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-            company.CompanyAddress.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+            company.CompanyAddress.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+            company.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
         }    
     }
     #endregion
