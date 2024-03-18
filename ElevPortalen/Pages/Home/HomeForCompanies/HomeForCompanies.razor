@@ -170,10 +170,7 @@ else
             _studentSearchResult = _studentList.Where(student => student.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
             student.Speciality.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
             student.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-            student.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-            student.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-            student.MiddleName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-            student.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+            student.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
     #endregion
