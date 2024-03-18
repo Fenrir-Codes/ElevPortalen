@@ -7,6 +7,7 @@
 
 @inject StudentService _studentService
 @inject SkillService _skillService
+@inject MessageService _messageService
 
 @foreach (var data in _student)
 {
@@ -127,7 +128,7 @@
                             <p class="mb-0">Kontakt</p>
                         </div>
                         <div class="col-sm-9">
-                            <button class="btn btn-success mb-0 btn-sm">Send besked</button>
+                            <button class="btn btn-success mb-0 btn-sm" @onclick="SendMessage">Send besked</button>
                         </div>
                     </div>
                 </div>
@@ -186,10 +187,12 @@
 @code {
     [Parameter]
     public int Id { get; set; }
+    private string? Message = "";
 
     private List<StudentModel> _student = new List<StudentModel>();
     private List<string> _SkillsOfStudent = new List<string>();
     private AlertBox _alertBox = new AlertBox();
+    private MessageModel _messageData = new MessageModel();
 
     #region Oninitialize
     protected override async Task OnInitializedAsync()
@@ -215,5 +218,30 @@
         }
     }
     #endregion
+
+
+    private async Task SendMessage()
+    {
+        try
+        {
+            _messageData = new MessageModel()
+            {
+                    SenderId = 3,
+                    ReceiverId = 18,
+                    SenderName = "Microcom A/S",
+                    Subject = "Testing sending",
+                    Content = "This is a test message sent from the view page from microcom to Jozsef Bali.",
+                    Timestamp = DateTime.Now,
+                    IsRead = false
+            };
+
+            Message = await _messageService.SaveMessage(_messageData);
+            _alertBox.SetMessage(true, Message, 2000, success: true);
+        }
+        catch (Exception ex)
+        {
+            _alertBox.SetMessage(true, $"Error - {ex.Message}", 0, danger: true);
+        }
+    }
 
 }

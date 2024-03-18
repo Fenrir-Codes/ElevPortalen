@@ -2,6 +2,7 @@ using ElevPortalen;
 using ElevPortalen.Areas.Identity;
 using ElevPortalen.Areas.Identity.Pages.Account;
 using ElevPortalen.Data;
+using ElevPortalen.Models;
 using ElevPortalen.Pages.AlertBox;
 using ElevPortalen.Services;
 using Microsoft.AspNetCore.Components;
@@ -24,6 +25,9 @@ var PortalDatabase = builder.Configuration.GetConnectionString("PortalDatabase")
 //RecoveryDb
 var DataRecoveryString = builder.Configuration.GetConnectionString("RecoveryDatabase") ??
     throw new InvalidOperationException("Connection string 'RecoveryDatabase' not found.");
+//Message Database
+var MessageDataString = builder.Configuration.GetConnectionString("MessageDatabase") ??
+    throw new InvalidOperationException("Connection string 'MessageDatabase' not found.");
 
 //DbContexts
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(LoginDatabase));
@@ -49,6 +53,7 @@ builder.Services.AddScoped<DawaService>();
 builder.Services.AddScoped<RegisterModel>();
 builder.Services.AddScoped<SkillService>();
 builder.Services.AddScoped<AlertBox>();
+builder.Services.AddScoped<MessageService>();
 builder.Services.AddHttpClient();
 //Dataprotection service by Jozsef
 builder.Services.AddDataProtection();
