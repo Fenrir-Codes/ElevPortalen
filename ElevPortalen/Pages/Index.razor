@@ -1,18 +1,13 @@
 ﻿@page "/"
 @*Lavet af Jozsef*@
 
-@using ElevPortalen.Pages.MessageBox
-@using ElevPortalen.Pages.SearchBox
-@using ElevPortalen.Services;
-@using ElevPortalen.Data;
-@using ElevPortalen.Models;
-@using System;
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.Home.HomeDefault
+@using ElevPortalen.Pages.Home.HomeForAdmin
+@using ElevPortalen.Pages.Home.HomeForCompanies
+@using ElevPortalen.Pages.Home.HomeForStudents
 
-@inject StudentService _studentService
-@inject CompanyService _companyService
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NavigationManager NavManager
-@inject IJSRuntime jsRuntime
 
 <PageTitle>Home</PageTitle>
 
@@ -21,153 +16,31 @@
     <!-- Authorized Student and Company-->
     <AuthorizeView Roles="Student, Company, Admin">
         <Authorized>
-            @if (_companyList.Any() && context.User.IsInRole(Student))
+            @if (context.User.IsInRole(Student))
             {
-                isStudent = true;
-
-                <!--Search container on top-->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <!-- this is the searchBox component here-->
-                        <div class="d-flex justify-content-center w-100 mb-4">
-                            <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Display Company-related content -->
-                <div class="row">
-                    @foreach (var data in _companySearchResult)
-                    {
-                        <div class="card m-1 p-0" style="max-width: 420px;">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    @if (data.profileImage != "")
-                                    {
-                                        <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
-                                    }
-                                    else
-                                    {
-                                        <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg" style="width: 100%; height: auto;">
-                                    }
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h5>@data.CompanyName</h5>
-                                    </div>
-                                    <p class="card-text">
-                                        <button class="btn btn-outline-info" @onclick="() => NavigateToNewTab(data.Link)">Visit hjemmeside</button>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                    }
-                </div>
-
+                //Listing the available companies for students
+                <HomeForStudents></HomeForStudents>
             }
-            else if (_studentList.Any() && context.User.IsInRole(Company))
+            else if (context.User.IsInRole(Company))
             {
-                isCompany = true;
-
-                <!--Search container on top-->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <!-- this is the searchBox component here-->
-                        <div class="d-flex justify-content-center w-100 mb-4">
-                            <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Display Student-related content -->
-                <div class="row d-flex justify-content-center">
-                    @foreach (var data in _studentSearchResult)
-                    {
-                        <!--Calling function to check the days since the student updated the profile-->
-                        CalculateDaysDifference(data.UpdatedDate);
-
-                        <div class="card m-2 p-0" style="max-width: 450px;">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    @if (!string.IsNullOrEmpty(data.profileImage))
-                                    {
-                                        <img class="rounded-start" src="images/ProfileImages/@data.profileImage" style="max-width: 150px; max-height: 150px;">
-                                    }
-                                    else
-                                    {
-                                        <img class="rounded-start" src="images/DefaultAvatar.jpg" style="max-width: 150px; max-height: 150px;">
-                                    }
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body">
-                                        <h4 class="fw-bold">
-                                            @data.FirstName <span> </span>
-                                            @if (data.MiddleName != null)
-                                            {
-                                                @data.MiddleName <span> </span>
-                                            }
-                                            @data.LastName
-                                        </h4>                                   
-                                        <p class="card-text">Specialiseret i @data.Speciality</p>
-                                        <p class="card-text"><small class="text-body-secondary">Sidst opdateret @dayDifference dage siden.</small></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <p class="card-text">Skills will be added here</p>                          
-                            </div>
-                        </div>
-                    }
-                </div>
+                //Listing the available students for companies
+                <HomeForCompanies></HomeForCompanies>
             }
             else if (context.User.IsInRole(Admin))
             {
-                <div class="container-fluid d-flex flex-column align-items-center justify-content-center position-relative">
-                    <div class="bg-image-container text-center position-absolute top-100 start-50 translate-middle-x" style="z-index: 1;">
-                        <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width: 75%; height: auto; opacity: 0.1;">
-                    </div>
-
-                    <div class="text-container mb-5" style="text-align: center; z-index: 2;">
-                        <h3 class="w-100"><span class="badge bg-secondary m-5">Welkommen @_authState.User.Identity.Name</span></h3>
-                    </div>
-                </div>
-
+                //Render admin index page
+                <HomeForAdmin></HomeForAdmin>
             }
             else
             {
-                isStudent = false;
-                isCompany = false;
-  
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p>@Message</p>
-
+                // If components can not be renderet for some reason, show the alerbox with the message.
+                <AlertBox IsVisible=true isDanger=true Message="An error occurred in rendering one of the components." waitForSeconds="0"></AlertBox>
             }
         </Authorized>
 
         <NotAuthorized>
-            <div class="container-fluid d-flex flex-column align-items-center justify-content-center position-relative">
-                <div class="bg-image-container text-center position-absolute top-50 start-50 translate-middle-x" style="z-index: 1;">
-                    <img src="/images/Logo_ElevPortalen.png" class="bg-image" style="max-width: 75%; height: auto; opacity: 0.1;">
-                </div>
-
-                <div class="text-container mb-5" style="text-align: center; z-index: 2;">
-                    <h1>Velkommen til ElevPortalen</h1>
-                    <div class="d-inline-flex align-items-center">
-                        <a href="/Identity/Account/Login" class="btn mb-3" role="button">Login</a>
-                        <p> eller </p>
-                        <a href="/Identity/Account/Register" class="btn mb-3 btn-hover-change" role="button">Registrer</a>
-                        <p> dig først</p>
-
-                    </div>
-                    <div>
-                        <p> Studenter i databasen @studentCount</p>
-                        <p> Firmaer i databasen @companyCount</p>
-                    </div>
-                </div>
-            </div>
+            <!-- Rendering the default home page with the logo and login, register buttons.-->
+            <HomeDefault></HomeDefault>
         </NotAuthorized>
 
     </AuthorizeView>
@@ -175,164 +48,32 @@
 </div>
 
 
-
-
 @code {
+
+    #region Initializing objects and variables
+
     // private fields within the scope of the class
     private AuthenticationState? _authState;
-    private List<StudentModel> _studentList = new List<StudentModel>();
-    private List<CompanyModel> _companyList = new List<CompanyModel>();
-    private List<CompanyModel> _companySearchResult = new List<CompanyModel>();
-    private List<StudentModel> _studentSearchResult = new List<StudentModel>();
-
-    private bool isAuthenticated = false;
-    private bool isStudent = false;
-    private bool isCompany = false;
-    private string Company = "Company";
-    private string Student = "Student";
-    private string Admin = "Admin";
+    // Strings
+    private readonly string Company = "Company";
+    private readonly string Student = "Student";
+    private readonly string Admin = "Admin";
     private string Message = "Loading...";
 
-    private int studentCount = 0;
-    private int companyCount = 0;
-    private int dayDifference = 0;
+    #endregion
 
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
+        await Authorize();
+    }
+    #endregion
 
-        //For see the spinner we can simulate the network slownes
-        // await Task.Run(SimulateSlowness);
-
+    #region Authenticate and read the data
+    private async Task Authorize()
+    {
         // Getting the user current authentication state.
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-        if (_authState != null)
-        {
-            if (_authState.User.Identity?.IsAuthenticated == true)
-            {
-                // If authenticated set the bool to true than read the users data from the data table with the help of ReadData function
-                isAuthenticated = true;
-                await ReadAllData();
-            }
-            else
-            {
-                isAuthenticated = false;
-                studentCount = await _studentService.GetStudentCountAsync();
-                companyCount = await _companyService.GetCompaniesCountAsync();
-            }
-        }
-    }
-    #endregion
-
-    #region Checking When The Student Updated The Profile (retuning int as Day)
-    private int CalculateDaysDifference(DateTime studentPrevDate)
-    {
-        var today = DateTime.Now;
-        dayDifference = (today - studentPrevDate.Date).Days;
-        return dayDifference;
-    }
-    #endregion
-
-    #region Slow network simulation function (testing the spinner)
-    private void SimulateSlowness()
-    {
-        System.Threading.Thread.Sleep(2000);
-    }
-    #endregion
-
-    #region Reading the data from the database with the user claims
-    public async Task ReadAllData()
-    {
-        if (_authState.User.IsInRole(Student)) // If the role is Student
-        {
-            //Getting the data
-            _companyList = await _companyService.ReadAllCompanyData();
-
-            _companySearchResult.Clear();
-            _companySearchResult = _companyList;
-        }
-        else if (_authState.User.IsInRole(Company)) // If the role is Company
-        {
-            //Getting the data with the service call from company
-            _studentList = await _studentService.ReadAllStudentData();
-
-            _studentSearchResult.Clear();
-            _studentSearchResult = _studentList;
-        }
-        else
-        {
-            return;
-        }
-    }
-    #endregion
-
-    #region Navigate to profile function
-    private void GoToProfile()
-    {
-        NavManager.NavigateTo("/profile");
-    }
-    #endregion
-
-    #region opening link in a new window
-    public async Task NavigateToNewTab(string weblink)
-    {
-        string url = "https://" + weblink;
-        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
-    }
-    #endregion
-
-    #region search function
-    void onSearch(string searchTerm)
-    {
-        // if the input field empty
-        if (string.IsNullOrEmpty(searchTerm))
-        {
-            // if student loggied in
-            if (isStudent)
-            {
-                _companySearchResult = _companyList; // list companies
-            }
-            else if (isCompany)
-            {
-                _studentSearchResult = _studentList;
-            }
-            else
-            {
-                _studentSearchResult.Clear();
-                _companySearchResult.Clear();
-            }
-        }
-        else
-        {
-
-            if (isStudent)
-            {
-                _companySearchResult = _companyList
-                    .Where(company =>
-                        company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                        company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-                        company.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-                        company.CompanyAddress.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-            }
-            else if (isCompany)
-            {
-                _studentSearchResult = _studentList
-                    .Where(student =>
-                        student.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                        student.Speciality.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                        student.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                        student.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-
-            }
-            else
-            {
-                _studentSearchResult.Clear();
-                _companySearchResult.Clear();
-            }
-        }
     }
     #endregion
 

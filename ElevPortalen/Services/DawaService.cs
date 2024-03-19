@@ -17,29 +17,33 @@ namespace ElevPortalen.Services
         #endregion
 
         #region GetAdress function
-        public async Task<List<AddressModel>> GetAddress(string searchTerm)
+        public async Task<(List<AddressModel>? Addresses, string? ErrorMessage)> GetAddress(string searchTerm)
         {
             try
             {
                 var response = await httpClient.GetAsync($"https://api.dataforsyningen.dk/adresser/autocomplete?q={searchTerm}");
-                Console.WriteLine($"API Response: {response}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    var address = JsonSerializer.Deserialize<List<AddressModel>>(content);
-                    return address;
+                    var addresses = JsonSerializer.Deserialize<List<AddressModel>>(content);
+                    return (addresses, null); // Return addresses and no error message
                 }
                 else
                 {
                     // Handle the case where the API response is not successful.
-                    return null!;
+                    return (null, $"API request failed with status code: {response.StatusCode}");
                 }
+            }
+            catch (HttpRequestException)
+            {
+                // Handle the case where there is no internet connection
+                return (null, "No internet connection");
             }
             catch (Exception ex)
             {
-
-                throw new InvalidOperationException($"Error occurred while getting the address data: {ex.Message}");
+                // Handle other exceptions
+                return (null, $"Error occurred while getting the address data: {ex.Message}");
             }
         }
         #endregion

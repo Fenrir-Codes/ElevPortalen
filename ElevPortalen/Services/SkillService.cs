@@ -37,6 +37,26 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Getting the skill Name as string to List
+        public async Task<List<string>> GetSkillsById(int id)
+        {
+            var skilldata = await _context.StudentSkills.FirstOrDefaultAsync(s => s.StudentId == id);
+
+            if (skilldata == null)
+            {
+                return null!;
+            }
+
+            List<string> skills = await Task.Run(() =>
+                typeof(SkillModel).GetProperties()
+                    .Where(skill => skill.PropertyType == typeof(bool) && (bool)skill.GetValue(skilldata))
+                    .Select(skill => skill.Name)
+                    .ToList());
+
+            return skills;
+        }
+        #endregion
+
         #region Create Skills
         public async Task<string?> CreateSkills(int studentId, SkillModel newSkills)
         {
@@ -70,10 +90,6 @@ namespace ElevPortalen.Services
                     existingSkills.Communikation = newSkills.Communikation;
                     existingSkills.TeamWorking = newSkills.TeamWorking;
                     existingSkills.WillingToLearn = newSkills.WillingToLearn;
-
-                    await _context.SaveChangesAsync();
-
-                    return null;
                 }
 
                 // Create new skills entry
@@ -81,15 +97,13 @@ namespace ElevPortalen.Services
                 _context.StudentSkills.Add(newSkills);
                 await _context.SaveChangesAsync();
 
-                return null;
+                return $"Skills were added successfully.";
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Failed to create/update skills: {ex.Message}");
             }
         }
-
-
         #endregion
 
         #region Retrieve the skills with StudentId
@@ -114,46 +128,44 @@ namespace ElevPortalen.Services
         {
             try
             {
-                var entry = await _context.StudentSkills.FirstOrDefaultAsync(s => s.StudentId == studentId);
+                var skill = await _context.StudentSkills.FirstOrDefaultAsync(s => s.StudentId == studentId);
 
                 // If the entry is not null
-                if (entry != null)
+                if (skill != null)
                 {
                     // Update individual skills
-                    entry.CSharp = updatedSkills.CSharp;
-                    entry.Java = updatedSkills.Java;
-                    entry.DotNet = updatedSkills.DotNet;
-                    entry.Typescript = updatedSkills.Typescript;
-                    entry.Python = updatedSkills.Python;
-                    entry.PHP = updatedSkills.PHP;
-                    entry.CPlusPlus = updatedSkills.CPlusPlus;
-                    entry.C = updatedSkills.C;
-                    entry.Bootstrap = updatedSkills.Bootstrap;
-                    entry.Blazor = updatedSkills.Blazor;
-                    entry.JavaScript = updatedSkills.JavaScript;
-                    entry.HTML = updatedSkills.HTML;
-                    entry.CSS = updatedSkills.CSS;
-                    entry.SQL = updatedSkills.SQL;
-                    entry.OfficePack = updatedSkills.OfficePack;
-                    entry.CloudComputing = updatedSkills.CloudComputing;
-                    entry.VersionControl = updatedSkills.VersionControl;
-                    entry.NetWork = updatedSkills.NetWork;
-                    entry.ProblemSolving = updatedSkills.ProblemSolving;
-                    entry.Communikation = updatedSkills.Communikation;
-                    entry.TeamWorking = updatedSkills.TeamWorking;
-                    entry.WillingToLearn = updatedSkills.WillingToLearn;
+                    skill.CSharp = updatedSkills.CSharp;
+                    skill.Java = updatedSkills.Java;
+                    skill.DotNet = updatedSkills.DotNet;
+                    skill.Typescript = updatedSkills.Typescript;
+                    skill.Python = updatedSkills.Python;
+                    skill.PHP = updatedSkills.PHP;
+                    skill.CPlusPlus = updatedSkills.CPlusPlus;
+                    skill.C = updatedSkills.C;
+                    skill.Bootstrap = updatedSkills.Bootstrap;
+                    skill.Blazor = updatedSkills.Blazor;
+                    skill.JavaScript = updatedSkills.JavaScript;
+                    skill.HTML = updatedSkills.HTML;
+                    skill.CSS = updatedSkills.CSS;
+                    skill.SQL = updatedSkills.SQL;
+                    skill.OfficePack = updatedSkills.OfficePack;
+                    skill.CloudComputing = updatedSkills.CloudComputing;
+                    skill.VersionControl = updatedSkills.VersionControl;
+                    skill.NetWork = updatedSkills.NetWork;
+                    skill.ProblemSolving = updatedSkills.ProblemSolving;
+                    skill.Communikation = updatedSkills.Communikation;
+                    skill.TeamWorking = updatedSkills.TeamWorking;
+                    skill.WillingToLearn = updatedSkills.WillingToLearn;
 
-
-                    _context.Entry(entry).State = EntityState.Modified;
+                    _context.Entry(skill).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
 
                     return "Skills updated successfully";
+
                 }
-
-
                 else
                 {
-                    return "Student not found"; // Return a message when the student is not found
+                    return "Student with the StudentId not found."; // Return a message when the student is not found
                 }
             }
             catch (Exception ex)
@@ -169,15 +181,15 @@ namespace ElevPortalen.Services
             try
             {
                 // Find the entry for the specified student
-                var entry = await _context.StudentSkills.FirstOrDefaultAsync(s => s.StudentId == studentId);
+                var skill = await _context.StudentSkills.FirstOrDefaultAsync(s => s.StudentId == studentId);
 
                 // If the entry is not null, delete it
-                if (entry != null)
+                if (skill != null)
                 {
-                    _context.StudentSkills.Remove(entry);
+                    _context.StudentSkills.Remove(skill);
                     await _context.SaveChangesAsync();
 
-                    return null; // Return null when there is no error
+                    return $"Skills deleted successfully."; //success
                 }
                 else
                 {

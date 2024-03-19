@@ -1,0 +1,19 @@
+﻿
+.card-footer {
+    background-color: black;
+    transition: .3s;
+}
+
+.card-footer:hover {
+    background-color: yellowgreen;
+    color:black;
+}
+
+.tableheader{
+    background-color:yellowgreen;
+    color:black;
+}
+
+.btn-operation {
+    background-color: yellowgreen;
+}

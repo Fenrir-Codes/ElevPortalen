@@ -2,6 +2,8 @@ using ElevPortalen;
 using ElevPortalen.Areas.Identity;
 using ElevPortalen.Areas.Identity.Pages.Account;
 using ElevPortalen.Data;
+using ElevPortalen.Models;
+using ElevPortalen.Pages.AlertBox;
 using ElevPortalen.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -14,21 +16,20 @@ using System.Drawing.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+//LoginDb
+var LoginDatabase = builder.Configuration.GetConnectionString("LoginDatabase") ?? 
+    throw new InvalidOperationException("Connection string 'LoginDatabase' not found.");
+//The ElevPortalenDb.
+var PortalDatabase = builder.Configuration.GetConnectionString("PortalDatabase") ?? 
+    throw new InvalidOperationException("Connection string 'PortalDatabase' not found.");
+//RecoveryDb
+var DataRecoveryString = builder.Configuration.GetConnectionString("RecoveryDatabase") ??
+    throw new InvalidOperationException("Connection string 'RecoveryDatabase' not found.");
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? 
-    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
-
-//The ElevPortalen-Data db string.
-var dbString = builder.Configuration.GetConnectionString("DbConnection") ?? 
-    throw new InvalidOperationException("Connection string 'DbConnection' not found.");
-
-var DataRecoveryDbString = builder.Configuration.GetConnectionString("RecoveryDbConnection") ??
-    throw new InvalidOperationException("Connection string 'DbConnection' not found.");
-
-builder.Services.AddDbContext<ElevPortalenDataDbContext>(options => options.UseSqlServer(dbString));
-builder.Services.AddDbContext<DataRecoveryDbContext>(options => options.UseSqlServer(DataRecoveryDbString));
+//DbContexts
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(LoginDatabase));
+builder.Services.AddDbContext<ElevPortalenDataDbContext>(options => options.UseSqlServer(PortalDatabase));
+builder.Services.AddDbContext<DataRecoveryDbContext>(options => options.UseSqlServer(DataRecoveryString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -48,14 +49,9 @@ builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<DawaService>();
 builder.Services.AddScoped<RegisterModel>();
 builder.Services.AddScoped<SkillService>();
+builder.Services.AddScoped<AlertBox>();
+builder.Services.AddScoped<MessageService>();
 builder.Services.AddHttpClient();
-//End ----
-
-//added Database context by Jozsef
-builder.Services.AddDbContext<ElevPortalenDataDbContext>(options =>
-    options.UseSqlServer(connectionString));
-// End ----
-
 //Dataprotection service by Jozsef
 builder.Services.AddDataProtection();
 // End ----

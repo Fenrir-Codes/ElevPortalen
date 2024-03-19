@@ -2,6 +2,7 @@
 
 @*Lavet af Jozsef*@
 @using ElevPortalen.Models
+@using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Services
 @using ElevPortalen.Data;
 @using System.Text.Json
@@ -28,13 +29,13 @@
                     <br />
                     <!-- Account details card-->
                     <div class="card mb-4">
-                        <div class="card-header fw-bold">Registrer Kontooplysninger</div>
+                        <div class="card-header fw-bold text-white bg-dark">Registrer Kontooplysninger</div>
                         <div class="card-body">
                             <form>
                                 <div class="col-md-6">
                                     <label class="small mb-1 fw-bold" for="title">Title</label>
                                     <input class="form-control" id="title" type="text"
-                                           placeholder="Skriv Din titel" @bind="_studentData.Title">
+                                           placeholder="f.eks. Datatekniker" @bind="_studentData.Title">
                                 </div>
                                 <!-- Form Row-->
                                 <div class="row gx-3 mb-3">
@@ -63,7 +64,8 @@
                                     <!-- Form Group (address)-->
                                     <div class="col-md-6">
                                         <label class="small mb-1 fw-bold" for="inputaddress">Addresse</label>
-                                        <input class="form-control" list="addressSuggestions" @bind="_studentData.Address" placeholder="Enter address" @oninput="UpdateDropdownWithDelay">
+                                        <input class="form-control" list="addressSuggestions" @bind="_studentData.Address" placeholder="Enter address"
+                                        @oninput="UpdateDropdownWithDelay">
                                         <datalist id="addressSuggestions">
                                             @foreach (var item in address)
                                             {
@@ -79,7 +81,7 @@
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1 fw-bold" for="inputPhone">Mobil</label>
                                         <input class="form-control" type="tel" id="inputPhone" name="phone"
-                                               placeholder="12 34 56 78" @bind="_studentData.PhoneNumber" required>
+                                               placeholder="8 cifre" @bind="_studentData.PhoneNumber" required>
                                     </div>
                                 </div>
                                 <!-- Form Row -->
@@ -92,6 +94,10 @@
                                             <option value="Infrastrukture">Infrastruktur</option>
                                             <option value="Programmering">Programmering</option>
                                         </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1 fw-bold" for="_picture">Image</label>
+                                        <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                                     </div>
                                 </div>
                                 <div class="row">
@@ -190,7 +196,6 @@
                                     <textarea class="form-control" @bind="_studentData.Description" id="_description" rows="4"></textarea>
                                 </div>
 
-                                <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                             </form>
 
                             <button class="btn btn-outline-success mt-2" @onclick="CreateStudentProfile">Gem</button>
@@ -211,7 +216,7 @@
                     <br />
                     <!-- Account details card-->
                     <div class="card mb-4">
-                        <div class="card-header">Registrer Kontooplysninger For Dit Firma</div>
+                        <div class="card-header text-white bg-dark fw-bold">Registrer Kontooplysninger For Dit Firma</div>
                         <div class="card-body">
                             <form>
                                 <!-- Form Row-->
@@ -239,12 +244,12 @@
                                     </div>
                                 </div>
                                 <!-- Form Row        -->
-                                <div class="row gx-3 mb-3">
+                                <div class="row gx-3 mb-">
                                     <!-- Form Group (Region)-->
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1 fw-bold" for="_region">Din Region</label>
                                         <select class="form-select form-select-md" @bind="_companyData.Region" id="_region" aria-label="Region">
-                                            <option disabled selected></option>
+                                           @*<option disabled selected></option> *@
                                             <option value="Region Nordjylland">Region Nordjylland</option>
                                             <option value="Region Midtjylland">Region Midtjylland</option>
                                             <option value="Region Syddanmark">Region Syddanmark</option>
@@ -261,13 +266,13 @@
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1 fw-bold" for="inputPhone">Phone Number</label>
                                         <input class="form-control" type="tel" id="inputPhone" name="phone"
-                                               placeholder="8 cifre" @bind="_companyData.PhoneNumber">
+                                               placeholder="8 cifre" @bind="_companyData.PhoneNumber" maxlength="8" pattern="[0-9]{8}" required>
                                     </div>
                                     <!-- webLink -->
                                     <div class="mb-3 col-md-6">
                                         <label class="small mb-1 fw-bold" for="inputWebsite">Firma link</label>
                                         <input class="form-control" id="inputWebsite" type="text"
-                                               placeholder="Indtast Webstedslink" @bind="_companyData.Link">
+                                               placeholder="pattern: www.example.dk" @bind="_companyData.Link">
                                     </div>
                                 </div>
                                 <!-- Form Row-->
@@ -277,17 +282,21 @@
                                         <label class="small mb-1 fw-bold" for="_preferences">Preference</label>
                                         <select class="form-select form-select-md" @bind="_companyData.Preferences" id="_preferences"
                                                 aria-label="Preferences">
-                                            <option value="" disabled selected></option>
+                                           @*<option value="" disabled selected></option> *@
                                             <option value="It-Supporter">It-Supporter</option>
                                             <option value="Infrastructure">Infrastruktur</option>
                                             <option value="Programmer">Programmør</option>
                                         </select>
                                     </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1 fw-bold" for="_picture">Image</label>
+                                        <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
+                                    </div>
                                 </div>
                                 <!-- Form Group (Description)-->
                                 <div class="col-md-12 mb-3">
                                     <label for="Description" class="form-label fw-bold">Beskrivelse</label>
-                                    <textarea class="form-control" @bind="_companyData.Description" id="_description" rows="4"></textarea>
+                                    <textarea class="form-control" @bind="_companyData.Description" id="_description" rows="8"></textarea>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" @bind="_companyData.IsHiring">
@@ -314,9 +323,12 @@
 
     </AuthorizeView>
 
+    <AlertBox @ref="_alertBox"/>
+
 </div>
 
 @code {
+
     #region fields
 
     private AuthenticationState? _authState;
@@ -330,16 +342,17 @@
     //address lookup
     private string? searchTerm;
     private string? selectedAddress;
-    private string Message = "";
+    private string? Message = "";
 
     //models
     private SkillModel _Skills = new SkillModel();
     private StudentModel _studentData = new StudentModel();
     private CompanyModel _companyData = new CompanyModel();
     private List<AddressModel> address = new List<AddressModel>();
+    //Messagebox
+    private AlertBox _alertBox = new AlertBox();
 
     //booleans
-    private bool showDropdown;
     private bool isAuthenticated = false;
 
     private CancellationTokenSource? cancellationTokenSource;
@@ -385,7 +398,7 @@
                     if (Guid.TryParse(userIdString, out Guid userId))
                     {
                         _studentData = new StudentModel
-                            {
+                        {
                                 UserId = userId, // Set the UserId to the user's unique identifier
                                 Title = _studentData.Title,
                                 FirstName = _studentData.FirstName,
@@ -400,27 +413,28 @@
                                 RegisteredDate = DateTime.Now,
                                 UpdatedDate = DateTime.Now
 
-                            };
+                        };
 
                         Message = await _studentService.CreateStudent(_studentData); //create student data
                         await CreateSkills(_studentData.StudentId); //add the student skills
+                        _alertBox.SetMessage(true, Message, 2000, success: true);
                         NavManager.NavigateTo("/profile"); // return to profile
                     }
                     else
                     {
                         // Handle the exception and return an error message
-                        Message = $"Error parsing GUID";
+                        _alertBox.SetMessage(true, "Error parsing GUID", 0, danger: true);
                     }
                 }
             }
 
             // Default return statement if conditions are not met
-            Message = $"Unexpected error occurred";
+            _alertBox.SetMessage(true, "Unexpected error occurred", 0, danger: true);
         }
         catch (Exception ex)
         {
             // Handle the exception and return an error message
-            Message = $"Error: {ex.Message}";
+            _alertBox.SetMessage(true, $"Error: {ex.Message}", 0, danger: true);
         }
     }
     #endregion
@@ -428,7 +442,8 @@
     #region Add Skills Function
     private async Task CreateSkills(int studentId)
     {
-        var result = await _skillService.CreateSkills(studentId, _Skills);
+        Message = await _skillService.CreateSkills(studentId, _Skills);
+        _alertBox.SetMessage(true, Message!, 5000, success: true);
     }
     #endregion
 
@@ -470,23 +485,24 @@
                         };
 
                         Message = await _companyService.CreateCompany(_companyData);
+                        _alertBox.SetMessage(true, Message, 5000, success: true);
                         NavManager.NavigateTo("/profile");
                     }
                     else
                     {
                         // Handle the exception and return an error message
-                        Message = $"Error parsing GUID";
+                        _alertBox.SetMessage(true, "Error parsing GUID", 10000, danger: true);
                     }
                 }
             }
 
             // Default return statement if conditions are not met
-            Message = $"Unexpected error occurred";
+            _alertBox.SetMessage(true, "Unexpected error occurred", 10000, danger: true);
         }
-        catch (Exception ex)
+        catch (Exception? ex)
         {
             // Handle the exception and return an error message
-            Message = $"Error: {ex.Message}";
+            _alertBox.SetMessage(true, $"Error: {ex.Message}", 10000, danger: true);
         }
     }
     #endregion
@@ -517,16 +533,23 @@
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             searchTerm = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
-            var updatedAddress = await dawaService.GetAddress(searchTerm);
-            address = updatedAddress ?? new List<AddressModel>();
-            showDropdown = true;
-            <!-- Set showDropdown to true to display the datalist -->
+            var (addresses, errorMessage) = await dawaService.GetAddress(searchTerm);
+
+            if (addresses != null)
+            {
+                address = addresses;
+            }
+            else
+            {
+                // Handle the error case, show a message to the user
+                _alertBox.SetMessage(true, errorMessage,10000, warning:true);
+            }
         }
         else
         {
-            <!-- Clear suggestions if searchTerm is empty -->
+            // Handle the case where the search term is empty, show a message to the user
+            _alertBox.SetMessage(true, "Please type your address.", 5000, warning: true);
             address = new List<AddressModel>();
-            showDropdown = false;
         }
 
         <!-- Trigger a re-render to update the UI -->
@@ -541,7 +564,7 @@
 
         if (e.FileCount > maxAllowedFiles)
         {
-            errors.Add($"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} files are allowed");
+            _alertBox.SetMessage(true, $"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} files are allowed", 10000, warning: true);
             return;
         }
 
@@ -567,9 +590,11 @@
             }
             catch (Exception ex)
             {
-                errors.Add($"File: {file.Name} Error: {ex.Message}");
+                _alertBox.SetMessage(true, $"File: {file.Name} Error: {ex.Message}", 10000, warning: true);
             }
         }
     }
     #endregion
+
+
 }

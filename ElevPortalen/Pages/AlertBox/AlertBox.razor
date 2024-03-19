@@ -1,0 +1,117 @@
+﻿@if (IsVisible)
+{
+    <div class="container fixed-bottom" style="max-width:600px;">
+        @if (isDanger && !string.IsNullOrWhiteSpace(Message))
+        {
+
+            <div class="alert alert-danger d-flex align-items-center justify-content-center shadow" role="alert">
+                <i class="fa-solid fa-triangle-exclamation me-3 fa-xl"></i>
+                <span class="fs-5">@Message</span>
+            </div>
+
+        }
+        else if (isSuccess && !string.IsNullOrWhiteSpace(Message))
+        {
+
+            <div class="alert alert-success d-flex align-items-center justify-content-center shadow" role="alert">
+                <i class="fa-solid fa-circle-check me-3 fa-xl"></i>
+                <span class="fs-5">@Message</span>
+            </div>
+
+        }
+        else if (isWarning && !string.IsNullOrWhiteSpace(Message))
+        {
+
+            <div class="alert alert-warning d-flex align-items-center justify-content-center shadow" role="alert">
+                <i class="fa-solid fa-circle-info fa-xl me-3"></i>
+                <span class="fs-5">@Message</span>
+            </div>
+
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(Message))
+            {
+                <div class="alert alert-primary d-flex align-items-center justify-content-center shadow" role="alert">
+                    <i class="fa-solid fa-circle-info me-3 fa-xl"></i>
+                    <span class="fs-5">@Message</span>
+                    @IsVisible @waitForSeconds
+                </div>
+            }
+
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; } = false;
+    [Parameter]
+    public string? Message { get; set; } = "";
+    [Parameter]
+    public bool isDanger { get; set; } = false;
+    [Parameter]
+    public bool isSuccess { get; set; } = false;
+    [Parameter]
+    public bool isWarning { get; set; } = false;
+    [Parameter]
+    public int waitForSeconds { get; set; } = 0;
+
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await HandleVisibility();
+        }
+    }
+
+    public void SetMessage(bool isVisible, string message, int delayInMillisec, bool danger = false, bool success = false, bool warning = false)
+    {
+        IsVisible = isVisible;
+        Message = message;
+        waitForSeconds = delayInMillisec;
+        isDanger = danger;
+        isSuccess = success;
+        isWarning = warning;
+
+        // Check if waitForSeconds is greater than 0 to avoid unnecessary delays
+        if (waitForSeconds > 0)
+        {
+            TurnOffAfterDelay(waitForSeconds);
+        }
+
+        StateHasChanged();
+    }
+
+    private async void TurnOffAfterDelay(int delayInMillisec)
+    {
+        await Task.Delay(delayInMillisec);
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    private async Task HandleVisibility()
+    {
+        if (waitForSeconds == 0)
+        {
+            IsVisible = true;
+        }
+        else
+        {
+            // Let the component render first
+            await Task.Delay(1);
+
+            // Hide the component after waitForSeconds given parameter
+            await Task.Delay(waitForSeconds);
+
+            await InvokeAsync(() =>
+            {
+                IsVisible = false;
+                StateHasChanged();
+            });
+        }
+    }
+
+
+}

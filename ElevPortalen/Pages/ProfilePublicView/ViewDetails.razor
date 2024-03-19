@@ -1,0 +1,67 @@
+﻿@page "/viewdetails/{Id:int}"
+
+@*Lavet af Jozsef*@
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.ProfilePublicView.CompanyView
+@using ElevPortalen.Pages.ProfilePublicView.StudentView
+
+@using System.Security.Claims
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Details</PageTitle>
+
+<div class="container p-4">
+
+    <AuthorizeView Roles="Company,Student,Admin">
+
+        <Authorized>
+            @if (context.User.IsInRole(Company))
+            {
+                <ViewStudent Id="Id"></ViewStudent>
+            }
+            else if (context.User.IsInRole(Student))
+            {
+                <ViewCompany Id="Id"></ViewCompany>
+            }
+            else
+            {
+                _alertBox.SetMessage(true, "Error in viewDetail page!", 0, danger: true);
+            }
+        </Authorized>
+
+        <NotAuthorized>
+            <AlertBox IsVisible=true Message="You need to log in first." isWarning=true waitForSeconds="0"></AlertBox>
+        </NotAuthorized>
+
+    </AuthorizeView>
+
+
+</div>
+<AlertBox @ref="_alertBox" />
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private AuthenticationState? _authState;
+    private AlertBox _alertBox = new AlertBox(); //AlertBox
+
+    private string Company = "Company";
+    private string Student = "Student";
+
+    #region Oninitialize
+    protected override async Task OnInitializedAsync()
+    {
+         await Authenticate();
+    }
+    #endregion
+
+    #region Authentivate user and read data according to Role
+    private async Task Authenticate()
+    {
+        // Getting the user current authentication state.
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+    }
+    #endregion
+
+}

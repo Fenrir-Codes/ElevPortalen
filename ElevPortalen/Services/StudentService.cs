@@ -44,7 +44,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get Student request
+        #region Get Student request (Read Data)
         public async Task<List<StudentModel>> ReadData(ClaimsPrincipal _user)
         {
             try
@@ -177,7 +177,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get Student by Id
+        #region Get Student by Id (Model)
         public async Task<StudentModel> GetStudentById(int Id)
         {
             try
@@ -197,6 +197,33 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"An error occurred while retrieving student data: {ex.Message}");
+            }
+        }
+        #endregion
+
+        #region Get Student by Id to list
+        public async Task<List<StudentModel>> GetStudentByIdToList(int Id)
+        {
+            try
+            {
+                var student = await _context.Student
+                    .Where(s => s.StudentId == Id).ToListAsync();
+
+                if (student != null)
+                {
+                    return student;
+                }
+                else
+                {
+                    // Throw an exception if no student found
+                    throw new InvalidOperationException($"No student found with Id: {Id}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Instead of throwing a new exception with a message that includes the original exception message,
+                // it's better to let the original exception propagate.
+                throw;
             }
         }
         #endregion

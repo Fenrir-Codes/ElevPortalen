@@ -1,0 +1,132 @@
+﻿@*Lavet af Jozsef*@
+
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.SearchBox
+@using ElevPortalen.Services;
+@using ElevPortalen.Data;
+@using ElevPortalen.Models;
+@using System;
+
+@inject CompanyService _companyService
+@inject NavigationManager NavManager
+@inject IJSRuntime jsRuntime
+
+<PageTitle>Companies</PageTitle>
+
+@if (_companyList.Any())
+{
+    isLoaded = true;
+
+    <!--Search container on top-->
+    <div class="row">
+        <div class="col-lg-12">
+            <!-- this is the searchBox component here-->
+            <div class="d-flex justify-content-center w-100 mb-4">
+                <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
+            </div>
+        </div>
+    </div>
+
+    <!-- Display Company-related content -->
+    <div class="row d-flex justify-content-center">
+        @foreach (var data in _companySearchResult)
+        {
+            <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer;" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(data.profileImage))
+                        {
+                            <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
+                        }
+                        else
+                        {
+                            <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg" style="width: 100%; height: auto;">
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5>@data.CompanyName</h5>
+                        </div>
+                        <p class="card-text">
+                            Card text here
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+}
+else
+{
+    <div class="spinner-border mt-5"
+         style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <div>
+        <span class="">Loading...</span>
+    </div>
+}
+
+<AlertBox @ref="_alertBox" />
+
+@code {
+    #region Initialize
+
+    private List<CompanyModel> _companyList = new List<CompanyModel>(); //List of Companies
+    private List<CompanyModel> _companySearchResult = new List<CompanyModel>(); // List searchresult
+    private AlertBox _alertBox = new AlertBox(); //AlertBox
+
+    private bool isLoaded = false;
+
+    #endregion
+
+    #region OnInitialize
+    protected override async Task OnInitializedAsync()
+    {
+        await ReadCompanyData();
+    }
+    #endregion
+
+    #region Read the data from company database
+    public async Task ReadCompanyData()
+    {
+        isLoaded = false;
+
+        _companySearchResult.Clear();
+        //Getting the data
+        _companyList = await _companyService.ReadAllCompanyData();
+        // Filling up the searchresult with list
+        _companySearchResult = _companyList;
+        // _companyList.Clear();
+    }
+    #endregion
+
+    #region search function
+    void onSearch(string searchTerm)
+    {
+        // if the input field empty
+        if (string.IsNullOrEmpty(searchTerm))
+        {
+            _companySearchResult = _companyList;
+        }
+        else
+        {
+            _companySearchResult = _companyList.Where(company =>
+            company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            company.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+            company.CompanyAddress.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+            company.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+        }    
+    }
+    #endregion
+
+    #region navigate to detailed Public profile view with Id (CompanyId)
+    private void NavigateToCompanytDetails(int companyId)
+    {
+        NavManager.NavigateTo($"/viewdetails/{companyId}");
+    }
+    #endregion
+
+}

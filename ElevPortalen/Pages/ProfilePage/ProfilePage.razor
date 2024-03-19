@@ -1,8 +1,8 @@
 ﻿@page "/profile"
 @*Lavet af Jozsef*@
 
-@using ElevPortalen.Pages.MessageBox
-@using ElevPortalen.Pages.UpdateProfileModal
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
@@ -17,53 +17,64 @@
 
 <div class="container p-4">
     <!--Autorizeview for Student and Company -->
-    <AuthorizeView Roles="Student,Company">
+    <AuthorizeView Roles="Student,Company,Admin">
         <Authorized>
-            @if (_studentList.Count >= 1)
+            @if (_student.Any())
             {
-                @foreach (var data in _studentList)
+                @foreach (var data in _student)
                 {
                     <!--Social container on top-->
                     <div class="row">
-                        <h3>@data.FirstName's Profile</h3>
                         <div class="col-lg-12">
-                            <div class="card mb-4">
+                            <div class="card mb-2">
                                 <div class="card-body shadow-sm">
-                                    <div class="d-flex align-items-center">
-                                        <a href="#" class="mx-2" style="color: black">
-                                            <span class="fa-stack fa-sm">
-                                                <i class="fas fa-circle fa-stack-2x"></i>
-                                                <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                        </a>
-                                        <a href="#" class="mx-2" style="color: black">
-                                            <span class="fa-stack fa-sm">
-                                                <i class="fas fa-circle fa-stack-2x"></i>
-                                                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                        </a>
-                                        <a href="#" class="mx-2" style="color: black">
-                                            <span class="fa-stack fa-sm">
-                                                <i class="fas fa-circle fa-stack-2x"></i>
-                                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                        </a>
-                                        <a href="#" class="mx-2" style="color: black">
-                                            <span class="fa-stack fa-sm">
-                                                <i class="fas fa-circle fa-stack-2x"></i>
-                                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-                                            </span>
-                                        </a>
+                                    <div class="d-flex justify-content-between align-items-center flex-column flex-sm-row">
+                                        <!-- Icons -->
+                                        <div class="d-flex mb-sm-0">
+                                            <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
+                                                <span class="fa-stack fa-sm">
+                                                    <i class="fas fa-circle fa-stack-2x"></i>
+                                                    <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
+                                                </span>
+                                            </a>
+                                            <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
+                                                <span class="fa-stack fa-sm">
+                                                    <i class="fas fa-circle fa-stack-2x"></i>
+                                                    <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                                                </span>
+                                            </a>
+                                            <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
+                                                <span class="fa-stack fa-sm">
+                                                    <i class="fas fa-circle fa-stack-2x"></i>
+                                                    <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                                </span>
+                                            </a>
+                                            <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
+                                                <span class="fa-stack fa-sm">
+                                                    <i class="fas fa-circle fa-stack-2x"></i>
+                                                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                                </span>
+                                            </a>
+                                            <button type="button" class="btn btn-primary position-relative btn-sm">
+                                                Inbox
+                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                    @newMessages
+                                                    <span class="visually-hidden">unread messages</span>
+                                                </span>
+                                            </button>
+                                        </div>
+                                        <h5 class="fw-medium mb-0 mx-lg-4 mx-sm-1">Velkommen @data.FirstName @data.LastName</h5>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+
                     <!--User profile container-->
                     <div class="row">
                         <div class="col-lg-4">
-                            <div class="card mb-4 shadow-sm">
+                            <div class="card mb-2 shadow-sm">
                                 <div class="card-body text-center">
                                     @if (data.profileImage != "")
                                     {
@@ -76,33 +87,41 @@
                                              class="rounded-circle img-fluid" style="width: 150px;">
                                     }
                                     <h5 class="my-3">@data.FirstName @data.LastName</h5>
-                                    <p class="text-muted mb-4">Specialiseret i @data.Speciality</p>
-                                    @*                                     <p class="text-muted mb-4">@data.Address</p> *@
-                                    <div class="d-flex justify-content-center mb-2">
-                                        <button type="button" class="btn btn-outline-success"
-                                                @onclick="() => DialogModal?.OpenStudentUpdate(data.StudentId)">
+                                    <p class="text-muted mb-3">Specialiseret i @data.Speciality</p>
+                                    <div class="d-flex justify-content-center mb-3">
+                                        <button type="button" class="btn btn-outline-success btn-sm mx-2"
+                                                @onclick="() => DialogModal!.OpenStudentUpdate(data.StudentId)">
                                             Opdater Profil
                                         </button>
-                                        <button type="button" class="btn btn-outline-danger ms-1"
+                                        <button type="button" class="btn btn-outline-danger btn-sm ms-1"
                                                 @onclick="() => DeleteStudentData(data.StudentId)" disabled="@(!isConfirmationChecked)">
                                             Slette profil
                                         </button>
                                     </div>
-                                    <div class="row-lg-4 gx-3 mb-3">
+                                    <div class="row-lg-4 gx-3 mb-2">
                                         <input class="form-check-input" type="checkbox" @bind="isConfirmationChecked">
                                         <label class="form-check-label">
                                             Bekræft Slet
                                         </label>
                                     </div>
                                     <span style="color:red" hidden="@(!isConfirmationChecked)">
-                                        Dette vil slette dine personale data og kan ikke fortrydes!
+                                        Dette vil slette dine data, men det kan gendannes senere, hvis du ikke sletter registreringen.
                                     </span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-8">
-                            <div class="card mb-4">
+                            <div class="card mb-2">
                                 <div class="card-body shadow-sm">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Dato for registrering</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">@data.RegisteredDate.ToString("dd, MMMM, yyyy")</p>
+                                        </div>
+                                    </div>
+                                    <hr />
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <p class="mb-0">Username</p>
@@ -148,20 +167,11 @@
                                     </div>
                                     <hr>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 mb-3">
                                             <p class="mb-0">Adresse</p>
                                         </div>
                                         <div class="col-sm-9">
                                             <p class="text-muted mb-0">@data.Address</p>
-                                        </div>
-                                    </div>
-                                    <hr />
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <p class="mb-0">Beskrivelse</p>
-                                        </div>
-                                        <div class="col-sm-9">
-                                            <p class="text-muted mb-0">@data.Description</p>
                                         </div>
                                     </div>
                                 </div>
@@ -169,12 +179,25 @@
                         </div>
                     </div>
 
+                    <!--Description-->
+                     <div class="row">
+                        <div class="col-lg-12">
+                          @*   <p class="mb-2 fw-bold">Beskrivelse</p> *@
+                            <div class="card mb-2">
+                                <div class="card-body shadow-sm">
+                                    <p class="text-muted mb-0">@data.Description</p>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+
                     <!-- Skills section -->
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card mb-4">
+                       @*      <p class="fw-bold">Skills:</p> *@
+                            <div class="card mb-2">
                                 <div class="card-body shadow-sm">
-                                    <h3>Skills:</h3>
+                                
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <!--Show skill names section-->
@@ -191,15 +214,15 @@
                                                             }
                                                         </h5>
                                                     </div>
-                                                    <button class="btn btn-outline-success" @onclick="() => ToggleUpdateSkillsSection(data.StudentId)">Opdater</button>
+                                                    <button class="btn btn-outline-success btn-sm" @onclick="() => ToggleUpdateSkillsSection(data.StudentId)">Opdater</button>
                                                 }
                                                 else
                                                 {
                                                     <p>Ingen tilgængelige færdigheder, du kan tilføje dine færdigheder.</p>
-                                                    <button class="btn btn-outline-success" @onclick="ToggleAddSkillsSection">Tilføj</button>
+                                                    <button class="btn btn-outline-success btn-sm" @onclick="ToggleAddSkillsSection">Tilføj</button>
                                                 }
                                             }
-                                            else if(isAddSectionVisible)
+                                            else if (isAddSectionVisible)
                                             {
 
                                                 <!--Skills Add section-->
@@ -293,104 +316,104 @@
                                                     </div>
                                                 </div>
 
-                                                <button class="btn btn-outline-success" @onclick="() => AddSkills(data.StudentId)">Gem</button>
-                                                <button class="btn btn-outline-danger" @onclick="ToggleAddSkillsSection">Tilbage</button>
+                                                <button class="btn btn-outline-success btn-sm" @onclick="() => AddSkills(data.StudentId)">Gem</button>
+                                                <button class="btn btn-outline-danger btn-sm" @onclick="ToggleAddSkillsSection">Tilbage</button>
                                             }
                                             else
                                             {
                                                 <!--Skills update section-->
-                                                    <div class="row">
-                                                        <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
-                                                        <div class="col-md-3 mb-2">
-                                                            <label class="mb-1 small form-label fw-bold" for="_Skills">Programmeringssprog</label>
+                                                <div class="row">
+                                                    <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Programmeringssprog</label>
 
-                                                            <div class="row">
-                                                                <label>
+                                                        <div class="row">
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.CSharp" /> C#
-                                                                </label>
-                                                                <label>
+                                                            </label>
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.Java" /> Java
-                                                                </label>
-                                                                <label>
+                                                            </label>
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.DotNet" /> .Net
-                                                                </label>
-                                                                <label>
+                                                            </label>
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.Typescript" /> TypeScript
-                                                                </label>
-                                                                <label>
+                                                            </label>
+                                                            <label>
                                                                 <input type="checkbox" @bind="_Skills.Python" /> Python
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3 mb-2">
-                                                            <div class="row">
-                                                                <label class="mt-4">
-                                                                <input type="checkbox" @bind="_Skills.PHP" /> PHP
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.CPlusPlus" /> C++
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.C" /> C
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.Blazor" /> Blazor
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.JavaScript" /> JavaScript
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3 mb-3">
-                                                            <label class="mb-1 small form-label fw-bold" for="_Skills">Web-Udvikling</label>
-
-                                                            <div class="row">
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.Bootstrap" /> Bootstrap
-                                                                </label>
-
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.HTML" /> Html
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.CSS" /> CSS
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.SQL" /> SQL
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.NetWork" /> Network
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3 mb-2">
-                                                            <label class="mb-1 small form-label fw-bold" for="_Skills">Andet</label>
-
-                                                            <div class="row">
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.OfficePack" /> Office pakken
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.CloudComputing" /> Cloud technologies
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.VersionControl" /> Git / GitHub
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.Communikation" /> Kommunikation
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.ProblemSolving" /> Problemsolving
-                                                                </label>
-                                                                <label>
-                                                                <input type="checkbox" @bind="_Skills.TeamWorking" /> Team work
-                                                                </label>
-                                                            </div>
+                                                            </label>
                                                         </div>
                                                     </div>
-                                                                                       
-                                                <button class="btn btn-outline-success" @onclick="() => UpdateSkills(data.StudentId)">Opdater</button>
-                                                <button class="btn btn-outline-danger" @onclick="HideUpdateSection">Tilbage</button>
+                                                    <div class="col-md-3 mb-2">
+                                                        <div class="row">
+                                                            <label class="mt-4">
+                                                                <input type="checkbox" @bind="_Skills.PHP" /> PHP
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CPlusPlus" /> C++
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.C" /> C
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Blazor" /> Blazor
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.JavaScript" /> JavaScript
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Web-Udvikling</label>
+
+                                                        <div class="row">
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Bootstrap" /> Bootstrap
+                                                            </label>
+
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.HTML" /> Html
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CSS" /> CSS
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.SQL" /> SQL
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.NetWork" /> Network
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Andet</label>
+
+                                                        <div class="row">
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.OfficePack" /> Office pakken
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CloudComputing" /> Cloud technologies
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.VersionControl" /> Git / GitHub
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Communikation" /> Kommunikation
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.ProblemSolving" /> Problemsolving
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.TeamWorking" /> Team work
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <button class="btn btn-outline-success btn-sm" @onclick="() => UpdateSkills(data.StudentId)">Opdater</button>
+                                                <button class="btn btn-outline-danger btn-sm" @onclick="HideUpdateSection">Tilbage</button>
                                             }
                                         </div>
                                     </div>
@@ -401,9 +424,9 @@
 
                 }
             }
-            else if (_companyList.Count >= 1)
+            else if (_company.Any())
             {
-                @foreach (var data in _companyList)
+                @foreach (var data in _company)
                 {
 
                     <!--Social container on top-->
@@ -411,7 +434,7 @@
                         <h3>@data.CompanyName's Profile</h3>
                         <div class="col-lg-12">
                             <div class="card mb-4">
-                                <div class="card-body shadow">
+                                <div class="card-body shadow-sm">
                                     <div class="d-flex align-items-center">
                                         <a href="#" class="mx-2" style="color: black">
                                             <span class="fa-stack fa-sm">
@@ -446,7 +469,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="card mb-4">
-                                <div class="card-body text-center shadow">
+                                <div class="card-body text-center shadow-sm">
                                     @if (data.profileImage != "")
                                     {
                                         <img src="images/ProfileImages/@data.profileImage" alt="avatar"
@@ -461,8 +484,8 @@
                                     <p class="text-muted mb-4">@data.CompanyAddress</p>
                                     <div class="d-flex justify-content-center mb-2">
                                         <button type="button" class="btn btn-outline-success"
-                                                @onclick="() => DialogModal?.OpenCompanyUpdate(data.CompanyId)">
-                                           Opdater Profil
+                                                @onclick="() => DialogModal!.OpenCompanyUpdate(data.CompanyId)">
+                                            Opdater Profil
                                         </button>
                                         <button type="button" class="btn btn-outline-danger ms-1"
                                                 @onclick="() => DeleteCompanyData(data.CompanyId)" disabled="@(!isConfirmationChecked)">
@@ -483,7 +506,7 @@
                         </div>
                         <div class="col-lg-8">
                             <div class="card mb-4">
-                                <div class="card-body shadow">
+                                <div class="card-body shadow-sm">
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <p class="mb-0">Dato for registrering</p>
@@ -530,7 +553,7 @@
                                         </div>
                                         <div class="col-sm-9">
                                             <p class="text-muted mb-0">
-                                                <button class="btn btn-outline-info" @onclick="NavigateToNewTab">Open Link on new tab</button>
+                                                <button class="btn btn-outline-info" @onclick="NavigateToNewTab">Åbn link på ny fane</button>
                                             </p>
                                         </div>
                                     </div>
@@ -610,46 +633,47 @@
                 <p>
                     @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
                     {
-                        Message = "Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data.";
-                        @Message
+                        <AlertBox IsVisible=true Message="Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data."
+                                    isWarning=true waitForSeconds="0"></AlertBox>
                     }
                     else
                     {
-                        Message = "Du har ingen rolle tildelt!";
-                        @Message
+                        <AlertBox IsVisible=true Message="Du har ingen rolle tildelt!" isDanger=true waitForSeconds="0"></AlertBox>
                     }
                 </p>
                 <br>
-                <button class="btn btn-success m-2" @onclick="NavigateToRegister">Go Register Your Data</button>
+                <button class="btn btn-success m-2" @onclick="NavigateToRegister">Registrer dine data</button>
                 ;
                 <br />
 
                 @if (hasStudentRecoveryData)
                 {
-                    <button class="btn btn-success m-2" @onclick="RecoverStudentData">Recover Your Data</button>
-               @*      <p>The Student's Guid is : @userIdClaim</p> *@
+                    <button class="btn btn-success m-2" @onclick="RecoverStudentData">Gendan data</button>
+                    @*      <p>The Student's Guid is : @userIdClaim</p> *@
 
                 }
                 else if (hasCompanyRecoveryData)
                 {
-                    <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Data recovery available</button>
-                   @*  <p>The Company's Guid is : @userIdClaim</p> *@
+                    <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Gendan Firma data</button>
+                    @*  <p>The Company's Guid is : @userIdClaim</p> *@
                 }
 
             }
 
             <!-- DialogModal for update view -->
-            <UpdateModalDialog @ref="DialogModal" StudentId="@StudentId" OnClose="ReRenderPage"></UpdateModalDialog>
+            <DialogModal @ref="DialogModal" profileId="@Id" OnClose="ReRenderPage"></DialogModal>
 
         </Authorized>
 
         <!-- Not authorized view -->
         <NotAuthorized>
-            Message = "Log ind først.";
-            <label>@Message</label>
+            <AlertBox IsVisible=true Message="Please log in first." isDanger=true waitForSeconds="0"></AlertBox>
         </NotAuthorized>
 
     </AuthorizeView>
+
+    <AlertBox @ref="_aletBox" />
+
 </div>
 
 
@@ -658,12 +682,13 @@
     #region private fields within the scope of the class
     private AuthenticationState? _authState;
     private ClaimsPrincipal? _user;
-    private List<StudentModel> _studentList = new List<StudentModel>();
-    private List<CompanyModel> _companyList = new List<CompanyModel>();
+    private List<StudentModel> _student = new List<StudentModel>();
+    private List<CompanyModel> _company = new List<CompanyModel>();
     private SkillModel _Skills = new SkillModel();
     private List<string> _SkillsOfStudent = new List<string>();
 
-    private UpdateModalDialog? DialogModal { get; set; }
+    private DialogModal? DialogModal { get; set; }
+    private AlertBox? _aletBox = new AlertBox();
 
     private bool isAuthenticated = false;
     private bool isConfirmationChecked = false;
@@ -672,7 +697,7 @@
 
     private string Company = "Company";
     private string Student = "Student";
-    private string Message = "";
+    private string? Message = "";
     private string _Name = "Default";
     private string _registeredDate = "";
 
@@ -680,7 +705,8 @@
     private string textColor = "white";
 
     // The StudentId
-    private int StudentId { get; set; }
+    private int newMessages = 0;
+    private int Id { get; set; }
     private bool hasStudentRecoveryData = false;
     private bool hasCompanyRecoveryData = false;
     private string userIdClaim = "";
@@ -701,10 +727,6 @@
                 isAuthenticated = true;
                 _Name = _user.Identity.Name!.ToString();
                 await ReadData(); //Read profile data
-
-                //Read skills data connected to the profile 
-                await GetSkills(_studentList);
-
             }
             else
             {
@@ -726,8 +748,10 @@
             {
                 //Getting the data with the service call from student
                 await GetStudentData(_user);
+                //Read skills data connected to the profile
+                await GetSkills(_student);
 
-                if (_studentList.Any() == false || _studentList == null)
+                if (_student.Any() == false || _student == null)
                 {
                     await CheckIfStudentHasDataToRecover(_user);
                 }
@@ -737,14 +761,14 @@
                 //Getting the data with the service call from company
                 await GetCompanyData(_user);
 
-                if (_companyList.Any() == false || _companyList == null)
+                if (_company.Any() == false || _company == null)
                 {
                     await CheckIfCompanyHasDataToRecover(_user);
                 }
             }
             else
             {
-                Message = $"You Have No Role Assigned - Could not read data.";
+                _aletBox.SetMessage(true, $"You Have No Role Assigned - Could not read data.", 0, danger: true);
             }
         }
     }
@@ -753,15 +777,15 @@
     #region Getting the data with the service call from student
     private async Task GetStudentData(ClaimsPrincipal _user)
     {
-        _studentList = await _studentService.ReadData(_user);
+        _student = await _studentService.ReadData(_user);
     }
     #endregion
 
     #region Getting the skill Name to List (string)
     private async Task GetSkills(List<StudentModel> data)
     {
-        foreach (var studentData in _studentList)
-         {
+        foreach (var studentData in _student)
+        {
             _SkillsOfStudent = await _skillService.GetSkills(studentData);
         }
     }
@@ -770,14 +794,14 @@
     #region Getting the data with the service call from company
     private async Task GetCompanyData(ClaimsPrincipal _user)
     {
-        _companyList = await _companyService.ReadData(_user);
+        _company = await _companyService.ReadData(_user);
     }
     #endregion
 
     #region Checking is student has recovery data if nothing exist in their profile
     private async Task CheckIfStudentHasDataToRecover(ClaimsPrincipal _user)
     {
-        if (_studentList.Any() == false || _studentList == null)
+        if (_student.Any() == false || _student == null)
         {
             userIdClaim = _user.Claims.FirstOrDefault()!.Value;
             if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
@@ -792,7 +816,7 @@
     #region Checking is company has recovery data if nothing exist in their profile
     private async Task CheckIfCompanyHasDataToRecover(ClaimsPrincipal _user)
     {
-        if (_companyList.Any() == false || _companyList == null)
+        if (_company.Any() == false || _company == null)
         {
             userIdClaim = _user.Claims.FirstOrDefault()!.Value;
             if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
@@ -854,7 +878,7 @@
     #region Navigate to company website Link with opening new window
     public async Task NavigateToNewTab()
     {
-        string url = "https://" + _companyList[0].Link;
+        string url = "https://" + _company[0].Link;
         await jsRuntime.InvokeVoidAsync("open", url, "_blank");
     }
     #endregion
@@ -864,8 +888,13 @@
     {
         if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
         {
-            await _studentService.RecoverStudentData(userIdGuid);
+            Message = await _studentService.RecoverStudentData(userIdGuid);
+            _aletBox.SetMessage(true, Message, 2000, success: true);
             await OnInitializedAsync();
+        }
+        else
+        {
+            _aletBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
         }
     }
     #endregion
@@ -875,8 +904,13 @@
     {
         if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
         {
-            await _companyService.RecoverCompanyData(userIdGuid);
+            Message = await _companyService.RecoverCompanyData(userIdGuid);
+            _aletBox.SetMessage(true, Message, 2000, success: true);
             await OnInitializedAsync();
+        }
+        else
+        {
+            _aletBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
         }
     }
     #endregion
@@ -906,7 +940,8 @@
     #region Add Skills Function
     private async Task AddSkills(int studentId)
     {
-        var result = await _skillService.CreateSkills(studentId, _Skills);
+        Message = await _skillService.CreateSkills(studentId, _Skills);
+        _aletBox.SetMessage(true, Message, 2000, success: true);
         await OnInitializedAsync();
         isAddSectionVisible = false;
     }
@@ -915,12 +950,11 @@
     #region Update Skills Function
     private async Task UpdateSkills(int studentId)
     {
-        var result = await _skillService.UpdateSkills(studentId, _Skills);
+        Message = await _skillService.UpdateSkills(studentId, _Skills);
+        _aletBox.SetMessage(true, Message, 2000, success: true);
         isUpdateSectionVisible = false;
         await OnInitializedAsync();
-       
     }
     #endregion
-
 
 }

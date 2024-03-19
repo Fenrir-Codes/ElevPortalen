@@ -4,6 +4,7 @@ using ElevPortalen.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElevPortalen.Migrations.ElevPortalenDataDb
 {
     [DbContext(typeof(ElevPortalenDataDbContext))]
-    partial class ElevPortalenDataDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240318204615_messages added")]
+    partial class messagesadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,6 +95,9 @@ namespace ElevPortalen.Migrations.ElevPortalenDataDb
                         .HasColumnType("bit");
 
                     b.Property<int>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SenderId")
                         .HasColumnType("int");
 
                     b.Property<string>("SenderName")
