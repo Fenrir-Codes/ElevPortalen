@@ -25,9 +25,6 @@ var PortalDatabase = builder.Configuration.GetConnectionString("PortalDatabase")
 //RecoveryDb
 var DataRecoveryString = builder.Configuration.GetConnectionString("RecoveryDatabase") ??
     throw new InvalidOperationException("Connection string 'RecoveryDatabase' not found.");
-//Message Database
-var MessageDataString = builder.Configuration.GetConnectionString("MessageDatabase") ??
-    throw new InvalidOperationException("Connection string 'MessageDatabase' not found.");
 
 //DbContexts
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(LoginDatabase));
