@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ElevPortalen.Migrations.ElevPortalenDataDb
+namespace ElevPortalen.Migrations
 {
     /// <inheritdoc />
-    public partial class messagesadded : Migration
+    public partial class messagesinit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,6 @@ namespace ElevPortalen.Migrations.ElevPortalenDataDb
                 {
                     MessageId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SenderId = table.Column<int>(type: "int", nullable: false),
                     ReceiverId = table.Column<int>(type: "int", nullable: false),
                     SenderName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Subject = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -29,13 +28,24 @@ namespace ElevPortalen.Migrations.ElevPortalenDataDb
                 {
                     table.PrimaryKey("PK_Messages", x => x.MessageId);
                 });
+
+          
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Company");
+
+            migrationBuilder.DropTable(
                 name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "StudentSkills");
+
+            migrationBuilder.DropTable(
+                name: "Student");
         }
     }
 }

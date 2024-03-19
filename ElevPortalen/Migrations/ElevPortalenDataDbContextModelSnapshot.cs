@@ -4,19 +4,16 @@ using ElevPortalen.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ElevPortalen.Migrations.ElevPortalenDataDb
+namespace ElevPortalen.Migrations
 {
     [DbContext(typeof(ElevPortalenDataDbContext))]
-    [Migration("20240229094741_SillsDatabase")]
-    partial class SillsDatabase
+    partial class ElevPortalenDataDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,6 +77,37 @@ namespace ElevPortalen.Migrations.ElevPortalenDataDb
                     b.ToTable("Company");
                 });
 
+            modelBuilder.Entity("ElevPortalen.Models.MessageModel", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SenderName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("MessageId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("ElevPortalen.Models.SkillModel", b =>
                 {
                     b.Property<int>("Id")
@@ -88,17 +116,81 @@ namespace ElevPortalen.Migrations.ElevPortalenDataDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("SkillName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("Blazor")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Bootstrap")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("C")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CPlusPlus")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CSS")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CSharp")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CloudComputing")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Communikation")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("DotNet")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("HTML")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Java")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("JavaScript")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("NetWork")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("OfficePack")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PHP")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ProblemSolving")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Python")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("SQL")
+                        .HasColumnType("bit");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("TeamWorking")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Typescript")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("VersionControl")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("WillingToLearn")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId")
+                        .IsUnique();
 
-                    b.ToTable("Skill");
+                    b.ToTable("StudentSkills");
                 });
 
             modelBuilder.Entity("ElevPortalen.Models.StudentModel", b =>
@@ -156,12 +248,17 @@ namespace ElevPortalen.Migrations.ElevPortalenDataDb
             modelBuilder.Entity("ElevPortalen.Models.SkillModel", b =>
                 {
                     b.HasOne("ElevPortalen.Models.StudentModel", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
+                        .WithOne("Skills")
+                        .HasForeignKey("ElevPortalen.Models.SkillModel", "StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("ElevPortalen.Models.StudentModel", b =>
+                {
+                    b.Navigation("Skills");
                 });
 #pragma warning restore 612, 618
         }

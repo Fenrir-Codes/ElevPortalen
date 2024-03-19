@@ -17,7 +17,7 @@
 @inject NavigationManager NavManager
 @inject IJSRuntime jsRuntime
 
-<div class="container p-4">
+<div class="container">
     <!--Autorizeview for Student and Company -->
     <AuthorizeView Roles="Student,Company,Admin">
         <Authorized>
@@ -48,17 +48,17 @@
                 ;
                 <br />
 
-                @if (hasStudentRecoveryData)
+               @if (hasStudentRecoveryData)
                 {
-                    <button class="btn btn-success m-2" @onclick="RecoverStudentData">Gendan data</button>
-                    @*      <p>The Student's Guid is : @userIdClaim</p> *@
+                  @*   <button class="btn btn-success m-2" @onclick="RecoverStudentData">Gendan data</button>
+                    <p>The Student's Guid is : @userIdClaim</p> *@
 
                 }
                 else if (hasCompanyRecoveryData)
                 {
-                    <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Gendan Firma data</button>
-                    @*  <p>The Company's Guid is : @userIdClaim</p> *@
-                }
+                    @* <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Gendan Firma data</button>
+                     <p>The Company's Guid is : @userIdClaim</p> *@
+                } 
 
             }
 
@@ -116,19 +116,6 @@
     }
     #endregion
 
-    #region Checking is company has recovery data if nothing exist in their profile
-    private async Task CheckIfCompanyHasDataToRecover(ClaimsPrincipal _user)
-    {
-        userIdClaim = _user.Claims.FirstOrDefault()!.Value;
-        if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
-        {
-            bool recoveryDataExists = await _companyService.CheckRecoveryDataExist(userIdGuid);
-            hasCompanyRecoveryData = recoveryDataExists;
-        }
-
-    }
-    #endregion
-
     #region navigation to register pages
     private void NavigateToRegister()
     {
@@ -143,38 +130,6 @@
             {
                 NavManager.NavigateTo("/registerprofile"); // Route to the student registration page
             }
-        }
-    }
-    #endregion
-
-    #region Recover Student Data with their Guid
-    private async Task RecoverStudentData()
-    {
-        if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
-        {
-            Message = await _studentService.RecoverStudentData(userIdGuid);
-            _aletBox.SetMessage(true, Message, 2000, success: true);
-            await OnInitializedAsync();
-        }
-        else
-        {
-            _aletBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
-        }
-    }
-    #endregion
-
-    #region Recover Companyt Data with their Guid
-    private async Task RecoverCompanyData()
-    {
-        if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
-        {
-            Message = await _companyService.RecoverCompanyData(userIdGuid);
-            _aletBox.SetMessage(true, Message, 2000, success: true);
-            await OnInitializedAsync();
-        }
-        else
-        {
-            _aletBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
         }
     }
     #endregion

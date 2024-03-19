@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ElevPortalen.Migrations.ElevPortalenDataDb
+namespace ElevPortalen.Migrations
 {
     [DbContext(typeof(ElevPortalenDataDbContext))]
-    [Migration("20240318204615_messages added")]
-    partial class messagesadded
+    [Migration("20240319182042_messagesinit")]
+    partial class messagesinit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,9 +95,6 @@ namespace ElevPortalen.Migrations.ElevPortalenDataDb
                         .HasColumnType("bit");
 
                     b.Property<int>("ReceiverId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SenderId")
                         .HasColumnType("int");
 
                     b.Property<string>("SenderName")
