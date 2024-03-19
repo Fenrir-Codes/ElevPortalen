@@ -1,0 +1,325 @@
+﻿@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.DialogModal
+@using ElevPortalen.Pages.ProfilePage.StudentProfile
+@using ElevPortalen.Services;
+@using ElevPortalen.Data;
+@using ElevPortalen.Models;
+@using System.Security.Claims
+
+@inject CompanyService _companyService
+@inject NavigationManager NavManager
+@inject IJSRuntime jsRuntime
+
+@if (_company.Any())
+{
+    @foreach (var data in _company)
+    {
+
+        <!--Social container on top-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mb-2">
+                    <div class="card-body shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center flex-column flex-sm-row">
+                            <!-- Icons -->
+                            <div class="d-flex mb-sm-0">
+                                <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
+                                    <span class="fa-stack fa-sm">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                                <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
+                                    <span class="fa-stack fa-sm">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                                <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
+                                    <span class="fa-stack fa-sm">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                                <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
+                                    <span class="fa-stack fa-sm">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                                <button type="button" class="btn btn-primary position-relative btn-sm">
+                                    Inbox
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        @newMessages
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </button>
+                            </div>
+                            <h5 class="fw-medium mb-0 mx-lg-4 mx-sm-1">Velkommen @data.CompanyName</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--User profile container-->
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center shadow-sm">
+                        @if (data.profileImage != "")
+                        {
+                            <img src="images/ProfileImages/@data.profileImage" alt="avatar"
+                                 class="rounded-circle img-fluid" style="width: 150px;">
+                        }
+                        else
+                        {
+                            <img src="images/DefaultAvatar.jpg" alt="avatar"
+                                 class="rounded-circle img-fluid" style="width: 150px;">
+                        }
+                        <h5 class="my-3">@data.CompanyName</h5>
+                        <p class="text-muted mb-4">@data.CompanyAddress</p>
+                        <div class="d-flex justify-content-center mb-2">
+                            <button type="button" class="btn btn-outline-success"
+                                    @onclick="() => DialogModal!.OpenCompanyUpdate(data.CompanyId)">
+                                Opdater Profil
+                            </button>
+                            <button type="button" class="btn btn-outline-danger ms-1"
+                                    @onclick="() => DeleteCompanyData(data.CompanyId)" disabled="@(!isConfirmationChecked)">
+                                Slette Profil
+                            </button>
+                        </div>
+                        <div class="row-lg-4 gx-3 mb-3">
+                            <input class="form-check-input" type="checkbox" @bind="isConfirmationChecked">
+                            <label class="form-check-label">
+                                Bekræft Slet
+                            </label>
+                        </div>
+                        <span style="color:red" hidden="@(!isConfirmationChecked)">
+                            Dette vil slette dine personale data og kan ikke fortrydes!
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body shadow-sm">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Dato for registrering</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@data.RegisteredDate.ToString("dd, MMMM, yyyy")</p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Username</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@_Name</p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Region</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    @data.Region
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Email</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    @data.Email
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Website</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    <button class="btn btn-success mb-0 btn-sm" @onclick="NavigateToNewTab">Besøg hjemmeside</button>
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Phone</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@data.PhoneNumber</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Leder efter</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    @data.Preferences
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Søger Elev</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    @if (data.IsHiring)
+                                    {
+                                        <span>Ja</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Nej</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Synlig profil</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    @if (data.IsVisible)
+                                    {
+                                        <span>Ja</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Nej</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Description-->
+        <div class="row">
+            <div class="col-lg-12">
+                @*   <p class="mb-2 fw-bold">Beskrivelse</p> *@
+                <div class="card mb-2">
+                    <div class="card-body shadow-sm">
+                        <p class="text-muted mb-0">@data.Description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <AlertBox IsVisible=true Message="The profile page can not be shown for some reason check component -> CompanyProfile" waitForSeconds="0" isDanger=true></AlertBox>
+}
+<!-- DialogModal for update view -->
+<DialogModal @ref="DialogModal" profileId="Id" OnClose="ReRenderPage"></DialogModal>
+<!-- AlertBox -->
+<AlertBox @ref="_aletBox" />
+
+@code {
+
+    #region Initialize
+    [Parameter]
+    public ClaimsPrincipal? _user { get; set; }
+    private int Id { get; set; }
+
+    private List<CompanyModel> _company = new List<CompanyModel>();
+
+    //Modal and AlertBox
+    private DialogModal? DialogModal { get; set; }
+    private AlertBox? _aletBox = new AlertBox();
+
+    private string? Message = "";
+    private string _Name = "Default";
+    private int newMessages = 0;
+
+    private bool isConfirmationChecked = false;
+    private bool isAddSectionVisible = false;
+    private bool isUpdateSectionVisible = false;
+
+    #endregion
+
+    #region OnInitialized
+    protected override async Task OnInitializedAsync()
+    {
+        await ReadCompanyData();
+    }
+    #endregion
+
+    #region Read the Company Data
+    private async Task ReadCompanyData()
+    {
+        if (_user != null)
+        {
+            //Getting the data with the service call from company
+            await GetCompanyData(_user);
+
+            if (_company == null)
+            {
+                _aletBox?.SetMessage(true, "_company list is null.", 0, warning: true);
+            }
+        }
+        else
+        {
+            _aletBox?.SetMessage(true, "_user claim not found in modul - CompanyProfile", 0, danger: true);
+        }
+
+    }
+    #endregion
+
+    #region Getting the data with the service call from company
+    private async Task GetCompanyData(ClaimsPrincipal _user)
+    {
+        _company = await _companyService.ReadData(_user);
+    }
+    #endregion
+
+    #region Navigate to company website Link with opening new window
+    public async Task NavigateToNewTab()
+    {
+        string url = "https://" + _company[0].Link;
+        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+    #endregion
+
+    #region Delete Function
+    private async Task DeleteCompanyData(int id)
+    {
+        if (isConfirmationChecked)
+        {
+            await _companyService.Delete(id);
+            NavManager.NavigateTo("/");
+        }
+    }
+    #endregion
+
+    #region Re-RenderPage function for re-renderint the profile page on change
+    private async void ReRenderPage()
+    {
+        await ReadCompanyData();
+        StateHasChanged();
+    }
+    #endregion
+
+}
