@@ -252,11 +252,13 @@ else
 
     private string? Message = "";
     private string _Name = "Default";
+    private string userIdClaim = "";
     private int newMessages = 0;
 
     private bool isConfirmationChecked = false;
     private bool isAddSectionVisible = false;
     private bool isUpdateSectionVisible = false;
+    private bool hasCompanyRecoveryData = false;
 
     #endregion
 
@@ -322,4 +324,16 @@ else
     }
     #endregion
 
+    #region Checking is company has recovery data if nothing exist in their profile
+    private async Task CheckIfCompanyHasDataToRecover(ClaimsPrincipal _user)
+    {
+        userIdClaim = _user.Claims.FirstOrDefault()!.Value;
+        if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
+        {
+            bool recoveryDataExists = await _companyService.CheckRecoveryDataExist(userIdGuid);
+            hasCompanyRecoveryData = recoveryDataExists;
+        }
+
+    }
+    #endregion
 }

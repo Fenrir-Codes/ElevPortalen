@@ -445,10 +445,12 @@ else
     private bool isConfirmationChecked = false;
     private bool isAddSectionVisible = false;
     private bool isUpdateSectionVisible = false;
+    private bool hasStudentRecoveryData = false;
 
     // strings and int
     private string? Message = "";
     private string _Name = "Default";
+    private string userIdClaim = "";
     private int newMessages = 0;
 
     #endregion
@@ -560,6 +562,19 @@ else
     {
         await ReadStudentData();
         StateHasChanged();
+    }
+    #endregion
+
+    #region Checking is student has recovery data if nothing exist in their profile
+    private async Task CheckIfStudentHasDataToRecover(ClaimsPrincipal _user)
+    {
+        userIdClaim = _user.Claims.FirstOrDefault()!.Value;
+        if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
+        {
+            bool recoveryDataExists = await _studentService.CheckRecoveryDataExist(userIdGuid);
+            hasStudentRecoveryData = recoveryDataExists;
+        }
+
     }
     #endregion
 
