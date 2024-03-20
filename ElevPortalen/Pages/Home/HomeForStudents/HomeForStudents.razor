@@ -31,9 +31,9 @@
     <div class="row d-flex justify-content-center">
         @foreach (var data in _companySearchResult)
         {
-            <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer;" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
+            <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
                 <div class="row g-0">
-                    <div class="col-md-4">
+                    <div class="col-md-4 image">
                         @if (!string.IsNullOrEmpty(data.profileImage))
                         {
                             <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
@@ -45,13 +45,21 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5>@data.CompanyName</h5>
+                            <h4 class="fw-bold">@data.CompanyName</h4>
                         </div>
                         <p class="card-text">
-                            Card text here
+                            <small class="text-body-secondary">@data.Email</small>
+                        </p>
+                        <p class="card-text">
+                            <small class="text-body-secondary">@data.CompanyAddress</small>
                         </p>
                     </div>
                 </div>
+
+                <div class="card-footer d-flex justify-content-center align-items-center">
+                    <p class="card-text fw-bold"><small class="text-body-secondary"> Leder efter @data.Preferences elev</small></p>
+                </div>
+
             </div>
 
         }

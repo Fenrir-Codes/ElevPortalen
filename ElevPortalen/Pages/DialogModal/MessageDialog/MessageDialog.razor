@@ -25,7 +25,7 @@
                 <textarea class="form-control" id="_message" rows="8" @bind="Model.Content"></textarea>
             </div>
             <p>
-           The reciever ID is: @ReceiverId
+           @* The reciever ID is: @ReceiverId *@
         </p>
         </div>
 
@@ -40,6 +40,11 @@
     public string? MessageTo { get; set; }
 
     protected override void OnInitialized()
+    {
+        SetDateAndID();
+    }
+
+    private void SetDateAndID()
     {
         Model.ReceiverId = ReceiverId;
         Model.Timestamp = DateTime.Now;

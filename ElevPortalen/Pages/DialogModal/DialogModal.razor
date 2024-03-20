@@ -179,7 +179,7 @@
     #endregion
 
     #region Message Dialog
-    public void OpenMessageDialog(int id, string firstName, string lastName)
+    public void OpenMessageDialog(int id, string? firstName, string? lastName)
     {
         MessageDialog = true;
         _recieverId = id;
@@ -187,8 +187,6 @@
         DisplayStyle = "block;";
         ModalClass = "show";
         ShowBackdrop = true;
-
-
     }
     #endregion
 

@@ -129,7 +129,8 @@
                             <p class="mb-0">Kontakt</p>
                         </div>
                         <div class="col-sm-9">
-                            <button class="btn btn-success mb-0 btn-sm" @onclick="() => DialogModal!.OpenMessageDialog(data.StudentId,data?.FirstName, data?.LastName)">Send besked</button>
+                            <button class="btn btn-success mb-0 btn-sm" @onclick="() =>
+                                DialogModal!.OpenMessageDialog(data.StudentId, data.FirstName, data.LastName)">Send besked</button>
                         </div>
                     </div>
                 </div>
@@ -195,7 +196,6 @@
     private List<StudentModel> _student = new List<StudentModel>();
     private List<string> _SkillsOfStudent = new List<string>();
     private AlertBox _alertBox = new AlertBox();
-    private MessageModel _messageData = new MessageModel();
     private DialogModal? DialogModal { get; set; }
 
     #region Oninitialize
