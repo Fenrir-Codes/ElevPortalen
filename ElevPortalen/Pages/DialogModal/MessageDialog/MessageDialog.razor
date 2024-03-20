@@ -1,0 +1,39 @@
+﻿@using ElevPortalen.Models;﻿
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Services;
+
+<!--container of the update page-->
+<div class="col-xl-12 col-md-12 col-sm-12">
+        <!--Header of the update page-->
+        <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
+        Send Besked til @SendTo
+        </div>
+
+        <!--body of the update page-->
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="_senderName" class="form-label">Email eller Navn</label>
+                <input type="text" class="form-control" id="_senderName" placeholder="name@example.com eller dit navn">
+            </div>
+            <div class="mb-3">
+                <label for="_subject" class="form-label">Subject</label>
+                <input type="text" class="form-control" id="_subject" placeholder="Subject">
+            </div>
+            <div class="mb-3">
+                <label for="_message" class="form-label">Besked</label>
+                <textarea class="form-control" id="_message" rows="8"></textarea>
+            </div>
+
+        </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public MessageModel? Model { get; set; }
+    [Parameter]
+    public int RecieverId { get; set; }
+    [Parameter]
+    public string? SendTo { get; set; }
+
+}

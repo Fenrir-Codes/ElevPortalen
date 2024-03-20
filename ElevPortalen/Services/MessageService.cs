@@ -19,7 +19,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Create Message
-        public async Task<string> SaveMessage(MessageModel message)
+        public async Task<string> SendMessage(MessageModel message)
         {
             try
             {

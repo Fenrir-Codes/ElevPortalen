@@ -1,0 +1,106 @@
+﻿@using ElevPortalen.Models;﻿
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Services;
+
+@inject CompanyService _companyService
+
+ <!--container of the update page-->
+<div class="container-fluid d-flex p-0 align-content-center justify-content-center">
+    <div class="col-xl-12 col-md-12 col-sm-12">
+
+        <!--Header of the update page-->
+        <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
+            Opdater Dine Oplysninger
+        </div>
+        <!--body of the update page-->
+        <div class="card-body">
+            <!-- Row -->
+            <div class="row gx-3 mb-3 px-4">
+                <!-- Company name -->
+                <div class="col-md-4 mb-2">
+                    <label for="companyname" class="mb-1 fw-bold">Firmanavn</label>
+                    <input id="companyname" type="text" @bind="@Model.CompanyName" class="form-control" placeholder="Firmanavn" />
+                </div>
+                <!-- Address -->
+                <div class="col-md-4 mb-2">
+                    <label for="address" class="mb-1 fw-bold">Adresse</label>
+                    <input id="address" type="text" @bind="@Model.CompanyAddress" class="form-control" placeholder="Adresse" />
+                </div>
+            </div>
+            <!-- Select region -->
+            <!-- Row -->
+            <div class="row gx-3 mb-3 px-4">
+                <div class="col-md-4 mb-2">
+                    <label class="mb-1 fw-bold" for="_region">Region</label>
+                    <select class="form-select form-select-md" @bind="Model.Region" id="_region" aria-label="Region">
+                        <option disabled selected></option>
+                        <option value="Region Nordjylland">Region Nordjylland</option>
+                        <option value="Region Midtjylland">Region Midtjylland</option>
+                        <option value="Region Syddanmark">Region Syddanmark</option>
+                        <option value="Region Hovedstaden">Region Hovedstaden</option>
+                        <option value="Region Sjælland">Region Sjælland</option>
+                    </select>
+                </div>
+                <!-- Email -->
+                <div class="col-md-4 mb-2">
+                    <label for="email" class="mb-1 fw-bold">E-mail</label>
+                    <input id="email" type="email" @bind="@Model.Email" class="form-control" placeholder="Email" />
+                </div>
+                <!-- Link -->
+                <div class="col-md-4">
+                    <label for="link" class="mb-1 fw-bold">Website link</label>
+                    <input id="link" type="text" @bind="@Model.Link" class="form-control" placeholder="example@example.com" />
+                </div>
+            </div>
+            <!-- Row -->
+            <div class="row gx-3 mb-3 px-4">
+                <!--select preferences-->
+                <div class="col-md-4">
+                    <label class="mb-1 fw-bold" for="_preferences">Preference</label>
+                    <select class="form-select form-select-md" @bind="Model.Preferences" id="_preferences"
+                            aria-label="Preferences">
+                        <option value="" disabled selected></option>
+                        <option value="It-Support">It-Supporter</option>
+                        <option value="Infrastrukture">Infrastruktur</option>
+                        <option value="Programmør">Programmør</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Textarea description -->
+            <!-- Row -->
+            <div class="row gx-3 mb-1 px-4">
+                <div class="col-md-12 mb-3">
+                    <label for="Description" class="mb-1 fw-bold">Beskrivelse</label>
+                    <textarea class="form-control" @bind="Model.Description" id="_description" rows="12"></textarea>
+                </div>
+            </div>
+            <!-- checkbox Hiring-->
+            <!-- Row -->
+            <div class="row gx-3 mb-1 px-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" @bind="Model.IsHiring">
+                    <label class="form-check-label">
+                        Hiring Now
+                    </label>
+                </div>
+            </div>
+            <!-- checkbox visible  -->
+            <!-- Row -->
+            <div class="row gx-3 mb-1 px-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" @bind="Model.IsVisible">
+                    <label class="form-check-label">
+                        Profile Visible
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public CompanyModel? Model { get; set; }
+
+}
