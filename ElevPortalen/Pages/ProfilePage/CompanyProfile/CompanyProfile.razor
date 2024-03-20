@@ -14,7 +14,6 @@
 {
     @foreach (var data in _company)
     {
-
         <!--Social container on top-->
         <div class="row">
             <div class="col-lg-12">
@@ -228,10 +227,28 @@
         </div>
     }
 }
+else if (!_company.Any())
+{
+    @if (hasCompanyRecoveryData)
+    {
+        <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Gendan Firma data</button>
+
+        <AlertBox IsVisible=true Message="Vi har fundet nogle data, som du kan gendanne." isWarning=true waitForSeconds="0"></AlertBox>
+        @* <p>The Company's Guid is : @userIdClaim</p> *@
+    }
+    else
+    {
+        <button class="btn btn-success m-2" @onclick="NavigateToRegister">Registrer dine data</button>
+
+        <AlertBox IsVisible=true Message="Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data."
+                  isWarning=true waitForSeconds="0"></AlertBox>
+    }
+}
 else
 {
     <AlertBox IsVisible=true Message="The profile page can not be shown for some reason check component -> CompanyProfile" waitForSeconds="0" isDanger=true></AlertBox>
 }
+
 <!-- DialogModal for update view -->
 <DialogModal @ref="DialogModal" profileId="Id" OnClose="ReRenderPage"></DialogModal>
 <!-- AlertBox -->
@@ -272,14 +289,17 @@ else
     #region Read the Company Data
     private async Task ReadCompanyData()
     {
+
         if (_user != null)
         {
+            _Name = _user?.Identity?.Name;
+
             //Getting the data with the service call from company
             await GetCompanyData(_user);
 
-            if (_company == null)
+            if (!_company.Any() || _company == null)
             {
-                _aletBox?.SetMessage(true, "_company list is null.", 0, warning: true);
+                await CheckIfCompanyHasDataToRecover(_user);
             }
         }
         else
@@ -324,6 +344,13 @@ else
     }
     #endregion
 
+    #region navigation to register pages
+    private void NavigateToRegister()
+    {
+        NavManager.NavigateTo("/registerprofile");
+    }
+    #endregion
+
     #region Checking is company has recovery data if nothing exist in their profile
     private async Task CheckIfCompanyHasDataToRecover(ClaimsPrincipal _user)
     {
@@ -351,5 +378,7 @@ else
         }
     }
     #endregion
+
+
 
 }

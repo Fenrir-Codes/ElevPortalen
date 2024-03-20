@@ -415,6 +415,24 @@
 
     }
 }
+else if (!_student.Any())
+{
+    @if (hasStudentRecoveryData)
+    {
+          <button class="btn btn-success m-2" @onclick="RecoverStudentData">Gendan data</button>
+
+        <AlertBox IsVisible=true Message="Vi har fundet nogle data, som du kan gendanne." isWarning=true waitForSeconds="0"></AlertBox>
+        @* <p>The Student's Guid is : @userIdClaim</p> *@
+
+    }
+    else
+    {
+        <button class="btn btn-success m-2" @onclick="NavigateToRegister">Registrer dine data</button>
+
+        <AlertBox IsVisible=true Message="Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data."
+                  isWarning=true waitForSeconds="0"></AlertBox>
+    }
+}
 else
 {
     <AlertBox IsVisible=true Message="The profile page can not be shown for some reason check component -> StudentProfile" waitForSeconds="0" isDanger=true></AlertBox>
@@ -449,7 +467,7 @@ else
 
     // strings and int
     private string? Message = "";
-    private string _Name = "Default";
+    private string? _Name = "Default";
     private string userIdClaim = "";
     private int newMessages = 0;
 
@@ -467,16 +485,23 @@ else
     {
         if (_user != null)
         {
+            _Name = _user?.Identity?.Name;
+
             //Getting the data with the service call from student
             await GetStudentData(_user);
-            if (_student != null)
+
+            if (_student.Any())
             {
                 //Read skills data connected to the profile
                 await GetSkills(_student);
             }
+            else if (!_student.Any() || _student == null)
+            {
+                await CheckIfStudentHasDataToRecover(_user);
+            }
             else
             {
-                _aletBox?.SetMessage(true, "Skills could not be read! Reason could be: _student list were null", 0, warning: true);
+                _aletBox?.SetMessage(true, "Skills could not be read! Reason could be: _student list returned null", 0, warning: true);
             }
         }
         else
@@ -562,6 +587,13 @@ else
     {
         await ReadStudentData();
         StateHasChanged();
+    }
+    #endregion
+
+    #region navigation to register
+    private void NavigateToRegister()
+    {
+        NavManager.NavigateTo("/registerprofile");
     }
     #endregion
 

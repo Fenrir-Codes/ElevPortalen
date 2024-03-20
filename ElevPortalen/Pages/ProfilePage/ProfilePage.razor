@@ -32,33 +32,7 @@
             }
             else
             {
-                <p>
-                    @if (_authState.User.IsInRole(Student) || _authState.User.IsInRole(Company))
-                    {
-                        <AlertBox IsVisible=true Message="Det ser ud til, at ingen personlige data er blevet tilføjet til din profil, klik på knappen for at registrere dine data."
-                                    isWarning=true waitForSeconds="0"></AlertBox>
-                    }
-                    else
-                    {
-                        <AlertBox IsVisible=true Message="Du har ingen rolle tildelt!" isDanger=true waitForSeconds="0"></AlertBox>
-                    }
-                </p>
-                <br>
-                <button class="btn btn-success m-2" @onclick="NavigateToRegister">Registrer dine data</button>
-                ;
-                <br />
-
-               @if (hasStudentRecoveryData)
-                {
-                  @*   <button class="btn btn-success m-2" @onclick="RecoverStudentData">Gendan data</button>
-                    <p>The Student's Guid is : @userIdClaim</p> *@
-
-                }
-                else if (hasCompanyRecoveryData)
-                {
-                    @* <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Gendan Firma data</button>
-                     <p>The Company's Guid is : @userIdClaim</p> *@
-                } 
+                <AlertBox IsVisible=true Message="Component could not be rendered for some reason. Check ProfilePage component." isWarning=true waitForSeconds="0"></AlertBox>
 
             }
 
@@ -89,9 +63,6 @@
     private string Student = "Student";
     private string? Message = "";
 
-
-    private bool hasStudentRecoveryData = false;
-    private bool hasCompanyRecoveryData = false;
     #endregion
 
     #region OnInitialize
@@ -111,24 +82,6 @@
             else
             {
                 isAuthenticated = false;
-            }
-        }
-    }
-    #endregion
-
-    #region navigation to register pages
-    private void NavigateToRegister()
-    {
-        if (_authState != null && _authState.User != null)
-        {
-            // If the user signed in and have no data in its data table
-            if (_authState.User.IsInRole(Company))  // If the user role is Company
-            {
-                NavManager.NavigateTo("/registerprofile"); // Route to the company registration page
-            }
-            else if (_authState.User.IsInRole(Student)) // If the role is Student
-            {
-                NavManager.NavigateTo("/registerprofile"); // Route to the student registration page
             }
         }
     }
