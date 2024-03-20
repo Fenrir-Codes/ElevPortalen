@@ -7,6 +7,7 @@
 
 @inject StudentService _studentService
 @inject SkillService _skillService
+@inject MessageService _messageService
 @inject NavigationManager NavManager
 @inject IJSRuntime jsRuntime
 
@@ -49,7 +50,7 @@
                                 <button type="button" class="btn btn-primary position-relative btn-sm">
                                     Inbox
                                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        @newMessages
+                                        @unreadMessages
                                         <span class="visually-hidden">unread messages</span>
                                     </span>
                                 </button>
@@ -439,7 +440,7 @@ else
 }
 
 <!-- DialogModal for update view -->
-<DialogModal @ref="DialogModal" profileId="Id" OnClose="ReRenderPage"></DialogModal>
+<DialogModal @ref="DialogModal" OnClose="ReRenderPage"></DialogModal>
 <!-- AlertBox -->
 <AlertBox @ref="_aletBox" />
 
@@ -469,7 +470,8 @@ else
     private string? Message = "";
     private string? _Name = "Default";
     private string userIdClaim = "";
-    private int newMessages = 0;
+
+    private int unreadMessages = 0;
 
     #endregion
 
@@ -494,6 +496,9 @@ else
             {
                 //Read skills data connected to the profile
                 await GetSkills(_student);
+
+                // Count the unread messages
+                await GetUnreadMessagesCount(_student[0].StudentId);
             }
             else if (!_student.Any() || _student == null)
             {
@@ -535,6 +540,7 @@ else
         {
             await _skillService.DeleteSkills(id);
             await _studentService.Delete(id);
+            await _messageService.DeleteWithReceiverId(id);
             NavManager.NavigateTo("/");
         }
     }
@@ -622,6 +628,13 @@ else
         {
             _aletBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
         }
+    }
+    #endregion
+
+    #region Count the unread messages
+    private async Task GetUnreadMessagesCount(int Id)
+    {
+       unreadMessages = await _messageService.GetUnredMessageCount(Id);
     }
     #endregion
 

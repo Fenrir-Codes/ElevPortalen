@@ -35,7 +35,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Delete Message
+        #region Delete Message with the messageId
         public async Task<string> Delete(int Id)
         {
             try
@@ -67,7 +67,35 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get Message with ID
+        #region Delete Message with the receiverId
+        public async Task<string> DeleteWithReceiverId(int Id)
+        {
+            try
+            {
+                var message = await _context.Messages.FirstOrDefaultAsync(m => m.ReceiverId == Id);
+                if (message != null)
+                {
+
+                    _context.Entry(message).State = EntityState.Detached;
+                    _context.Messages.Remove(message);
+
+                    await _context.SaveChangesAsync();
+
+                    return "Message Deleted.";
+                }
+                else
+                {
+                    return $"Messasge not found with MessageId - {Id}.";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"An error has occurred: {ex.Message}");
+            }
+        }
+        #endregion
+
+        #region Get Message with Id
         public async Task<List<MessageModel>> GetMessageById(int Id)
         {
             try
@@ -87,6 +115,22 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+        #endregion
+
+        #region Count Unread Messages
+        public async Task<int> GetUnredMessageCount(int Id)
+        {
+            try
+            {
+                int unreadMessageCount = await _context.Messages.Where(s => s.ReceiverId == Id && !s.IsRead).CountAsync();
+
+                return unreadMessageCount;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while counting unread messages." + ex.Message);
             }
         }
         #endregion

@@ -129,7 +129,7 @@
                             <p class="mb-0">Kontakt</p>
                         </div>
                         <div class="col-sm-9">
-                            <button class="btn btn-success mb-0 btn-sm" @onclick="() => DialogModal!.OpenMessageDialog(data.StudentId,data.FirstName, data.LastName)">Send besked</button>
+                            <button class="btn btn-success mb-0 btn-sm" @onclick="() => DialogModal!.OpenMessageDialog(data.StudentId,data?.FirstName, data?.LastName)">Send besked</button>
                         </div>
                     </div>
                 </div>
@@ -184,7 +184,7 @@
 }
 
 <!-- DialogModal for update view -->
-<DialogModal @ref="DialogModal" profileId="Id" OnClose="ReRenderPage"></DialogModal>
+<DialogModal @ref="DialogModal" OnClose="ReRenderPage"></DialogModal>
 <AlertBox @ref="_alertBox" />
 
 @code {

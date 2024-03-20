@@ -6,24 +6,27 @@
 <div class="col-xl-12 col-md-12 col-sm-12">
         <!--Header of the update page-->
         <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
-        Send Besked til @SendTo
+        Send Besked til @MessageTo
         </div>
 
         <!--body of the update page-->
         <div class="card-body">
+        <input type="hidden" @bind="Model.ReceiverId">
             <div class="mb-3">
                 <label for="_senderName" class="form-label">Email eller Navn</label>
-                <input type="text" class="form-control" id="_senderName" placeholder="name@example.com eller dit navn">
+                <input type="text" class="form-control" id="_senderName" placeholder="name@example.com eller dit navn" @bind="Model.SenderName">
             </div>
             <div class="mb-3">
                 <label for="_subject" class="form-label">Subject</label>
-                <input type="text" class="form-control" id="_subject" placeholder="Subject">
+                <input type="text" class="form-control" id="_subject" placeholder="Subject" @bind="Model.Subject">
             </div>
             <div class="mb-3">
                 <label for="_message" class="form-label">Besked</label>
-                <textarea class="form-control" id="_message" rows="8"></textarea>
+                <textarea class="form-control" id="_message" rows="8" @bind="Model.Content"></textarea>
             </div>
-
+            <p>
+           The reciever ID is: @ReceiverId
+        </p>
         </div>
 
 </div>
@@ -32,8 +35,14 @@
     [Parameter]
     public MessageModel? Model { get; set; }
     [Parameter]
-    public int RecieverId { get; set; }
+    public int ReceiverId { get; set; }
     [Parameter]
-    public string? SendTo { get; set; }
+    public string? MessageTo { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Model.ReceiverId = ReceiverId;
+        Model.Timestamp = DateTime.Now;
+    }
 
 }

@@ -28,7 +28,7 @@
                         }
                         else if (MessageDialog)
                         {
-                            <MessageDialog Model="_messageToSend" SendTo="@_reciverName"></MessageDialog>
+                            <MessageDialog Model="_messageToSend" MessageTo="@_messageTo" ReceiverId="@_recieverId"></MessageDialog>
                         }
                         else
                         {
@@ -77,8 +77,6 @@
 @code {
 
     #region Initialize parameter and fields , models
-
-    [Parameter] public int profileId { get; set; }
     [Parameter] public EventCallback<bool> OnClose { get; set; }
 
     public StudentModel _studentToUpdate = new StudentModel();
@@ -98,8 +96,10 @@
     private bool isStudent = false;
     private bool isCompany = false;
 
+    // Message dialog fields
     private bool MessageDialog = false;
-    private string? _reciverName = "";
+    private string? _messageTo = "";
+    private int _recieverId { get; set; }
 
     #endregion
 
@@ -178,16 +178,16 @@
     }
     #endregion
 
-    #region Open Company Update
+    #region Message Dialog
     public void OpenMessageDialog(int id, string firstName, string lastName)
     {
         MessageDialog = true;
+        _recieverId = id;
+        _messageTo = firstName + " " + lastName;
         DisplayStyle = "block;";
         ModalClass = "show";
         ShowBackdrop = true;
 
-        profileId = id;
-        _reciverName = firstName + " " + lastName;
 
     }
     #endregion
