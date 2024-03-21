@@ -2,6 +2,8 @@
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Services;
 
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <!--container of the update page-->
 <div class="col-xl-12 col-md-12 col-sm-12">
         <!--Header of the update page-->
@@ -13,8 +15,8 @@
         <div class="card-body">
         <input type="hidden" @bind="Model.ReceiverId">
             <div class="mb-3">
-                <label for="_senderName" class="form-label">Email eller Navn</label>
-                <input type="text" class="form-control" id="_senderName" placeholder="name@example.com eller dit navn" @bind="Model.SenderName">
+                <label for="_senderName" class="form-label">E-mail</label>
+                <input type="text" class="form-control" id="_senderName" placeholder="name@example.com" @bind="Model.SenderName">
             </div>
             <div class="mb-3">
                 <label for="_subject" class="form-label">Subject</label>
@@ -39,15 +41,32 @@
     [Parameter]
     public string? MessageTo { get; set; }
 
+    private AuthenticationState? _authState;
+    private string? nameOFSender { get; set; }
+
     protected override void OnInitialized()
     {
-        SetDateAndID();
+        SetValues();
     }
 
-    private void SetDateAndID()
+    #region Setting the ID of the sender, the date and the senderName
+    private async void SetValues()
     {
+        await GetAuthenticatedUsersName();
+
+        // Set values automatically
         Model.ReceiverId = ReceiverId;
+        Model.SenderName = nameOFSender;
         Model.Timestamp = DateTime.Now;
     }
+    #endregion
+
+    #region Get the authenticated user name
+    private async Task GetAuthenticatedUsersName()
+    {
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        nameOFSender = _authState.User.Identity.Name;
+    }
+    #endregion
 
 }
