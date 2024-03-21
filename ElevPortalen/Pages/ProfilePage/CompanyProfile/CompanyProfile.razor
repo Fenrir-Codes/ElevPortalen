@@ -214,17 +214,20 @@
             </div>
         </div>
 
-        <!--Description-->
-        <div class="row">
-            <div class="col-lg-12">
-                @*   <p class="mb-2 fw-bold">Beskrivelse</p> *@
-                <div class="card mb-2">
-                    <div class="card-body shadow-sm">
-                        <p class="text-muted mb-0">@data.Description</p>
+        @if (!string.IsNullOrEmpty(data.Description))
+        {
+            <!--Description-->
+            <div class="row">
+                <div class="col-lg-12">
+                    @*   <p class="mb-2 fw-bold">Beskrivelse</p> *@
+                    <div class="card mb-2">
+                        <div class="card-body shadow-sm">
+                            <p class="text-muted mb-0">@data.Description</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     }
 }
 else if (!_company.Any())
