@@ -97,7 +97,7 @@
                             </label>
                         </div>
                         <span style="color:red" hidden="@(!isConfirmationChecked)">
-                            Dette vil slette dine data, men det kan gendannes senere, hvis du ikke sletter registreringen.
+                            Dette vil slette dine data inklusiv dine beskeder!
                         </span>
                     </div>
                 </div>
@@ -540,7 +540,7 @@ else
         {
             await _skillService.DeleteSkills(id);
             await _studentService.Delete(id);
-            await _messageService.DeleteWithReceiverId(id);
+            await _messageService.DeleteAllWithReceiverId(id);
             NavManager.NavigateTo("/");
         }
     }

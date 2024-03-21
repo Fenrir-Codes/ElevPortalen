@@ -33,7 +33,7 @@
         {
             <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
                 <div class="row g-0">
-                    <div class="col-md-4 image">
+                    <div class="col-md-4 image border">
                         @if (!string.IsNullOrEmpty(data.profileImage))
                         {
                             <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
