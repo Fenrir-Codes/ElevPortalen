@@ -110,6 +110,7 @@
 
                         @if (_listOfStudents.Any())
                         {
+                            isStudent = true;
                             <table class="table table-striped table-dark text-white">
                                 <thead>
                                     <tr>
@@ -165,6 +166,7 @@
                         }
                         else if (_listOfConpanies.Any())
                         {
+                            isCompany = true;
                             <table class="table table-striped table-dark text-white">
                                 <thead>
                                     <tr>
@@ -250,7 +252,7 @@
 
         </div>
 
-        <DialogModal @ref="DialogModal" profileId="@Id" OnClose="ReRenderTable"></DialogModal>
+        <DialogModal @ref="DialogModal"  OnClose="ReRenderTable"></DialogModal>
     </Authorized>
 
     <NotAuthorized>

@@ -18,11 +18,11 @@
                 <div class="modal-content">
                     <div class="modal-body p-0 bg-dark text-white">
 
-                        @if (context.User.IsInRole(Student) && !MessageDialog)
+                        @if (isStudent && !MessageDialog)
                         {
                             <UpdateStudentDialog Model="_studentToUpdate"></UpdateStudentDialog>
                         }
-                        else if (context.User.IsInRole(Company) && !MessageDialog)
+                        else if (isCompany && !MessageDialog)
                         {
                             <UpdateCompanyDialog Model="_companyToUpdate"></UpdateCompanyDialog>
                         }
@@ -44,7 +44,7 @@
                         {
                             <button type="button" class="btn btn-success" @onclick=@SubmitUpdateStudent>Update</button>
                         }
-                        else if(isCompany && !MessageDialog)
+                        else if (isCompany && !MessageDialog)
                         {
                             <button type="button" class="btn btn-success" @onclick=@SubmitUpdateCompany>Update</button>
                         }
@@ -91,6 +91,7 @@
     public string ModalClass = "";
     private readonly string Company = "Company";
     private readonly string Student = "Student";
+    private readonly string Admin = "Admin";
 
     public bool ShowBackdrop = false;
     private bool isStudent = false;
