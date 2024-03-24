@@ -35,14 +35,14 @@
                                     {
                                         <td style="max-width:10px;"><i class="fa-solid fa-envelope fa-xl"></i></td>
                                         <td class="align-middle fw-bold" style="max-width:100px;">Fra: @message.SenderName</td>
-                                        <td class="align-middle text-center fw-bold"><small>@message.Content.Substring(0, 40) ...</small></td>
+                                        <td class="align-middle text-center fw-bold"><small>@message.Content.Substring(0, 10) ...</small></td>
                                         <td class="align-middle text-end fw-bold" style="max-width:100px;">Modtaget: @message.Timestamp.ToShortDateString()</td>
                                     }
                                     else
                                     {
                                         <td style="max-width:10px;"><i class="fa-solid fa-envelope-open fa-xl"></i></td>
                                         <td class="align-middle" style="max-width:100px;">Fra: @message.SenderName</td>
-                                        <td class="align-middle text-center"><small>@message.Content.Substring(0, 30) ...</small></td>
+                                        <td class="align-middle text-center"><small>@message.Content.Substring(0, 10) ...</small></td>
                                         <td class="align-middle text-end" style="max-width:100px;">Modtaget: @message.Timestamp.ToShortDateString()</td>
                                     }
                                 </tr>
