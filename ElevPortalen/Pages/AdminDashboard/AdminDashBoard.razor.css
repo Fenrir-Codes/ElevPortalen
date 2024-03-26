@@ -17,3 +17,28 @@
 .btn-operation {
     background-color: yellowgreen;
 }
+
+
+.skeleton-card {
+    box-shadow: none;
+    border: 1px solid lightgrey;
+}
+.skeleton-text {
+    width: 100%;
+    height: 16px;
+    margin-bottom: 8px;
+    background-color: #f0f0f0; /* Light gray */
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)); /* Shimmer effect */
+    background-size: 200% 100%; /* Size of the background gradient */
+    animation: shimmer 2s infinite linear; /* Shimmer animation */
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0; /* Start position of the gradient */
+    }
+
+    100% {
+        background-position: 200% 0; /* End position of the gradient */
+    }
+}

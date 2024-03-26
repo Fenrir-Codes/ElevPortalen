@@ -24,10 +24,39 @@
     </div>
 </div>
 
-@if (_companyList.Any())
+@if (!isLoaded)
 {
-    isLoaded = true;
+    <!-- Skeleton layout for loading -->
+    <div class="row d-flex justify-content-center">
+        @for (var i = 0; i < 9; i++)
+        {
+            <div class="skeleton-card m-2 p-0" style="max-width: 450px;">
+                <div class="row g-0">
+                    <div class="col-md-4 image border">
+                        <div class="skeleton-image"></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div class="skeleton-text"></div>
+                            <p class="card-text">
+                                <div class="skeleton-text"></div>
+                            </p>
+                            <p class="card-text">
+                                <div class="skeleton-text"></div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="card-footer d-flex justify-content-center align-items-center">
+                    <div class="skeleton-text"></div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
     <!-- Display Company-related content -->
     <div class="row d-flex justify-content-center">
         @foreach (var data in _companySearchResult)
@@ -65,50 +94,12 @@
 
         }
     </div>
-}
-else
-{
-
-    <!-- Skeleton layout for loading -->
-    <div class="row d-flex justify-content-center">
-        @for (var i = 0; i < 9; i++)
-        {
-            <div class="skeleton-card m-2 p-0" style="max-width: 450px;">
-                <div class="row g-0">
-                    <div class="col-md-4 image border">
-                        <div class="skeleton-image"></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <div class="skeleton-text"></div>
-                            <p class="card-text">
-                                <div class="skeleton-text"></div>
-                            </p>
-                            <p class="card-text">
-                                <div class="skeleton-text"></div>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                    <div class="skeleton-text"></div>
-                </div>
-            </div>
-        }
-    </div>
-@*     <div class="spinner-border mt-5"
-         style="width: 3rem; height: 3rem;" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-    <div>
-        <span class="">Loading...</span>
-    </div>@**@
 } 
 
 <AlertBox @ref="_alertBox" />
 
 @code {
+
     #region Initialize
 
     private List<CompanyModel> _companyList = new List<CompanyModel>(); //List of Companies
@@ -122,6 +113,7 @@ else
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
+        isLoaded = false;
         await ReadCompanyData();
     }
     #endregion
@@ -129,14 +121,14 @@ else
     #region Read the data from company database
     public async Task ReadCompanyData()
     {
-        isLoaded = false;
-
         _companySearchResult.Clear();
         //Getting the data
         _companyList = await _companyService.ReadAllCompanyData();
         // Filling up the searchresult with list
         _companySearchResult = _companyList;
         // _companyList.Clear();
+
+        isLoaded = true;
     }
     #endregion
 

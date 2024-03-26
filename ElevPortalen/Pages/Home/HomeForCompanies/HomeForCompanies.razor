@@ -23,10 +23,39 @@
     </div>
 </div>
 
-@if (_studentList.Any())
+@if (!isLoaded)
 {
-    isLoaded = true;
+    <!-- Skeleton layout for loading -->
+    <div class="row d-flex justify-content-center">
+        @for (var i = 0; i < 9; i++)
+        {
+            <div class="skeleton-card m-2 p-0" style="max-width: 450px;">
+                <div class="row g-0">
+                    <div class="col-md-4 image border">
+                        <div class="skeleton-image"></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div class="skeleton-text"></div>
+                            <p class="card-text">
+                                <div class="skeleton-text"></div>
+                            </p>
+                            <p class="card-text">
+                                <div class="skeleton-text"></div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="card-footer d-flex justify-content-center align-items-center">
+                    <div class="skeleton-text"></div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
     <!-- Display Student-related content -->
     <div class="row d-flex justify-content-center">
         @foreach (var data in _studentSearchResult)
@@ -107,45 +136,6 @@
             </div>
         }
     </div>
-}
-else
-{
-    <!-- Skeleton layout for loading -->
-    <div class="row d-flex justify-content-center">
-        @for (var i = 0; i < 9; i++)
-        {
-            <div class="skeleton-card m-2 p-0" style="max-width: 450px;">
-                <div class="row g-0">
-                    <div class="col-md-4 image border">
-                        <div class="skeleton-image"></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <div class="skeleton-text"></div>
-                            <p class="card-text">
-                                <div class="skeleton-text"></div>
-                            </p>
-                            <p class="card-text">
-                                <div class="skeleton-text"></div>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-footer d-flex justify-content-center align-items-center">
-                    <div class="skeleton-text"></div>
-                </div>
-            </div>
-        }
-    </div>
-
-@*     <div class="spinner-border mt-5"
-         style="width: 3rem; height: 3rem;" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-    <div>
-        <span class="">Loading...</span>
-    </div> *@
 } 
 
 <AlertBox @ref="_alertBox" />
@@ -166,6 +156,7 @@ else
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
+        isLoaded = false;
         await ReadStudentsData();
     }
     #endregion
@@ -173,8 +164,6 @@ else
     #region Read the data from student database
     public async Task ReadStudentsData()
     {
-        isLoaded = false;
-
         _studentSearchResult.Clear();
         //Getting the data
         _studentList = await _studentService.ReadAllStudentData();
@@ -183,6 +172,8 @@ else
         //get skill for each student with thir StudentId to dictionary
         await GetSkills(_studentList);
         // _studentList.Clear();
+
+        isLoaded = true;
     }
     #endregion
 
