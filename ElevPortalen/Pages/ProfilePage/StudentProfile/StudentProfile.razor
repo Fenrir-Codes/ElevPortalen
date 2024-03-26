@@ -506,6 +506,7 @@ else
 
             //Getting the data with the service call from student
             await GetStudentData(_user);
+            isLoaded = true;
 
             if (_student.Any())
             {
@@ -514,8 +515,6 @@ else
 
                 // Count the unread messages
                 await GetUnreadMessagesCount(_student[0].StudentId);
-
-                isLoaded = true;
             }
             else if (!_student.Any() || _student == null)
             {
