@@ -6,6 +6,7 @@
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
 @using System;
+@using ElevPortalen.Pages.ProfilePublicView
 
 @inject CompanyService _companyService
 @inject NavigationManager NavManager
@@ -13,19 +14,19 @@
 
 <PageTitle>Companies</PageTitle>
 
+<!--Search container on top-->
+<div class="row">
+    <div class="col-lg-12">
+        <!-- this is the searchBox component here-->
+        <div class="d-flex justify-content-center w-100 mb-4">
+            <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
+        </div>
+    </div>
+</div>
+
 @if (_companyList.Any())
 {
     isLoaded = true;
-
-    <!--Search container on top-->
-    <div class="row">
-        <div class="col-lg-12">
-            <!-- this is the searchBox component here-->
-            <div class="d-flex justify-content-center w-100 mb-4">
-                <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
-            </div>
-        </div>
-    </div>
 
     <!-- Display Company-related content -->
     <div class="row d-flex justify-content-center">
@@ -67,14 +68,43 @@
 }
 else
 {
-    <div class="spinner-border mt-5"
+
+    <!-- Skeleton layout for loading -->
+    <div class="row d-flex justify-content-center">
+        @for (var i = 0; i < 9; i++)
+        {
+            <div class="skeleton-card m-2 p-0" style="max-width: 450px;">
+                <div class="row g-0">
+                    <div class="col-md-4 image border">
+                        <div class="skeleton-image"></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div class="skeleton-text"></div>
+                            <p class="card-text">
+                                <div class="skeleton-text"></div>
+                            </p>
+                            <p class="card-text">
+                                <div class="skeleton-text"></div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-center align-items-center">
+                    <div class="skeleton-text"></div>
+                </div>
+            </div>
+        }
+    </div>
+@*     <div class="spinner-border mt-5"
          style="width: 3rem; height: 3rem;" role="status">
         <span class="visually-hidden">Loading...</span>
     </div>
     <div>
         <span class="">Loading...</span>
-    </div>
-}
+    </div>@**@
+} 
 
 <AlertBox @ref="_alertBox" />
 

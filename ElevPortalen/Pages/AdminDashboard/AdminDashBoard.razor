@@ -1,11 +1,11 @@
 ﻿@page "/admindashboard"
-@attribute [Authorize(Roles = "Admin")]
 
 @using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
 @using ElevPortalen.Pages.AlertBox
+@using System.Security.Cryptography;
 
 @inject ElevPortalenDataDbContext _context
 @inject StudentService _studentService
@@ -139,8 +139,6 @@
                                                         Operation
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" href="#">Vis Profil</a></li>
-                                                        <li><hr class="dropdown-divider"></li>
                                                         <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenStudentUpdate(student.StudentId)">Opdater</a></li>
                                                         <li><a class="dropdown-item" href="#">Fjern</a></li>
                                                     </ul>
@@ -217,8 +215,6 @@
                                                         Operation
                                                     </button>
                                                     <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" href="#">Vis Profil</a></li>
-                                                        <li><hr class="dropdown-divider"></li>
                                                         <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenCompanyUpdate(company.CompanyId)">Opdater</a></li>
                                                         <li><a class="dropdown-item" href="#">Fjern</a></li>
                                                     </ul>
@@ -364,6 +360,5 @@
         StateHasChanged();
     }
     #endregion
-
 
 }

@@ -5,3 +5,37 @@
         transform: scale(1.04);
         box-shadow: 0px 0px 5px 0px rgba(102,102,102,1);
     }
+
+/* Styles for skeleton loading */
+.skeleton-card {
+    box-shadow: none;
+    border: 1px solid lightgrey;
+}
+.skeleton-image {
+    width: 150px;
+    height: 150px;
+    background-color: #f0f0f0; /* Light gray */
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)); /* Shimmer effect */
+    background-size: 200% 100%; /* Size of the background gradient */
+    animation: shimmer 2s infinite linear; /* Shimmer animation */
+}
+
+.skeleton-text {
+    width: 100%;
+    height: 16px;
+    margin-bottom: 8px;
+    background-color: #f0f0f0; /* Light gray */
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)); /* Shimmer effect */
+    background-size: 200% 100%; /* Size of the background gradient */
+    animation: shimmer 2s infinite linear; /* Shimmer animation */
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0; /* Start position of the gradient */
+    }
+
+    100% {
+        background-position: 200% 0; /* End position of the gradient */
+    }
+}
