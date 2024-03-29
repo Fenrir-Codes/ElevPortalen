@@ -229,7 +229,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Get a student by its Guid
-        public async Task<StudentModel> GetStudentByGuid(Guid id)
+        public async Task<StudentModel?> GetStudentByGuid(Guid id)
         {
             try
             {
@@ -241,7 +241,7 @@ namespace ElevPortalen.Services
                 }
                 else
                 {
-                    throw new InvalidOperationException($"An error occurred while finding user's Guid. Or no Guid in database.");
+                    return null;
                 }
             }
             catch (Exception ex)

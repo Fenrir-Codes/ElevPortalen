@@ -324,5 +324,29 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Get a Company by its Guid
+        public async Task<CompanyModel?> GetCompanyByGuid(Guid id)
+        {
+            try
+            {
+                var company = await _context.Company.FirstOrDefaultAsync(c => c.UserId == id);
+
+                if (company != null)
+                {
+                    return company;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new InvalidOperationException($"An error occurred while retrieving company data: {ex.Message}");
+
+            }
+        }
+        #endregion
     }
 }
