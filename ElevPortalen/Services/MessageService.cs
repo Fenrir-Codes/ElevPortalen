@@ -19,7 +19,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Create Message
-        public async Task<string> SaveMessage(MessageModel message)
+        public async Task<string> SendMessage(MessageModel message)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Delete Message
+        #region Delete Message with the messageId
         public async Task<string> Delete(int Id)
         {
             try
@@ -67,12 +67,56 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get Message with ID
-        public async Task<List<MessageModel>> GetMessageById(int Id)
+        #region Delete Messages with the receiverId
+        public async Task<string> DeleteAllWithReceiverId(int receiverId)
         {
             try
             {
-                var message = await _context.Messages.Where(m => m.MessageId == Id).ToListAsync();
+                var messages = await _context.Messages.Where(m => m.ReceiverId == receiverId).ToListAsync();
+
+                if (messages.Any())
+                {
+                    _context.Messages.RemoveRange(messages);
+                    await _context.SaveChangesAsync();
+                    return "Messages Deleted.";
+                }
+                else
+                {
+                    return $"No messages found with ReceiverId - {receiverId}.";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"An error has occurred: {ex.Message}");
+            }
+        }
+        #endregion
+
+        #region Mark Message as Read
+        public async Task MarkMessageAsRead(int messageId)
+        {
+            try
+            {
+                var message = await _context.Messages.FirstOrDefaultAsync(m => m.MessageId == messageId);
+                if (message != null)
+                {
+                    message.IsRead = true;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while marking the message as read." + ex.Message);
+            }
+        }
+        #endregion
+
+        #region Get Message with ReceiverId
+        public async Task<List<MessageModel>> GetMessageWithReceiverId(int Id)
+        {
+            try
+            {
+                var message = await _context.Messages.Where(m => m.ReceiverId == Id).ToListAsync();
 
                 if (message != null)
                 {
@@ -87,6 +131,22 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+        #endregion
+
+        #region Count Unread Messages
+        public async Task<int> GetUnredMessageCount(int Id)
+        {
+            try
+            {
+                int unreadMessageCount = await _context.Messages.Where(m => m.ReceiverId == Id && !m.IsRead).CountAsync();
+
+                return unreadMessageCount;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while counting unread messages." + ex.Message);
             }
         }
         #endregion

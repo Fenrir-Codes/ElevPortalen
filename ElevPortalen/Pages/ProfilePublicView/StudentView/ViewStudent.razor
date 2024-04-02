@@ -4,6 +4,7 @@
 @using ElevPortalen.Data;
 @using ElevPortalen.Services;
 @using ElevPortalen.Models;
+@using ElevPortalen.Pages.DialogModal;
 
 @inject StudentService _studentService
 @inject SkillService _skillService
@@ -56,7 +57,7 @@
         <div class="col-lg-4">
             <div class="card mb-2 shadow-sm">
                 <div class="card-body text-center">
-                    @if (data.profileImage != "")
+                    @if (!string.IsNullOrEmpty(data.profileImage))
                     {
                         <img src="images/ProfileImages/@data.profileImage" alt="avatar"
                              class="rounded-circle img-fluid" style="width: 150px; height:150px;">
@@ -127,8 +128,9 @@
                         <div class="col-sm-3">
                             <p class="mb-0">Kontakt</p>
                         </div>
-                        <div class="col-sm-9">
-                            <button class="btn btn-success mb-0 btn-sm" @onclick="SendMessage">Send besked</button>
+                        <div class="col-sm-9">                
+                            <button class="btn btn-success mb-0 btn-sm" @onclick="() =>
+                                DialogModal!.OpenMessageDialog(data.StudentId, data.FirstName, data.LastName)">Send besked</button>
                         </div>
                     </div>
                 </div>
@@ -137,16 +139,19 @@
     </div>
 
     <!--Description-->
-    <div class="row">
-        <div class="col-lg-12">
-            @*   <p class="mb-2 fw-bold">Beskrivelse</p> *@
-            <div class="card mb-2">
-                <div class="card-body shadow-sm">
-                    <p class="m-1">@data.Description</p>
+    @if (!string.IsNullOrEmpty(data.Description))
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                @*   <p class="mb-2 fw-bold">Beskrivelse</p> *@
+                <div class="card mb-2">
+                    <div class="card-body shadow-sm">
+                        <p class="m-1">@data.Description</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 
     <!-- Skills section -->
     <div class="row">
@@ -182,6 +187,8 @@
 
 }
 
+<!-- DialogModal for update view -->
+<DialogModal @ref="DialogModal" OnClose="ReRenderPage"></DialogModal>
 <AlertBox @ref="_alertBox" />
 
 @code {
@@ -192,7 +199,7 @@
     private List<StudentModel> _student = new List<StudentModel>();
     private List<string> _SkillsOfStudent = new List<string>();
     private AlertBox _alertBox = new AlertBox();
-    private MessageModel _messageData = new MessageModel();
+    private DialogModal? DialogModal { get; set; }
 
     #region Oninitialize
     protected override async Task OnInitializedAsync()
@@ -219,28 +226,11 @@
     }
     #endregion
 
-
-    private async Task SendMessage()
+    #region Re-RenderPage function for re-renderint the profile page on change
+    private void ReRenderPage()
     {
-        try
-        {
-            _messageData = new MessageModel()
-            {
-                    ReceiverId = 18,
-                    SenderName = "Microcom A/S",
-                    Subject = "Testing sending",
-                    Content = "This is a test message sent from the view page from microcom to Jozsef Bali.",
-                    Timestamp = DateTime.Now,
-                    IsRead = false
-            };
-
-            Message = await _messageService.SaveMessage(_messageData);
-            _alertBox.SetMessage(true, Message, 2000, success: true);
-        }
-        catch (Exception ex)
-        {
-            _alertBox.SetMessage(true, $"Error - {ex.Message}", 0, danger: true);
-        }
+        StateHasChanged();
     }
+    #endregion
 
 }

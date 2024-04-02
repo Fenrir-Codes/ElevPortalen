@@ -89,7 +89,7 @@
                                     <div class="col-md-6">
                                         <label class="small mb-1 fw-bold" for="_speciality">Specialisering</label>
                                         <select class="form-select form-select-md" @bind="_studentData.Speciality" id="_speciality" aria-label="Region" required>
-                                            <option value="" disabled selected>Vælg dit speciale</option>
+                                            @* <option value="" disabled selected>Vælg dit speciale</option> *@
                                             <option value="It-Support">It-Supporter</option>
                                             <option value="Infrastrukture">Infrastruktur</option>
                                             <option value="Programmering">Programmering</option>
@@ -100,6 +100,31 @@
                                         <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                                     </div>
                                 </div>
+                                <!-- Just for fun -->
+                                <div class="row gx-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1 fw-bold" for="_gender">Gender</label>
+                                        <select class="form-select form-select-md" id="_gender" aria-label="Region" required>
+                                            <option selected>Male</option>
+                                            <option>Female</option>
+                                            <option>Tramssexual Male</option>
+                                            <option>Transsexual Female</option>
+                                            <option>Metrosexual Male</option>
+                                            <option>Metrosexual Female</option>
+                                            <option>Male but curius what being a female is like</option>
+                                            <option>Female but curius what being a male is like</option>
+                                            <option>Male but overweight, have boobs</option>
+                                            <option>Female, but have an Adam's apple</option>
+                                            <option>Born without genitals - Identify as Male</option>
+                                            <option>Born without genitals - Identify as Female</option>
+                                            <option>Born without genitals - Proud of it</option>
+                                            <option>Cointhusian Transfestator</option>
+                                            <option>A Nipple-Sucking, Intergalactic, Anti-Condom Weapon</option>
+                                            <option>Prefen not to say</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!-- Fun end -->
                                 <div class="row">
                                     <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
                                     <div class="col-md-3 mb-2">

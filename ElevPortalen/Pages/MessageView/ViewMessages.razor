@@ -1,0 +1,114 @@
+﻿@page "/viewmessages/{ReceiverId:int}"
+
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Services;
+@using ElevPortalen.Models;
+
+@inject MessageService _messageService
+
+<PageTitle>Messages</PageTitle>
+
+<div class="container">
+    @if (_listOfMessages.Any())
+    {
+        <div class="card shadow-sm">
+            <div class="card-header text-center bg-dark text-white">
+                @if (!MessageOpen)
+                {
+                    <h4 class="m-0">Beskeder</h4>
+                }
+                else
+                {
+                    <h4 class="m-0">Besked fra: @messageFrom</h4>
+                }
+            </div>
+
+            <div class="card-body">
+                @if (!MessageOpen)
+                {
+                    <table class="table table-hover border">
+                        <tbody>
+                            @foreach (var message in _listOfMessages)
+                            {
+                                <tr style="cursor:pointer;" @onclick="() => ToggleOpenMessage(message)">
+                                    @if (!message.IsRead)
+                                    {
+                                        <td style="max-width:10px;"><i class="fa-solid fa-envelope fa-xl"></i></td>
+                                        <td class="align-middle fw-bold" style="max-width:100px;">Fra: @message.SenderName</td>
+                                        <td class="align-middle text-center fw-bold"><small>@message.Content.Substring(0, 10) ...</small></td>
+                                        <td class="align-middle text-end fw-bold" style="max-width:100px;">Modtaget: @message.Timestamp.ToShortDateString()</td>
+                                    }
+                                    else
+                                    {
+                                        <td style="max-width:10px;"><i class="fa-solid fa-envelope-open fa-xl"></i></td>
+                                        <td class="align-middle" style="max-width:100px;">Fra: @message.SenderName</td>
+                                        <td class="align-middle text-center"><small>@message.Content.Substring(0, 10) ...</small></td>
+                                        <td class="align-middle text-end" style="max-width:100px;">Modtaget: @message.Timestamp.ToShortDateString()</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="m-3">@_Message.Content</p>
+                }
+            </div>
+
+            @if (MessageOpen)
+            {
+                <div class="card-footer d-flex">
+                    <button class="btn btn-sm btn-danger" @onclick="ToggleBack">Tilbage</button>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <AlertBox IsVisible=true Message="Du har ingen beskeder." waitForSeconds="0" isWarning=true></AlertBox>
+    }
+
+</div>
+
+@code {
+    [Parameter] public int ReceiverId { get; set; }
+    private MessageModel _Message = new MessageModel();
+    private List<MessageModel> _listOfMessages = new List<MessageModel>();
+    private bool MessageOpen = false;
+    private string? messageFrom = "";
+
+    #region OnInitialized
+    protected override async Task OnInitializedAsync()
+    {
+        await ReadMessages();
+    }
+    #endregion
+
+    #region Getting the messages with th ReceiverId
+    public async Task ReadMessages()
+    {
+        _listOfMessages = await _messageService.GetMessageWithReceiverId(ReceiverId);
+    }
+    #endregion
+
+    #region ToggleMessage and set it to readed stand
+    private async void ToggleOpenMessage(MessageModel message)
+    {
+        MessageOpen = true;
+        _Message = message;
+        messageFrom = message.SenderName;
+        await _messageService.MarkMessageAsRead(message.MessageId);
+    }
+    #endregion
+
+    #region Toggle back button
+    private async void ToggleBack()
+    {
+        MessageOpen = false;
+        await OnInitializedAsync();
+        StateHasChanged();
+    }
+    #endregion
+
+}

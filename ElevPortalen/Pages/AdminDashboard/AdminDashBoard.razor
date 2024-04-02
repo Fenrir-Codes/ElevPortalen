@@ -1,11 +1,11 @@
 ﻿@page "/admindashboard"
-@attribute [Authorize(Roles = "Admin")]
 
 @using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
 @using ElevPortalen.Pages.AlertBox
+@using System.Security.Cryptography;
 
 @inject ElevPortalenDataDbContext _context
 @inject StudentService _studentService
@@ -16,241 +16,266 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized>
-
-        <!-- Container -->
-        <div class="container-fluid text-center">
-            <!-- Row with 4 cards -->
-            <div class="row pt-2">
-                <div class="col-lg-6 col-xl-3 mb-2">
-                    <div class="card bg-secondary text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">
-                                        Tilmeldte Elever:
-                                    </div>
-                                    <div class="text-lg fw-bold">
-                                        @_studentCount
-                                    </div>
+        @if (!isLoaded)
+        {
+            <div class="container-fluid text-center">
+                <!-- Row with 4 cards -->
+                <div class="row pt-2">
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        <div class="col-lg-3 mb-2">
+                            <!-- Skeleton for each card -->
+                            <div class="skeleton-card">
+                                <div class="card-body">
+                                    <div class="skeleton-text"></div>
+                                    <p class="card-text">
+                                        <div class="skeleton-text"></div>
+                                    </p>
+                                    <p class="card-text">
+                                        <div class="skeleton-text"></div>
+                                    </p>
                                 </div>
-                                <i class="fa-solid fa-user-check fa-2xl"></i>
                             </div>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer;" @onclick="GetAllStudent">
-                            <div>View</div>
-                            <div><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xl-3 mb-2">
-                    <div class="card bg-secondary text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">
-                                        Tilmeldte Firmaer:
-                                    </div>
-                                    <div class="text-lg fw-bold">
-                                        @_companyCount
-                                    </div>
-                                </div>
-                                <i class="fa-solid fa-building-circle-check fa-2xl"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer" @onclick="GetAllCompany">
-                            <div>View</div>
-                            <div><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xl-3 mb-2">
-                    <div class="card bg-secondary text-white h-100">
-                        <div class="card-body text-white">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">
-                                        Something
-                                    </div>
-                                </div>
-                                <i class="fa-solid fa-square-check fa-2xl"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer">
-                            <div>View</div>
-                            <div><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xl-3 mb-2">
-                    <div class="card bg-secondary text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="me-3">
-                                    <div class="text-white-75 small">
-                                        Something
-                                    </div>
-                                </div>
-                                <i class="fa-solid fa-comment fa-2xl"></i>
-                            </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer">
-                            <div>View</div>
-                            <div href="#"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
-
-            <!--More contect after the hr tag   , it can be a list of users etc...-->
-            @if (_listOfStudents.Any() || _listOfConpanies.Any())
-            {
-                <div class="card bg-secondary text-white">
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">@_tableName</h5>
-
-                        @if (_listOfStudents.Any())
-                        {
-                            <table class="table table-striped table-dark text-white">
-                                <thead>
-                                    <tr>
-                                        <th class="tableheader" scope="col">Id</th>
-                                        <th class="tableheader" scope="col">Navn</th>
-                                        <th class="tableheader" scope="col">Addresse</th>
-                                        <th class="tableheader" scope="col">E-mail</th>
-                                        <th class="tableheader" scope="col">Telefonnummer</th>
-                                        <th class="tableheader" scope="col">Specialisering</th>
-                                        <th class="tableheader" scope="col">Operationer</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var student in studentsToPage())
-                                    {
-                                        <tr>
-                                            <th scope="row">@student.StudentId</th>
-                                            <td>@student.FirstName @student.MiddleName @student.LastName</td>
-                                            <td>@student.Address</td>
-                                            <td>@student.Email</td>
-                                            <td>@student.PhoneNumber</td>
-                                            <td>@student.Speciality</td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn btn-operation dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Operation
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" href="#">Vis Profil</a></li>
-                                                        <li><hr class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenStudentUpdate(student.StudentId)">Opdater</a></li>
-                                                        <li><a class="dropdown-item" href="#">Fjern</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                            <!-- Pagination controls -->
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination">
-                                    @foreach (int page in Enumerable.Range(1, TotalPagesStudents))
-                                    {
-                                        var num = page;
-                                        <li class="page-item @(page == currentPage ? "active" : "")">
-                                            <button class="page-link" @onclick="() => ChangePage(page)">@num</button>
-                                        </li>
-                                    }
-                                </ul>
-                            </nav>
-
-                        }
-                        else if (_listOfConpanies.Any())
-                        {
-                            <table class="table table-striped table-dark text-white">
-                                <thead>
-                                    <tr>
-                                        <th class="tableheader" scope="col">Id</th>
-                                        <th class="tableheader" scope="col">Firmanavn</th>
-                                        <th class="tableheader" scope="col">Addresse</th>
-                                        <th class="tableheader" scope="col">E-mail</th>
-                                        <th class="tableheader" scope="col">Telefonnummer</th>
-                                        <th class="tableheader" scope="col">Leder efter</th>
-                                        <th class="tableheader" scope="col">Ansatter nu</th>
-                                        <th class="tableheader" scope="col">Synlig</th>
-                                        <th class="tableheader" scope="col">Operationer</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var company in companiesToPage())
-                                    {
-                                        <tr>
-                                            <th scope="row">@company.CompanyId</th>
-                                            <td>@company.CompanyName</td>
-                                            <td>@company.CompanyAddress</td>
-                                            <td>@company.Email</td>
-                                            <td>@company.PhoneNumber</td>
-                                            <td>@company.Preferences</td>
-                                            <td>
-                                                @if (company.IsHiring)
-                                                {
-                                                    <span>Ja</span>
-                                                }
-                                                else
-                                                {
-                                                    <span>Nej</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (company.IsVisible)
-                                                {
-                                                    <span>Ja</span>
-                                                }
-                                                else
-                                                {
-                                                    <span>Nej</span>
-                                                }
-                                            </td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <button type="button" class="btn dropdown-toggle btn-operation" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Operation
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" href="#">Vis Profil</a></li>
-                                                        <li><hr class="dropdown-divider"></li>
-                                                        <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenCompanyUpdate(company.CompanyId)">Opdater</a></li>
-                                                        <li><a class="dropdown-item" href="#">Fjern</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-
-                            <!-- Pagination controls -->
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination">
-                                    @foreach (int page in Enumerable.Range(1, TotalPagesCompanies))
-                                    {
-                                        var num = page;
-                                        <li class="page-item @(page == currentPage ? "active" : "")">
-                                            <button class="page-link" @onclick="() => ChangePage(page)">@num</button>
-                                        </li>
-                                    }
-                                </ul>
-                            </nav>
-                        }
-                        else
-                        {
-                            <h5 class="card-title fw-bold">No data recieved!</h5>
-                        }
+        }
+        else
+        {
+            <!-- Container -->
+            <div class="container-fluid text-center">
+                <!-- Row with 4 cards -->
+                <div class="row pt-2">
+                    <div class="col-lg-6 col-xl-3 mb-2">
+                        <div class="card bg-secondary text-white h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="me-3">
+                                        <div class="text-white-75 small">
+                                            Tilmeldte Elever:
+                                        </div>
+                                        <div class="text-lg fw-bold">
+                                            @_studentCount
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-user-check fa-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer;" @onclick="GetAllStudent">
+                                <div>View</div>
+                                <div><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xl-3 mb-2">
+                        <div class="card bg-secondary text-white h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="me-3">
+                                        <div class="text-white-75 small">
+                                            Tilmeldte Firmaer:
+                                        </div>
+                                        <div class="text-lg fw-bold">
+                                            @_companyCount
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-building-circle-check fa-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer" @onclick="GetAllCompany">
+                                <div>View</div>
+                                <div><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xl-3 mb-2">
+                        <div class="card bg-secondary text-white h-100">
+                            <div class="card-body text-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="me-3">
+                                        <div class="text-white-75 small">
+                                            Something
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-square-check fa-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer">
+                                <div>View</div>
+                                <div><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xl-3 mb-2">
+                        <div class="card bg-secondary text-white h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="me-3">
+                                        <div class="text-white-75 small">
+                                            Something
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-comment fa-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer">
+                                <div>View</div>
+                                <div href="#"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            }
 
-        </div>
+                <!--More contect after the hr tag   , it can be a list of users etc...-->
+                @if (_listOfStudents.Any() || _listOfConpanies.Any())
+                {
+                    <div class="card bg-secondary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">@_tableName</h5>
 
-        <DialogModal @ref="DialogModal" profileId="@Id" OnClose="ReRenderTable"></DialogModal>
+                            @if (_listOfStudents.Any())
+                            {
+                                isStudent = true;
+                                <table class="table table-striped table-dark text-white">
+                                    <thead>
+                                        <tr>
+                                            <th class="tableheader" scope="col">Id</th>
+                                            <th class="tableheader" scope="col">Navn</th>
+                                            <th class="tableheader" scope="col">Addresse</th>
+                                            <th class="tableheader" scope="col">E-mail</th>
+                                            <th class="tableheader" scope="col">Telefonnummer</th>
+                                            <th class="tableheader" scope="col">Specialisering</th>
+                                            <th class="tableheader" scope="col">Operationer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var student in studentsToPage())
+                                        {
+                                            <tr>
+                                                <th scope="row">@student.StudentId</th>
+                                                <td>@student.FirstName @student.MiddleName @student.LastName</td>
+                                                <td>@student.Address</td>
+                                                <td>@student.Email</td>
+                                                <td>@student.PhoneNumber</td>
+                                                <td>@student.Speciality</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn btn-operation dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            Operation
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenStudentUpdate(student.StudentId)">Opdater</a></li>
+                                                            <li><a class="dropdown-item" href="#">Fjern</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <!-- Pagination controls -->
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        @foreach (int page in Enumerable.Range(1, TotalPagesStudents))
+                                        {
+                                            var num = page;
+                                            <li class="page-item @(page == currentPage ? "active" : "")">
+                                                <button class="page-link" @onclick="() => ChangePage(page)">@num</button>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+
+                            }
+                            else if (_listOfConpanies.Any())
+                            {
+                                isCompany = true;
+                                <table class="table table-striped table-dark text-white">
+                                    <thead>
+                                        <tr>
+                                            <th class="tableheader" scope="col">Id</th>
+                                            <th class="tableheader" scope="col">Firmanavn</th>
+                                            <th class="tableheader" scope="col">Addresse</th>
+                                            <th class="tableheader" scope="col">E-mail</th>
+                                            <th class="tableheader" scope="col">Telefonnummer</th>
+                                            <th class="tableheader" scope="col">Leder efter</th>
+                                            <th class="tableheader" scope="col">Ansatter nu</th>
+                                            <th class="tableheader" scope="col">Synlig</th>
+                                            <th class="tableheader" scope="col">Operationer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var company in companiesToPage())
+                                        {
+                                            <tr>
+                                                <th scope="row">@company.CompanyId</th>
+                                                <td>@company.CompanyName</td>
+                                                <td>@company.CompanyAddress</td>
+                                                <td>@company.Email</td>
+                                                <td>@company.PhoneNumber</td>
+                                                <td>@company.Preferences</td>
+                                                <td>
+                                                    @if (company.IsHiring)
+                                                    {
+                                                        <span>Ja</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Nej</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (company.IsVisible)
+                                                    {
+                                                        <span>Ja</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Nej</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <button type="button" class="btn dropdown-toggle btn-operation" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            Operation
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenCompanyUpdate(company.CompanyId)">Opdater</a></li>
+                                                            <li><a class="dropdown-item" href="#">Fjern</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                <!-- Pagination controls -->
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        @foreach (int page in Enumerable.Range(1, TotalPagesCompanies))
+                                        {
+                                            var num = page;
+                                            <li class="page-item @(page == currentPage ? "active" : "")">
+                                                <button class="page-link" @onclick="() => ChangePage(page)">@num</button>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                            }
+                            else
+                            {
+                                <h5 class="card-title fw-bold">No data recieved!</h5>
+                            }
+                        </div>
+                    </div>
+                }
+
+            </div>
+        }
+       
+        <DialogModal @ref="DialogModal"  OnClose="ReRenderTable"></DialogModal>
     </Authorized>
 
     <NotAuthorized>
@@ -282,9 +307,12 @@
     private bool isStudent = false;
     private bool isCompany = false;
 
+    private bool isLoaded = false;
+
     #region initialize
     protected override async Task OnInitializedAsync()
     {
+        isLoaded = false;
         await GetCount();
     }
     #endregion
@@ -294,6 +322,7 @@
     {
         _studentCount = await _studentService.GetStudentCountAsync();
         _companyCount = await _companyService.GetCompaniesCountAsync();
+        isLoaded = true;
     }
     #endregion
 
@@ -362,6 +391,5 @@
         StateHasChanged();
     }
     #endregion
-
 
 }

@@ -94,9 +94,11 @@ namespace ElevPortalen.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            //var deleteProfileData = await _studentService.DeleteStudentWithGuid(user.Id);
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
+
+            // Added - deleting the Student data from the database on account delete.
+            await DeleteProfileData(userId);
 
             if (!result.Succeeded)
             {
@@ -109,5 +111,45 @@ namespace ElevPortalen.Areas.Identity.Pages.Account.Manage
 
             return Redirect("~/");
         }
+
+        private async Task<IActionResult> DeleteProfileData(string userId)
+        {
+            Guid userGuid;
+            // Convert string userId to Guid
+            if (Guid.TryParse(userId, out userGuid))
+            {
+                // Check in the student database
+                var deleteStudentProfileData = await _studentService.GetStudentByGuid(userGuid);
+                if (deleteStudentProfileData != null)
+                {
+                    await _studentService.Delete(deleteStudentProfileData.StudentId);
+                }
+                else
+                {
+                    // Check in the company database
+                    var deleteCompanyProfileData = await _companyService.GetCompanyByGuid(userGuid);
+                    if (deleteCompanyProfileData != null)
+                    {
+                        await _companyService.Delete(deleteCompanyProfileData.CompanyId);
+                    }
+                    else
+                    {
+                        // User not found in either database, sign out and redirect
+                        await _signInManager.SignOutAsync();
+                        return Redirect("~/");
+                    }
+                }
+            }
+            else
+            {
+                // Invalid ID request
+                throw new InvalidOperationException("Invalid Id request");
+            }
+
+            // Add a return statement in case the method doesn't return in any of the conditions above
+            return RedirectToPage(); // Or return any other appropriate result
+        }
+
+
     }
 }

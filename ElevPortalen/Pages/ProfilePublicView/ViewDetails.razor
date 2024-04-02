@@ -9,11 +9,12 @@
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+
 <PageTitle>Details</PageTitle>
 
-<div class="container p-4">
+<div class="container">
 
-    <AuthorizeView Roles="Company,Student,Admin">
+    <AuthorizeView Roles="Company,Student">
 
         <Authorized>
             @if (context.User.IsInRole(Company))
@@ -26,12 +27,12 @@
             }
             else
             {
-                _alertBox.SetMessage(true, "Error in viewDetail page!", 0, danger: true);
+                _alertBox.SetMessage(true, "Error in viewDetails component! - Role not assigned or something is wrong with the roles.", 0, danger: true);
             }
         </Authorized>
 
         <NotAuthorized>
-            <AlertBox IsVisible=true Message="You need to log in first." isWarning=true waitForSeconds="0"></AlertBox>
+            <AlertBox IsVisible=true Message="You need to log in first. Or this Role is restricted to view this page!" isWarning=true waitForSeconds="0"></AlertBox>
         </NotAuthorized>
 
     </AuthorizeView>
@@ -46,13 +47,13 @@
     private AuthenticationState? _authState;
     private AlertBox _alertBox = new AlertBox(); //AlertBox
 
-    private string Company = "Company";
-    private string Student = "Student";
+    private readonly string Company = "Company";
+    private readonly string Student = "Student";
 
     #region Oninitialize
     protected override async Task OnInitializedAsync()
     {
-         await Authenticate();
+        await Authenticate();
     }
     #endregion
 

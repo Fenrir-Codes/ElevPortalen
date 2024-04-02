@@ -1,0 +1,78 @@
+﻿/* Styles for skeleton loading */
+.skeleton-social-icons {
+    width: 200px; /* Adjust width as needed */
+    height: 30px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Light gray */
+    border-radius: 5px;
+}
+
+.skeleton-user-name {
+    width: 200px; /* Adjust width as needed */
+    height: 20px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Light gray */
+    border-radius: 5px;
+}
+
+.skeleton-profile-image {
+    width: 150px; /* Adjust width as needed */
+    height: 150px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Light gray */
+    border-radius: 50%;
+}
+
+.skeleton-user-speciality {
+    width: 120px; /* Adjust width as needed */
+    height: 15px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Light gray */
+    border-radius: 5px;
+}
+
+.skeleton-profile-buttons {
+    width: 200px; /* Adjust width as needed */
+    height: 30px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Light gray */
+    border-radius: 5px;
+}
+
+.skeleton-user-details {
+    height: 200px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Light gray */
+    border-radius: 5px;
+}
+
+.skeleton-description {
+    height: 100px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Light gray */
+    border-radius: 5px;
+}
+
+.skeleton-skills {
+    height: 50px; /* Adjust height as needed */
+    background-color: #f0f0f0; /* Light gray */
+    border-radius: 5px;
+}
+
+
+/* Styles for skeleton loading */
+.skeleton-profile-image,
+.skeleton-user-name,
+.skeleton-user-speciality,
+.skeleton-profile-buttons,
+.skeleton-user-details,
+.skeleton-description,
+.skeleton-skills {
+    background-color: #f0f0f0; /* Light gray */
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0)); /* Shimmer effect */
+    background-size: 200% 100%; /* Size of the background gradient */
+    animation: shimmer 2s infinite linear; /* Shimmer animation */
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0; /* Start position of the gradient */
+    }
+
+    100% {
+        background-position: 200% 0; /* End position of the gradient */
+    }
+}

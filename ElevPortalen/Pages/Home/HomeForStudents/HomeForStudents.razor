@@ -6,6 +6,7 @@
 @using ElevPortalen.Data;
 @using ElevPortalen.Models;
 @using System;
+@using ElevPortalen.Pages.ProfilePublicView
 
 @inject CompanyService _companyService
 @inject NavigationManager NavManager
@@ -13,27 +14,56 @@
 
 <PageTitle>Companies</PageTitle>
 
-@if (_companyList.Any())
-{
-    isLoaded = true;
-
-    <!--Search container on top-->
-    <div class="row">
-        <div class="col-lg-12">
-            <!-- this is the searchBox component here-->
-            <div class="d-flex justify-content-center w-100 mb-4">
-                <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
-            </div>
+<!--Search container on top-->
+<div class="row">
+    <div class="col-lg-12">
+        <!-- this is the searchBox component here-->
+        <div class="d-flex justify-content-center w-100 mb-4">
+            <SearchBox Items="_companyList" OnSearch="onSearch"></SearchBox>
         </div>
     </div>
+</div>
 
+@if (!isLoaded)
+{
+    <!-- Skeleton layout for loading -->
+    <div class="row d-flex justify-content-center">
+        @for (var i = 0; i < 9; i++)
+        {
+            <div class="skeleton-card m-2 p-0" style="max-width: 450px;">
+                <div class="row g-0">
+                    <div class="col-md-4 image border">
+                        <div class="skeleton-image"></div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <div class="skeleton-text"></div>
+                            <p class="card-text">
+                                <div class="skeleton-text"></div>
+                            </p>
+                            <p class="card-text">
+                                <div class="skeleton-text"></div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-center align-items-center">
+                    <div class="skeleton-text"></div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
     <!-- Display Company-related content -->
     <div class="row d-flex justify-content-center">
         @foreach (var data in _companySearchResult)
         {
-            <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer;" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
+            <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
                 <div class="row g-0">
-                    <div class="col-md-4">
+                    <div class="col-md-4 image border">
                         @if (!string.IsNullOrEmpty(data.profileImage))
                         {
                             <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
@@ -45,32 +75,31 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5>@data.CompanyName</h5>
+                            <h4 class="fw-bold">@data.CompanyName</h4>
                         </div>
                         <p class="card-text">
-                            Card text here
+                            <small class="text-body-secondary">@data.Email</small>
+                        </p>
+                        <p class="card-text">
+                            <small class="text-body-secondary">@data.CompanyAddress</small>
                         </p>
                     </div>
                 </div>
+
+                <div class="card-footer d-flex justify-content-center align-items-center">
+                    <p class="card-text fw-bold"><small class="text-body-secondary"> Leder efter @data.Preferences elev</small></p>
+                </div>
+
             </div>
 
         }
     </div>
-}
-else
-{
-    <div class="spinner-border mt-5"
-         style="width: 3rem; height: 3rem;" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-    <div>
-        <span class="">Loading...</span>
-    </div>
-}
+} 
 
 <AlertBox @ref="_alertBox" />
 
 @code {
+
     #region Initialize
 
     private List<CompanyModel> _companyList = new List<CompanyModel>(); //List of Companies
@@ -84,6 +113,7 @@ else
     #region OnInitialize
     protected override async Task OnInitializedAsync()
     {
+        isLoaded = false;
         await ReadCompanyData();
     }
     #endregion
@@ -91,14 +121,14 @@ else
     #region Read the data from company database
     public async Task ReadCompanyData()
     {
-        isLoaded = false;
-
         _companySearchResult.Clear();
         //Getting the data
         _companyList = await _companyService.ReadAllCompanyData();
         // Filling up the searchresult with list
         _companySearchResult = _companyList;
         // _companyList.Clear();
+
+        isLoaded = true;
     }
     #endregion
 
