@@ -39,7 +39,7 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 // Handle the exception and return an error message
-                throw new InvalidOperationException($"An error har ocurred: {ex.Message}");
+                throw new InvalidOperationException($"An error has ocurred: {ex.Message}");
             }
         }
         #endregion

@@ -1,6 +1,7 @@
 ﻿@using ElevPortalen.Models
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Pages.DialogModal.CompanyDialog
+@using ElevPortalen.Pages.DialogModal.JobOfferDialog
 @using ElevPortalen.Pages.DialogModal.MessageDialog
 @using ElevPortalen.Pages.DialogModal.StudentDialog
 @using ElevPortalen.Services
@@ -8,6 +9,7 @@
 @inject StudentService _studentService
 @inject CompanyService _companyService
 @inject MessageService _messageService
+@inject JobService _jobService
 
 <AuthorizeView Roles="Student, Company, Admin">
     <Authorized>
@@ -30,6 +32,10 @@
                         {
                             <MessageDialog Model="_messageToSend" MessageTo="@_messageTo" ReceiverId="@_recieverId"></MessageDialog>
                         }
+                        else if (JobOfferDialog)
+                        {
+                            <JobOfferDialog companyId="_companyId" job="_job"></JobOfferDialog>
+                        }
                         else
                         {
                             <AlertBox IsVisible=true Message="No role assigned to user! - DialogModal Component" waitForSeconds="0" isWarning=true></AlertBox>
@@ -47,6 +53,10 @@
                         else if (isCompany && !MessageDialog)
                         {
                             <button type="button" class="btn btn-success" @onclick=@SubmitUpdateCompany>Update</button>
+                        }
+                        else if (JobOfferDialog && !MessageDialog)
+                        {
+                            <button type="button" class="btn btn-success" @onclick=@SubmitJobOffer>Opret job</button>
                         }
                         else
                         {
@@ -82,7 +92,7 @@
     public StudentModel _studentToUpdate = new StudentModel();
     private CompanyModel _companyToUpdate = new CompanyModel();
     private MessageModel _messageToSend = new MessageModel();
-
+    private JobOfferModel _job = new JobOfferModel();
     private AlertBox _alertBox = new AlertBox();
 
     private string _Message = "";
@@ -99,8 +109,12 @@
 
     // Message dialog fields
     private bool MessageDialog = false;
+    private bool JobOfferDialog = false;
+
     private string? _messageTo = "";
     private int _recieverId { get; set; }
+    // sent it to job offer dialog
+    private int _companyId { get; set; }
 
     #endregion
 
@@ -111,13 +125,13 @@
         {
             _Message = await _studentService.Update(_studentToUpdate); //calling update from service
             _alertBox.SetMessage(true, _Message, 2000, success:true);
-            await Close();
         }
         catch (Exception ex)
         {
             _Message = $"An error occurred sucessfully - " + ex.Message;
             _alertBox.SetMessage(true, _Message,2000, danger: true);
         }
+        await Close();
     }
     #endregion
 
@@ -128,13 +142,13 @@
         {
             _Message = await _companyService.Update(_companyToUpdate); //calling update from service
             _alertBox.SetMessage(true, _Message, 2000, success: true);
-            await Close();
         }
         catch (Exception ex)
         {          
             _Message = $"An error occurred sucessfully - " + ex.Message;
             _alertBox.SetMessage(true, _Message,0, danger: true);
         }
+        await Close();
     }
     #endregion
 
@@ -152,6 +166,22 @@
             _Message = $"An error occurred sucessfully - " + ex.Message;
             _alertBox.SetMessage(true, _Message, 0, danger: true);
         }
+    }
+    #endregion
+
+    #region Handle validation submit (Job offer)
+    private async Task SubmitJobOffer()
+    {
+        var (message, success) = await _jobService.Create(_job);
+        if (success)
+        {
+            _alertBox.SetMessage(true, message, 2000, success:true);
+        }
+        else
+        {
+            _alertBox.SetMessage(true, message, 0, danger:true);
+        }
+        await Close();
     }
     #endregion
 
@@ -192,11 +222,26 @@
     }
     #endregion
 
+    #region open Job Offer Dialog
+    public void OpenJobOfferDialog(int companyId)
+    {
+        JobOfferDialog = true;
+        _companyId = companyId;
+
+        DisplayStyle = "block;";
+        ModalClass = "show";
+        ShowBackdrop = true;
+    }
+    #endregion
+
     #region Close Function
     public Task Close()
     {
         isCompany = false;
         isStudent = false;
+        JobOfferDialog = false;
+
+        ResetModels();
 
         DisplayStyle = "none";
         ModalClass = "";
@@ -205,4 +250,10 @@
     }
     #endregion
 
+    private void ResetModels()
+    {
+        _studentToUpdate = new();
+        _companyToUpdate = new();
+        _job = new();
+    }
 }

@@ -25,11 +25,15 @@ var PortalDatabase = builder.Configuration.GetConnectionString("PortalDatabase")
 //RecoveryDb
 var DataRecoveryString = builder.Configuration.GetConnectionString("RecoveryDatabase") ??
     throw new InvalidOperationException("Connection string 'RecoveryDatabase' not found.");
+//Job offer database
+var JobOfferDataBase = builder.Configuration.GetConnectionString("JobOfferDataBase") ??
+    throw new InvalidOperationException("Connection string 'LoginDatabase' not found.");
 
 //DbContexts
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(LoginDatabase));
 builder.Services.AddDbContext<ElevPortalenDataDbContext>(options => options.UseSqlServer(PortalDatabase));
 builder.Services.AddDbContext<DataRecoveryDbContext>(options => options.UseSqlServer(DataRecoveryString));
+builder.Services.AddDbContext<JobOfferDbContext>(options => options.UseSqlServer(JobOfferDataBase));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -46,11 +50,12 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<ElevPortalenDataDbContext>();
 builder.Services.AddScoped<StudentService>();
+builder.Services.AddScoped<JobService>();
 builder.Services.AddScoped<DawaService>();
-builder.Services.AddScoped<RegisterModel>();
 builder.Services.AddScoped<SkillService>();
 builder.Services.AddScoped<AlertBox>();
 builder.Services.AddScoped<MessageService>();
+builder.Services.AddScoped<RegisterModel>();
 builder.Services.AddHttpClient();
 //Dataprotection service by Jozsef
 builder.Services.AddDataProtection();
