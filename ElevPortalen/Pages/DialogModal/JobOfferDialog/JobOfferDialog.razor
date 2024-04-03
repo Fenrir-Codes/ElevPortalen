@@ -16,52 +16,68 @@
     <div class="container px-4">
 
         <form>
-            <div class="col-md-6">
-                <label for="title" class="form-label">Jobtitel</label>
-                <input type="text" class="form-control" id="title" @bind="job.Title" placeholder="Jobtitel">
+            <!-- top row with 2 input -->
+            <div class="row gx-3 mb-2 mt-2">
+                <div class="col-md-6">
+                    <label for="title" class="form-label small mb-1 fw-bold">Jobtitel</label>
+                    <input type="text" class="form-control" id="title" @bind="job.Title" placeholder="Jobtitel" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="small mb-1 fw-bold" for="inputaddress">Addresse</label>
+                    <input class="form-control" list="addressSuggestions" @bind="job.JobAddress" placeholder="Indtast adressen, hvor jobbet finder sted"
+                           @oninput="UpdateDropdownWithDelay">
+                    <datalist id="addressSuggestions">
+                        @foreach (var item in address)
+                        {
+                            <!-- Option for each address suggestion -->
+                            <option value="@item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn">
+                                <!-- Display street name and house number for each address suggestion -->
+                                @item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn
+                            </option>
+                        }
+                    </datalist>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label class="small mb-1 fw-bold" for="inputaddress">Addresse</label>
-                <input class="form-control" list="addressSuggestions" @bind="job.JobAddress" placeholder="Enter address"
-                       @oninput="UpdateDropdownWithDelay">
-                <datalist id="addressSuggestions">
-                    @foreach (var item in address)
-                    {
-                        <!-- Option for each address suggestion -->
-                        <option value="@item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn">
-                            <!-- Display street name and house number for each address suggestion -->
-                            @item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn
-                        </option>
-                    }
-                </datalist>
-            </div>
-@*             <div class="mb-3">
-                <label for="jobAddress" class="form-label">Job Address</label>
-                <input type="text" class="form-control" id="jobAddress" @bind="job.JobAddress">
-            </div> *@
-            <div class="mb-3">
-                <label for="jobLink" class="form-label">Link til jobbet</label>
+
+            <!-- Middle -->
+            <div class="mb-4">
+                <label for="jobLink" class="form-label small mb-1 fw-bold">Link til jobbet</label>
                 <input type="text" class="form-control" id="jobLink" @bind="job.JobLink" placeholder="www.example.com">
             </div>
-            <div class="mb-3">
-                <label for="jobDetails" class="form-label">Job beskrivelse</label>
-                <textarea class="form-control" id="jobDetails" rows="6" @bind="job.JobDetails"></textarea>
+            <div class="mb-4">
+                <label for="jobDetails" class="form-label small mb-1 fw-bold">Job beskrivelse</label>
+                <textarea class="form-control" id="jobDetails" rows="8" @bind="job.JobDetails" placeholder="Skriv om jobbet"></textarea>
             </div>
-            <div class="mb-3">
-                <label for="numberOfPositions" class="form-label">Antal ledige stillinger</label>
-                <input type="number" class="form-control" id="numberOfPositions" @bind="job.NumberOfPositionsAvailable">
-            </div>
-            <div class="mb-3">
-                <label for="speciality" class="form-label">Specialisering</label>
-                <input type="text" class="form-control" id="speciality" @bind="job.Speciality">
-            </div>
-            <div class="mb-3">
-                <label for="deadline" class="form-label">Deadline</label>
-                <input type="date" id="deadline" class="form-control" @bind="job.Deadline" />
+
+            <!-- bottom row -->
+            <div class="row gx-3 mb-4 mt-2">
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label for="numberOfPositions" class="form-label small mb-1 fw-bold">Antal ledige stillinger</label>
+                        <input type="number" class="form-control" id="numberOfPositions" @bind="job.NumberOfPositionsAvailable" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label for="_speciality" class="form-label small mb-1 fw-bold">Specialisering</label>
+                        <select class="form-select form-select-md" id="_speciality" aria-label="Region" @bind="job.Speciality" required>
+                            <option selected disabled>Vælg specialisering</option>
+                            <option value="It-Support">It-Supporter</option>
+                            <option value="Infrastrukture">Infrastruktur</option>
+                            <option value="Programmering">Programmering</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label for="deadline" class="form-label small mb-1 fw-bold">Deadline</label>
+                        <input type="date" id="deadline" class="form-control" @bind="job.Deadline"/>
+                    </div>
+                </div> 
             </div>
         </form>
 
-        <p>the company id is : @companyId</p>
+        @* <p>the company id is : @companyId</p> *@
 
     </div>
 
@@ -90,7 +106,7 @@
     { 
         job.CompanyId = companyId;
         job.DateOfPublish = DateTime.Now;
-        job.Deadline = DateTime.Now.AddDays(20);
+        job.Deadline = DateTime.Now;
     }
     #endregion
 
