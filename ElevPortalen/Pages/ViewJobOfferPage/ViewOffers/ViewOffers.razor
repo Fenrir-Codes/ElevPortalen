@@ -1,16 +1,33 @@
 ﻿@page "/viewoffers"
-
 @using ElevPortalen.Models
 @using ElevPortalen.Services;
 
 @inject JobService _jobService
 
-
-<!--test code-->
 <div class="container">
-    @if (_jobList.Any())
+    @if (!isLoaded)
     {
-        foreach (var job in _jobList)
+        <!-- Placeholder skeleton for card -->
+        @for (int i = 0; i < 5; i++) 
+        {
+            <div class="card mt-3 shadow-sm">
+                <div class="card-skeleton-body">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-address"></div>
+                    <div class="skeleton-details"></div>
+                </div>
+                <div class="card-skeleton-footer d-flex">
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <!-- Actual cards -->
+        @foreach (var job in _jobList)
         {
             <div class="card mt-3 shadow-sm">
                 <div class="card-body">
@@ -18,32 +35,31 @@
                     <h6 class="card-address mb-2 text-muted">@job.JobAddress</h6>
                     <div class="position-details">
                         <h4><a href="@job.JobLink" class="card-link">@job.Title med specielle i @job.Speciality</a></h4>
-                        <div class="NumOfPositions badge bg-secondary">Antal ledige plads : @job.NumberOfPositionsAvailable</div>
-                        <div class="specialization badge bg-secondary">@job.Speciality</div>
-                        <div class="specialization badge bg-secondary">Ansøgningsfrist : @job.Deadline.ToShortDateString()</div>
                     </div>
-@*                     <p class="card-text text-muted">Godkendt til flere specialer</p> *@
+                </div>
+                <div class="card-footer d-flex">
+                    <div class="NumOfPositions badge bg-secondary mx-1">Antal ledige plads : @job.NumberOfPositionsAvailable</div>
+                    <div class="specialization badge bg-secondary mx-1">@job.Speciality</div>
+                    <div class="specialization badge bg-secondary mx-1">Ansøgningsfrist : @job.Deadline.ToShortDateString()</div>
                 </div>
             </div>
         }
     }
 </div>
 
-
 @code {
     private List<JobOfferModel> _jobList = new List<JobOfferModel>();
+    private bool isLoaded = false;
 
-    #region Initialize
     protected override async Task OnInitializedAsync()
     {
+        isLoaded = false;
         await GetAllJobOffers();
     }
-    #endregion
 
     private async Task GetAllJobOffers()
     {
         _jobList = await _jobService.GetAllOffers();
+        isLoaded = true; // Set isLoaded to true once data is loaded
     }
-
-
 }
