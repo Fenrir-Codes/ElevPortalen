@@ -159,9 +159,19 @@ else
                                         <button class="btn btn-success mb-0 btn-sm"
                                         @onclick="NavigateToNewTab">Besøg hjemmeside</button>
                                     </p>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="mb-0">Opret jobtilbud</p>
+                                </div>
+                                <div class="col-sm-9">
                                     <p class="text-muted mb-0">
                                         <button class="btn btn-success mb-0 btn-sm"
-                                        @onclick="() => DialogModal?.OpenJobOfferDialog(data.CompanyId)">Opret Jobtilbud</button>
+                                                @onclick="() => DialogModal?.OpenJobOfferDialog(data.CompanyId)">
+                                            Opret Jobtilbud
+                                        </button>
                                     </p>
                                 </div>
                             </div>
