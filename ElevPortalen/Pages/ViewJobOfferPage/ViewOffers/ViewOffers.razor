@@ -12,35 +12,23 @@
     {
         foreach (var job in _jobList)
         {
-            <div class="card">
+            <div class="card mt-3 shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">@job.Title</h5>
+                    <h3 class="card-title">@job.Title</h3>
                     <h6 class="card-address mb-2 text-muted">@job.JobAddress</h6>
                     <div class="position-details">
-                        <h3><a href="@job.JobLink" class="card-link">@job.NumberOfPositionsAvailable - @job.Title @job.Speciality</a></h3>
-@*                         <div class="specialization badge bg-secondary">har 2 lærlinge</div>
-                        <div class="specialization badge bg-secondary">Ansøgninger frabedes</div> *@
+                        <h4><a href="@job.JobLink" class="card-link">@job.Title med specielle i @job.Speciality</a></h4>
+                        <div class="NumOfPositions badge bg-secondary">Antal ledige plads : @job.NumberOfPositionsAvailable</div>
+                        <div class="specialization badge bg-secondary">@job.Speciality</div>
+                        <div class="specialization badge bg-secondary">Ansøgningsfrist : @job.Deadline.ToShortDateString()</div>
                     </div>
-                    <p class="card-text text-muted">Godkendt til flere specialer</p>
+@*                     <p class="card-text text-muted">Godkendt til flere specialer</p> *@
                 </div>
             </div>
         }
     }
 </div>
 
-
-@* <div class="card">
-    <div class="card-body">
-        <h5 class="card-title">@job.Title Borgmesterforvaltningen, IT-Drift & Sikkerhed og Digitalisering & Data (ODENSE KOMMUNE)</h5>
-        <h6 class="card-address mb-2 text-muted">5240 Odense NØ</h6>
-        <div class="position-details">
-            <h3><a href="/vis-praktiksted/1003316558" class="card-link">1 - Datatekniker med speciale i programmering</a></h3>
-            <div class="specialization badge bg-secondary">har 2 lærlinge</div>
-            <div class="specialization badge bg-secondary">Ansøgninger frabedes</div>
-        </div>
-        <p class="card-text text-muted">Godkendt til flere specialer</p>
-    </div>
-</div> *@
 
 @code {
     private List<JobOfferModel> _jobList = new List<JobOfferModel>();
