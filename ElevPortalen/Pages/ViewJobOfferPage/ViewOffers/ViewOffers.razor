@@ -46,7 +46,7 @@
     private List<JobOfferModel> _jobList = new List<JobOfferModel>();
 
     #region Initialize
-    protected override async void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         await GetAllJobOffers();
     }

@@ -1,6 +1,7 @@
 ﻿using ElevPortalen.Data;
 using ElevPortalen.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace ElevPortalen.Services
 {
@@ -38,12 +39,13 @@ namespace ElevPortalen.Services
         {
             try
             {
-                return await _context.JobOfferDataBase.ToListAsync();
+                var response = await _context.JobOfferDataBase.AsNoTracking().ToListAsync();
+                return response;
             }
-            catch (Exception ex)
+            catch (DbException ex)
             {
                 // Handle the exception, log, and return null or throw an error as appropriate
-                throw new Exception($"An error occurred while retrieving data from the database: {ex.Message}");
+                throw new Exception($"An error occurred : {ex.Message}");
             }
         }
         #endregion
