@@ -7,47 +7,49 @@
 @inject JobService _jobService
 @inject IJSRuntime jsRuntime
 
-<div class="container">
-    @if (!isLoaded)
-    {
-        <!-- Placeholder skeleton for card -->
-        @for (int i = 0; i < 5; i++) 
+<div class="container-fluid">
+    <div class="row d-flex justify-content-sm-center">
+        @if (!isLoaded)
         {
-            <div class="card mt-3 shadow-sm">
-                <div class="card-skeleton-body">
-                    <div class="skeleton-title"></div>
-                    <div class="skeleton-address"></div>
-                    <div class="skeleton-details"></div>
-                </div>
-                <div class="card-skeleton-footer d-flex">
-                    <div class="skeleton-line"></div>
-                    <div class="skeleton-line"></div>
-                    <div class="skeleton-line"></div>
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <!-- Actual cards -->
-        @foreach (var job in _jobList)
-        {
-            <div class="card mt-3 shadow-sm">
-                <div class="card-body">
-                    <h3 class="card-title">@job.Title</h3>
-                    <h6 class="card-address mb-2 text-muted">@job.JobAddress</h6>
-                    <div class="position-details">
-                        <h4><a style="cursor:pointer;" @onclick="() => NavigateToNewTab(job.JobLink)" target="_blank" rel="noopener noreferrer" class="card-link">@job.Title med specielle i @job.Speciality</a></h4>
+            <!-- Placeholder skeleton for card -->
+            @for (int i = 0; i < 5; i++)
+            {
+                <div class="card m-2 p-0 mt-3 shadow-sm">
+                    <div class="card-skeleton-body">
+                        <div class="skeleton-title"></div>
+                        <div class="skeleton-address"></div>
+                        <div class="skeleton-details"></div>
+                    </div>
+                    <div class="card-skeleton-footer d-flex">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line"></div>
                     </div>
                 </div>
-                <div class="card-footer d-flex">
-                    <div class="NumOfPositions badge bg-secondary mx-1">Antal ledige plads : @job.NumberOfPositionsAvailable</div>
-                    <div class="specialization badge bg-secondary mx-1">@job.Speciality</div>
-                    <div class="specialization badge bg-secondary mx-1">Ansøgningsfrist : @job.Deadline.ToShortDateString()</div>
-                </div>
-            </div>
+            }
         }
-    }
+        else
+        {
+            <!-- Actual cards -->
+            @foreach (var job in _jobList)
+            {
+                <div class="card m-2 p-0 mt-3 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title"><span class="badge bg-success">@job.Title</span></h4>
+                        <div class="position-details">
+                            <h4><div class="card-link" @onclick="() => NavigateToNewTab(job.JobLink)">@job.Title med specielle i @job.Speciality</div></h4>
+                            <h6 class="card-address mb-2 text-muted">@job.JobAddress</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-center">
+                        <div class="specialization badge bg-success mx-1">@job.Speciality</div>
+                        <div class="NumOfPositions badge bg-secondary mx-1">Antal ledige plads : @job.NumberOfPositionsAvailable</div>
+                        <div class="specialization badge bg-secondary mx-1">Ansøgningsfrist : @job.Deadline.ToShortDateString()</div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
 </div>
 
 <AlertBox @ref="_alertBox"/>

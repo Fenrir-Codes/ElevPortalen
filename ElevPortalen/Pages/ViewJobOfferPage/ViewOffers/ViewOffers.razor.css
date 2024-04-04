@@ -4,6 +4,11 @@
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 480px;
+}
+
+.card-link{
+    cursor:pointer;
 }
 
 /* Skeleton card body */
@@ -15,12 +20,14 @@
     width: 400px;
     height: 15px;
 }
+.skeleton-details,
 .skeleton-address {
-    width: 600px;
+    width: 480px;
     height: 15px;
 }
 
 /* Skeleton lines with shimmer effect */
+.skeleton-details,
 .skeleton-title,
 .skeleton-address,
 .skeleton-line {
