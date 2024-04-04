@@ -34,7 +34,7 @@
                         }
                         else if (JobOfferDialog)
                         {
-                            <JobOfferDialog companyId="_companyId" job="_job"></JobOfferDialog>
+                            <JobOfferDialog job="_job"></JobOfferDialog>
                         }
                         else
                         {
@@ -223,10 +223,11 @@
     #endregion
 
     #region open Job Offer Dialog
-    public void OpenJobOfferDialog(int companyId)
+    public void OpenJobOfferDialog(int companyId, string? companyName)
     {
         JobOfferDialog = true;
-        _companyId = companyId;
+        _job.CompanyId = companyId;
+        _job.CompanyName = companyName;
 
         DisplayStyle = "block;";
         ModalClass = "show";

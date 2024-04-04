@@ -34,15 +34,18 @@
             @foreach (var job in _jobList)
             {
                 <div class="card m-2 p-0 mt-3 shadow-sm">
+                    <div class="card-header bg-success">
+                        <div class="CompanyName badge mx-1">@job.CompanyName</div>
+                    </div>
                     <div class="card-body">
-                        <h4 class="card-title"><span class="badge bg-success">@job.Title</span></h4>
+                        <h4 class="card-title"><span class="badge bg-secondary">@job.Title</span></h4>
                         <div class="position-details">
                             <h4><div class="card-link" @onclick="() => NavigateToNewTab(job.JobLink)">@job.Title med specielle i @job.Speciality</div></h4>
                             <h6 class="card-address mb-2 text-muted">@job.JobAddress</h6>
                         </div>
                     </div>
-                    <div class="card-footer d-flex justify-content-center">
-                        <div class="specialization badge bg-success mx-1">@job.Speciality</div>
+                    <div class="card-footer d-flex justify-content-center">                      
+                        <div class="specialization badge bg-secondary mx-1">@job.Speciality</div>
                         <div class="NumOfPositions badge bg-secondary mx-1">Antal ledige plads : @job.NumberOfPositionsAvailable</div>
                         <div class="specialization badge bg-secondary mx-1">Ansøgningsfrist : @job.Deadline.ToShortDateString()</div>
                     </div>

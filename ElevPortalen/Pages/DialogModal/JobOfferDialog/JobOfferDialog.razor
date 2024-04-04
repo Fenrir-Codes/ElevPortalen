@@ -79,6 +79,9 @@
 
         @* <p>the company id is : @companyId</p> *@
 
+        @job.CompanyId
+        @job.CompanyName
+
     </div>
 
 </div>
@@ -87,7 +90,6 @@
 
 
 @code {
-    [Parameter] public int companyId { get; set; }
     [Parameter] public JobOfferModel? job { get; set; }
     private List<AddressModel> address = new List<AddressModel>();
     private AlertBox _alertBox = new AlertBox();
@@ -104,7 +106,7 @@
     #region Set get and set companyid
     private void SetValues()
     { 
-        job.CompanyId = companyId;
+        // job.CompanyId = companyId;
         job.DateOfPublish = DateTime.Now;
         job.Deadline = DateTime.Now;
     }

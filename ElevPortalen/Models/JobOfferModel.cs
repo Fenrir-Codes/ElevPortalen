@@ -7,6 +7,7 @@ namespace ElevPortalen.Models
         [Key]
         public int JobOfferId { get; set; }
         public int CompanyId { get; set; }
+        public string? CompanyName { get; set; }
         public string? Title { get; set; }
         public string? JobAddress { get; set; }
         public string? JobLink { get; set; }
