@@ -1,4 +1,4 @@
-For run this application wothout errors:
+For run this application without errors:
 
 #1 - check if your connectionstrings are in use! (if you do not have them, make them, connectionstring to the database showing up in SSMS)
 # Connectionstring names should be the same as it written in the program.cs Connectionstrings can be found now in appsettings.json
