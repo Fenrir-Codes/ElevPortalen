@@ -1,8 +1,11 @@
 ﻿@page "/viewoffers"
+
 @using ElevPortalen.Models
+@using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Services;
 
 @inject JobService _jobService
+@inject IJSRuntime jsRuntime
 
 <div class="container">
     @if (!isLoaded)
@@ -34,7 +37,7 @@
                     <h3 class="card-title">@job.Title</h3>
                     <h6 class="card-address mb-2 text-muted">@job.JobAddress</h6>
                     <div class="position-details">
-                        <h4><a href="@job.JobLink" class="card-link">@job.Title med specielle i @job.Speciality</a></h4>
+                        <h4><a style="cursor:pointer;" @onclick="() => NavigateToNewTab(job.JobLink)" target="_blank" rel="noopener noreferrer" class="card-link">@job.Title med specielle i @job.Speciality</a></h4>
                     </div>
                 </div>
                 <div class="card-footer d-flex">
@@ -47,19 +50,41 @@
     }
 </div>
 
+<AlertBox @ref="_alertBox"/>
+
 @code {
     private List<JobOfferModel> _jobList = new List<JobOfferModel>();
+    private AlertBox _alertBox = new AlertBox();
     private bool isLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
-        isLoaded = false;
         await GetAllJobOffers();
     }
 
+    #region get all joboffers to list
     private async Task GetAllJobOffers()
     {
-        _jobList = await _jobService.GetAllOffers();
-        isLoaded = true; // Set isLoaded to true once data is loaded
+        var (list, message, success) = await _jobService.GetAllOffers();
+        isLoaded = success;
+        if (success)
+        {
+            _jobList = list;
+            // _alertBox.SetMessage(true, message,5000,success:true);
+        }
+        else
+        {
+            _alertBox.SetMessage(true, message, 0, warning:true);
+        }
     }
+    #endregion
+
+
+    #region Navigate to company website Link with opening new window
+    public async Task NavigateToNewTab(string link)
+    {
+        string url = "https://" + link;
+        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+    #endregion
 }

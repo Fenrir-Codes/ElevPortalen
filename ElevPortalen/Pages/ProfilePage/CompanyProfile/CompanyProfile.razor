@@ -157,7 +157,7 @@ else
                                 <div class="col-sm-9">
                                     <p class="text-muted mb-0">
                                         <button class="btn btn-success mb-0 btn-sm"
-                                        @onclick="NavigateToNewTab">Besøg hjemmeside</button>
+                                        @onclick="() => NavigateToNewTab(data.Link)">Besøg hjemmeside</button>
                                     </p>
                                 </div>
                             </div>
@@ -348,9 +348,9 @@ else
     #endregion
 
     #region Navigate to company website Link with opening new window
-    public async Task NavigateToNewTab()
+    public async Task NavigateToNewTab(string link)
     {
-        string url = "https://" + _company[0].Link;
+        string url = "https://" + link;
         await jsRuntime.InvokeVoidAsync("open", url, "_blank");
     }
     #endregion

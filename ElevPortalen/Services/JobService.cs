@@ -35,17 +35,17 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Read all job offers to list
-        public async Task<List<JobOfferModel>> GetAllOffers()
+        public async Task<(List<JobOfferModel>?, string, bool)> GetAllOffers()
         {
             try
             {
                 var response = await _context.JobOfferDataBase.AsNoTracking().ToListAsync();
-                return response;
+                return (response, "Data load success", true);
             }
             catch (DbException ex)
             {
-                // Handle the exception, log, and return null or throw an error as appropriate
-                throw new Exception($"An error occurred : {ex.Message}");
+                // Handle the exception, log, and return an error message along with false
+                return (null, $"An error occurred: {ex.Message}", false);
             }
         }
         #endregion
