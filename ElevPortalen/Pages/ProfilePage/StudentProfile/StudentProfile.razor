@@ -55,12 +55,16 @@ else
                                             <i class="fab fa-github fa-stack-1x fa-inverse"></i>
                                         </span>
                                     </a>
-                                    <button type="button" class="btn btn-primary position-relative btn-sm" @onclick="() => NavigateToMyMessages(data.StudentId)">
-                                        Inbox
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            @unreadMessages
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                    <button type="button" class="btn btn-outline-success position-relative btn-sm" @onclick="() => NavigateToMyMessages(data.StudentId)">
+                                        Inbox 
+                                        <span><i class="fa-solid fa-envelope"></i></span>
+                                        @if (unreadMessages > 0)
+                                        {
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                @unreadMessages
+                                                <span class="visually-hidden">unread messages</span>
+                                            </span>
+                                        }
                                     </button>
                                 </div>
                                 <h5 class="fw-medium mb-0 mx-lg-4 mx-sm-1">Velkommen @data.FirstName @data.LastName</h5>

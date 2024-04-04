@@ -8,6 +8,7 @@
 @using System.Security.Claims
 
 @inject CompanyService _companyService
+@inject MessageService _messageService
 @inject NavigationManager NavManager
 @inject IJSRuntime jsRuntime
 
@@ -53,12 +54,16 @@ else
                                             <i class="fab fa-github fa-stack-1x fa-inverse"></i>
                                         </span>
                                     </a>
-                                    <button type="button" class="btn btn-primary position-relative btn-sm" @onclick="() => NavigateToMyMessages(data.CompanyId)">
-                                        Inbox
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            @newMessages
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                    <button type="button" class="btn btn-outline-success position-relative btn-sm" @onclick="() => NavigateToMyMessages(data.CompanyId)">
+                                        Inbox 
+                                        <span><i class="fa-solid fa-envelope"></i></span>
+                                        @if (unreadMessages > 0)
+                                        {
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                @unreadMessages
+                                                <span class="visually-hidden">unread messages</span>
+                                            </span>
+                                        }
                                     </button>
                                 </div>
                                 <h5 class="fw-medium mb-0 mx-lg-4 mx-sm-1">Velkommen @data.CompanyName</h5>
@@ -303,6 +308,8 @@ else
     private bool hasCompanyRecoveryData = false;
     private bool isLoaded = false;
 
+    private int unreadMessages = 0;
+
     #endregion
 
     #region OnInitialized
@@ -330,7 +337,12 @@ else
             {
                 await CheckIfCompanyHasDataToRecover(_user);
             }
-          
+            else
+            {
+                // Count the unread messages
+                await GetUnreadMessagesCount(_company[0].CompanyId);
+            }
+
         }
         else
         {
@@ -418,6 +430,13 @@ else
         {
             _aletBox.SetMessage(true, $"An error occurred while recovering the data!", 0, danger: true);
         }
+    }
+    #endregion
+
+    #region Count the unread messages
+    private async Task GetUnreadMessagesCount(int Id)
+    {
+        unreadMessages = await _messageService.GetUnredMessageCount(Id);
     }
     #endregion
 
