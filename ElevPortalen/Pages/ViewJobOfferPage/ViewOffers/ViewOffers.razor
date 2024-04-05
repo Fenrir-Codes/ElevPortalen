@@ -28,27 +28,34 @@
                 </div>
             }
         }
+        else if (!_jobList.Any())
+        {
+            <AlertBox IsVisible=true waitForSeconds="0" Message="Ingen jobtilbud i øjeblikket." isWarning=true></AlertBox>
+        }
         else
         {
             <!-- Actual cards -->
             @foreach (var job in _jobList)
             {
-                <div class="card m-2 p-0 mt-3 shadow-sm">
-                    <div class="card-header bg-success">
-                        <div class="CompanyName badge mx-1">@job.CompanyName</div>
-                    </div>
-                    <div class="card-body">
-                        <h4 class="card-title"><span class="badge bg-secondary">@job.Title</span></h4>
-                        <div class="position-details">
-                            <h4><div class="card-link" @onclick="() => NavigateToNewTab(job.JobLink)">@job.Title med specielle i @job.Speciality</div></h4>
-                            <h6 class="card-address mb-2 text-muted">@job.JobAddress</h6>
+                <div class="card m-2 p-0 mt-3">
+                    <div class="row g-0">
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <h4 class="card-title"><span class="badge bg-success">@job.Title</span></h4>
+                                <div class="position-details">
+                                    <h5><div class="card-link pt-2" @onclick="() => NavigateToNewTab(job.JobLink)">@job.Title med specielle i @job.Speciality</div></h5>
+                                    <p class="card-text">@job.JobAddress</p>
+                                    <p class="card-text badge bg-success">@job.CompanyName</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-footer d-flex justify-content-center">                      
+                    <div class="card-footer d-flex justify-content-center align-items-center">
                         <div class="specialization badge bg-secondary mx-1">@job.Speciality</div>
                         <div class="NumOfPositions badge bg-secondary mx-1">Antal ledige plads : @job.NumberOfPositionsAvailable</div>
-                        <div class="specialization badge bg-secondary mx-1">Ansøgningsfrist : @job.Deadline.ToShortDateString()</div>
+                        <div class="specialization badge bg-dark text-warning mx-1">Ansøgningsfrist : @job.Deadline.ToShortDateString()</div>
                     </div>
+
                 </div>
             }
         }
@@ -75,6 +82,7 @@
         if (success)
         {
             _jobList = list;
+
             // _alertBox.SetMessage(true, message,5000,success:true);
         }
         else

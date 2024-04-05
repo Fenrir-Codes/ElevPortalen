@@ -1,11 +1,10 @@
 ﻿/* Skeleton card */
 .card {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 480px;
+    max-width: 450px;
     transition: transform 0.2s;
+}
+.card-body{
+    
 }
 
 .card:hover {
@@ -70,5 +69,16 @@
 
     100% {
         background-position: 200% 0;
+    }
+}
+
+@media (width <= 470px) {
+    .card{
+        width:350px;
+    }
+    .card-footer{
+        display:flex;
+        flex-direction:column;
+        height:80px;
     }
 }
