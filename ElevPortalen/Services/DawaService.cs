@@ -38,7 +38,7 @@ namespace ElevPortalen.Services
             catch (HttpRequestException)
             {
                 // Handle the case where there is no internet connection
-                return (null, "No internet connection");
+                return (null, "No internet connection, or the service unreachable in the moment.");
             }
             catch (Exception ex)
             {

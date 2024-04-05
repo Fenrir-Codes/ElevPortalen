@@ -1,0 +1,164 @@
+﻿@using ElevPortalen.Models
+@using ElevPortalen.Services;
+@using ElevPortalen.Pages.AlertBox
+@using System.Threading
+
+@inject JobService _jobService
+@inject DawaService dawaService
+@inject NavigationManager _navmanager
+
+<div class="col-xl-12 col-md-12 col-sm-12">
+    <!--Header of the update page-->
+    <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
+        Opret jobtilbud
+    </div>
+
+    <div class="container px-4">
+
+        <form>
+            <!-- top row with 2 input -->
+            <div class="row gx-3 mb-2 mt-2">
+                <div class="col-md-6">
+                    <label for="title" class="form-label small mb-1 fw-bold">Jobtitel</label>
+                    <input type="text" class="form-control" id="title" @bind="job.Title" placeholder="Jobtitel" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="small mb-1 fw-bold" for="inputaddress">Addresse</label>
+                    <input class="form-control" list="addressSuggestions" @bind="job.JobAddress" placeholder="Indtast adressen, hvor jobbet finder sted"
+                           @oninput="UpdateDropdownWithDelay">
+                    <datalist id="addressSuggestions">
+                        @foreach (var item in address)
+                        {
+                            <!-- Option for each address suggestion -->
+                            <option value="@item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn">
+                                <!-- Display street name and house number for each address suggestion -->
+                                @item.adresse.adresseringsvejnavn @item.adresse.husnr @item.adresse.etage @item.adresse.dør @item.adresse.postnr @item.adresse.postnrnavn
+                            </option>
+                        }
+                    </datalist>
+                </div>
+            </div>
+
+            <!-- Middle -->
+            <div class="mb-4">
+                <label for="jobLink" class="form-label small mb-1 fw-bold">Link til jobbet</label>
+                <input type="text" class="form-control" id="jobLink" @bind="job.JobLink" placeholder="www.example.com">
+            </div>
+            <div class="mb-4">
+                <label for="jobDetails" class="form-label small mb-1 fw-bold">Job beskrivelse</label>
+                <textarea class="form-control" id="jobDetails" rows="8" @bind="job.JobDetails" placeholder="Skriv om jobbet"></textarea>
+            </div>
+
+            <!-- bottom row -->
+            <div class="row gx-3 mb-4 mt-2">
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label for="numberOfPositions" class="form-label small mb-1 fw-bold">Antal ledige stillinger</label>
+                        <input type="number" class="form-control" id="numberOfPositions" @bind="job.NumberOfPositionsAvailable" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label for="_speciality" class="form-label small mb-1 fw-bold">Specialisering</label>
+                        <select class="form-select form-select-md" id="_speciality" aria-label="Region" @bind="job.Speciality" required>
+                            <option selected disabled>Vælg specialisering</option>
+                            <option value="It-Support">It-Supporter</option>
+                            <option value="Infrastrukture">Infrastruktur</option>
+                            <option value="Programmering">Programmering</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-2">
+                        <label for="deadline" class="form-label small mb-1 fw-bold">Deadline</label>
+                        <input type="date" id="deadline" class="form-control" @bind="job.Deadline"/>
+                    </div>
+                </div> 
+            </div>
+        </form>
+
+        @* <p>the company id is : @job.companyId</p> *@
+        @* <p>the company name  is : @job.CompanyName</p> *@
+
+    </div>
+
+</div>
+
+<AlertBox @ref="_alertBox" />
+
+
+@code {
+    [Parameter] public JobOfferModel? job { get; set; }
+    private List<AddressModel> address = new List<AddressModel>();
+    private AlertBox _alertBox = new AlertBox();
+    private CancellationTokenSource? cancellationTokenSource;
+    private string? searchTerm;
+
+    #region Initialize
+    protected override void OnInitialized()
+    {
+        SetValues();
+    }
+    #endregion
+
+    #region Set get and set companyid
+    private void SetValues()
+    { 
+        // job.CompanyId = companyId;
+        job.DateOfPublish = DateTime.Now;
+        job.Deadline = DateTime.Now;
+    }
+    #endregion
+
+    #region Method to update address suggestions with a delay
+    private async Task UpdateDropdownWithDelay(ChangeEventArgs args)
+    {
+        searchTerm = args.Value?.ToString();
+
+        <!-- Cancel the previous delay if any -->
+        cancellationTokenSource?.Cancel();
+
+        <!-- Create a new cancellation token for the delay -->
+        cancellationTokenSource = new CancellationTokenSource();
+
+        try
+        {
+            <!-- Delay for 300 milliseconds before fetching suggestions -->
+            await Task.Delay(300, cancellationTokenSource.Token);
+        }
+        catch (TaskCanceledException)
+        {
+            <!-- Delay was canceled due to a new input change -->
+            return;
+        }
+
+        <!-- Fetch and update address suggestions based on the searchTerm -->
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            searchTerm = char.ToUpper(searchTerm[0]) + searchTerm.Substring(1);
+            var (addresses, errorMessage) = await dawaService.GetAddress(searchTerm);
+
+            if (addresses != null)
+            {
+                address = addresses;
+            }
+            else
+            {
+                // Handle the error case, show a message to the user
+                _alertBox.SetMessage(true, errorMessage, 10000, warning: true);
+            }
+        }
+        else
+        {
+            // Handle the case where the search term is empty, show a message to the user
+            _alertBox.SetMessage(true, "Please type your address.", 5000, warning: true);
+            address = new List<AddressModel>();
+        }
+
+        <!-- Trigger a re-render to update the UI -->
+        StateHasChanged();
+    }
+    #endregion
+
+
+}

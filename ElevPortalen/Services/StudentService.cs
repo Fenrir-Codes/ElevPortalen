@@ -13,14 +13,12 @@ namespace ElevPortalen.Services
     {
         private readonly ElevPortalenDataDbContext _context;
         private readonly DataRecoveryDbContext _recoveryContext;
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IDataProtector? _dataProtector;
 
         #region constructor
-        public StudentService(ElevPortalenDataDbContext context, DataRecoveryDbContext recoveryContext, IDataProtectionProvider dataProtectionProvider, ApplicationDbContext applicationDbContext)
+        public StudentService(ElevPortalenDataDbContext context, DataRecoveryDbContext recoveryContext, IDataProtectionProvider dataProtectionProvider)
         {
             _context = context;
-            _applicationDbContext = applicationDbContext;
             _recoveryContext = recoveryContext;
             _dataProtector = dataProtectionProvider.CreateProtector("ProtectData");
             //i just placed it here if need, we can use it to protect data
@@ -28,18 +26,19 @@ namespace ElevPortalen.Services
         #endregion
 
         #region create Student function async
-        public async Task<string> CreateStudent(StudentModel student)
+        public async Task<(string?, bool)> CreateStudent(StudentModel student)
         {
             try
             {
                 _context.Student.Add(student); // Add input to context variables
                 await _context.SaveChangesAsync(); // Save data
 
-                return $"User Profile Created";
+                return ("Student Profile Created.", true);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"An error har ocurred: {ex.Message}");
+                // Handle the exception and return an error message
+                return ($"An error has ocurred: {ex.Message}", false);
             }
         }
         #endregion

@@ -2,10 +2,8 @@
 using ElevPortalen.Models;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using System.Net.Sockets;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
+
 
 namespace ElevPortalen.Services
 {
@@ -27,24 +25,24 @@ namespace ElevPortalen.Services
         #endregion
 
         #region create Company function async
-        public async Task<string> CreateCompany(CompanyModel company)
+        public async Task<(string?, bool)> CreateCompany(CompanyModel company)
         {
             try
             {
                 _context.Company.Add(company); // Add input to context variables
                 await _context.SaveChangesAsync(); // Save data
 
-                return $"Company Profile Created";
+                return ("Company Profile Created.", true);
             }
             catch (Exception ex)
             {
                 // Handle the exception and return an error message
-                throw new InvalidOperationException($"An error har ocurred: {ex.Message}");
+                return ($"An error has ocurred: {ex.Message}", false);
             }
         }
         #endregion
 
-        #region Get Company request
+        #region Get Company request with the claimprincipal
         public async Task<List<CompanyModel>> ReadData(ClaimsPrincipal _user)
         {
             try
@@ -62,13 +60,13 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get All Data from Company
+        #region Get All Data from Company if they are visible
         public async Task<List<CompanyModel>> ReadAllCompanyData()
         {
             try
             {
                 //Get all the data
-                var response = await _context.Company.AsNoTracking().ToListAsync();
+                var response = await _context.Company.Where(c => c.IsVisible == true).AsNoTracking().ToListAsync();
 
                 return response; // return the data
             }

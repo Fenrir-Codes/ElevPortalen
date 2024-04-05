@@ -2,6 +2,7 @@
 
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Data;
+@using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Models;
 
@@ -75,7 +76,7 @@
                                 <p class="mb-0">Dato for registrering</p>
                             </div>
                             <div class="col-sm-9">
-                                <p class="text-muted mb-0">@data.RegisteredDate.ToString("dd, MMMM, yyyy")</p>
+                                <p class="text-muted mb-0">@data.RegisteredDate.ToShortDateString()</p>
                             </div>
                         </div>
                         <hr />             
@@ -110,6 +111,18 @@
                             </div>
                         </div>
                         <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">Kontakt</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <button class="btn btn-success mb-0 btn-sm" @onclick="() =>
+                                DialogModal!.OpenMessageDialog(data.CompanyId, data.CompanyName, null)">
+                                Send besked
+                            </button>
+                        </div>
+                    </div>
+                    <hr />
                         <div class="row">
                             <div class="col-sm-3">
                                 <p class="mb-0">Phone</p>
@@ -185,12 +198,16 @@
         </div>
     }
 }
-
+<DialogModal @ref="DialogModal" OnClose="ReRenderPage"></DialogModal>
+<AlertBox @ref="_alertBox" />
 
 @code {
     [Parameter]
     public int Id { get; set; }
     private List<CompanyModel> _company = new List<CompanyModel>();
+    private AlertBox _alertBox = new AlertBox();
+    private DialogModal? DialogModal { get; set; }
+
 
     #region Oninitialize
     protected override async Task OnInitializedAsync()
@@ -211,6 +228,13 @@
     {
         string url = "https://" + _company[0].Link;
         await jsRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+    #endregion
+
+    #region Re-RenderPage function for re-renderint the profile page on change
+    private void ReRenderPage()
+    {
+        StateHasChanged();
     }
     #endregion
 

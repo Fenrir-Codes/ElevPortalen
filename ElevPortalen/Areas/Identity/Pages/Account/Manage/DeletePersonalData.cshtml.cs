@@ -95,7 +95,7 @@ namespace ElevPortalen.Areas.Identity.Pages.Account.Manage
             }
 
             var result = await _userManager.DeleteAsync(user);
-            var userId = await _userManager.GetUserIdAsync(user);
+            var userId = await _userManager.GetUserIdAsync(user);        
 
             // Added - deleting the Student data from the database on account delete.
             await DeleteProfileData(userId);
@@ -147,7 +147,7 @@ namespace ElevPortalen.Areas.Identity.Pages.Account.Manage
             }
 
             // Add a return statement in case the method doesn't return in any of the conditions above
-            return RedirectToPage(); // Or return any other appropriate result
+            return RedirectToPage();
         }
 
 

@@ -1,53 +1,53 @@
 ﻿/* Styles for skeleton loading */
 .skeleton-social-icons {
-    width: 200px; /* Adjust width as needed */
-    height: 30px; /* Adjust height as needed */
+    width: 200px; 
+    height: 30px; 
     background-color: #f0f0f0; /* Light gray */
     border-radius: 5px;
 }
 
 .skeleton-user-name {
-    width: 200px; /* Adjust width as needed */
-    height: 20px; /* Adjust height as needed */
+    width: 200px; 
+    height: 20px; 
     background-color: #f0f0f0; /* Light gray */
     border-radius: 5px;
 }
 
 .skeleton-profile-image {
-    width: 150px; /* Adjust width as needed */
-    height: 150px; /* Adjust height as needed */
+    width: 150px;
+    height: 150px; 
     background-color: #f0f0f0; /* Light gray */
     border-radius: 50%;
 }
 
 .skeleton-user-speciality {
-    width: 120px; /* Adjust width as needed */
-    height: 15px; /* Adjust height as needed */
+    width: 120px; 
+    height: 15px; 
     background-color: #f0f0f0; /* Light gray */
     border-radius: 5px;
 }
 
 .skeleton-profile-buttons {
-    width: 200px; /* Adjust width as needed */
-    height: 30px; /* Adjust height as needed */
+    width: 200px; 
+    height: 30px; 
     background-color: #f0f0f0; /* Light gray */
     border-radius: 5px;
 }
 
 .skeleton-user-details {
-    height: 200px; /* Adjust height as needed */
+    height: 200px;
     background-color: #f0f0f0; /* Light gray */
     border-radius: 5px;
 }
 
 .skeleton-description {
-    height: 100px; /* Adjust height as needed */
-    background-color: #f0f0f0; /* Light gray */
+    height: 100px; 
+    background-color: #f0f0f0;
     border-radius: 5px;
 }
 
 .skeleton-skills {
-    height: 50px; /* Adjust height as needed */
+    height: 50px; 
     background-color: #f0f0f0; /* Light gray */
     border-radius: 5px;
 }

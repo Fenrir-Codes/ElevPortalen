@@ -55,12 +55,16 @@ else
                                             <i class="fab fa-github fa-stack-1x fa-inverse"></i>
                                         </span>
                                     </a>
-                                    <button type="button" class="btn btn-primary position-relative btn-sm" @onclick="() => NavigateToMyMessages(data.StudentId)">
-                                        Inbox
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            @unreadMessages
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                    <button type="button" class="btn btn-outline-success position-relative btn-sm" @onclick="() => NavigateToMyMessages(data.StudentId)">
+                                        Inbox 
+                                        <span><i class="fa-solid fa-envelope"></i></span>
+                                        @if (unreadMessages > 0)
+                                        {
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                @unreadMessages
+                                                <span class="visually-hidden">unread messages</span>
+                                            </span>
+                                        }
                                     </button>
                                 </div>
                                 <h5 class="fw-medium mb-0 mx-lg-4 mx-sm-1">Velkommen @data.FirstName @data.LastName</h5>
@@ -565,20 +569,35 @@ else
     #region Add Skills Function
     private async Task AddSkills(int studentId)
     {
-        Message = await _skillService.CreateSkills(studentId, _Skills);
-        _aletBox.SetMessage(true, Message, 2000, success: true);
-        await OnInitializedAsync();
-        isAddSectionVisible = false;
+        var (message, success) = await _skillService.CreateSkills(studentId, _Skills);
+        if (success)
+        {
+            _aletBox.SetMessage(true, message, 2000, success: true);
+            await OnInitializedAsync();
+            isAddSectionVisible = false;
+        }
+        else
+        {
+            _aletBox.SetMessage(true, message, 10000, danger: true);
+        }
     }
     #endregion
 
     #region Update Skills Function
     private async Task UpdateSkills(int studentId)
     {
-        Message = await _skillService.UpdateSkills(studentId, _Skills);
-        _aletBox.SetMessage(true, Message, 2000, success: true);
-        isUpdateSectionVisible = false;
-        await OnInitializedAsync();
+        var (message, success) = await _skillService.UpdateSkills(studentId, _Skills);
+        if (success)
+        {
+            _aletBox.SetMessage(true, message, 2000, success: true);
+            isUpdateSectionVisible = false;
+            await OnInitializedAsync();
+        }
+        else
+        {
+            _aletBox.SetMessage(true, message, 10000, danger: true);
+        }
+
     }
     #endregion
 
