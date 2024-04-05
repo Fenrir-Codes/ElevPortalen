@@ -54,6 +54,10 @@
         }
     </div>
 }
+else if (!_studentList.Any())
+{
+    <AlertBox IsVisible=true Message="Ingen studenter er registreret endnu." waitForSeconds="0" isWarning=true></AlertBox>
+}
 else
 {
     <!-- Display Student-related content -->
@@ -63,7 +67,7 @@ else
             <!--Calling function to check the days since the student updated the profile-->
             CalculateDaysDifference(data.UpdatedDate);
 
-            <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToStudentDetails(data!.StudentId)">
+            <div class="card bg-dark text-white m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToStudentDetails(data!.StudentId)">
                 <div class="row g-0">
                     <div class="col-md-4 image border">
                         @if (!string.IsNullOrEmpty(data.profileImage))
@@ -79,10 +83,6 @@ else
                         <div class="card-body">
                             <h4 class="fw-bold">
                                 @data.FirstName <span> </span>
-                                @if (!string.IsNullOrEmpty(data.MiddleName))
-                                {
-                                    @data.MiddleName <span> </span>
-                                }
                                 @data.LastName
                             </h4>
                             <p class="card-text">Specialiseret i @data.Speciality</p>
@@ -171,7 +171,7 @@ else
         _studentSearchResult = _studentList;
         //get skill for each student with thir StudentId to dictionary
         await GetSkills(_studentList);
-        // _studentList.Clear();
+         //_studentList.Clear();
 
         isLoaded = true;
     }

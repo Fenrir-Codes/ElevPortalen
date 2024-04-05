@@ -55,13 +55,17 @@
         }
     </div>
 }
+else if (!_companyList.Any())
+{
+    <AlertBox IsVisible=true Message="Ingen virksomhed er registreret endnu." waitForSeconds="0" isWarning=true></AlertBox>
+}
 else
 {
     <!-- Display Company-related content -->
     <div class="row d-flex justify-content-center">
         @foreach (var data in _companySearchResult)
         {
-            <div class="card m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
+            <div class="card bg-dark text-white m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
                 <div class="row g-0">
                     <div class="col-md-4 image border">
                         @if (!string.IsNullOrEmpty(data.profileImage))
@@ -87,7 +91,7 @@ else
                 </div>
 
                 <div class="card-footer d-flex justify-content-center align-items-center">
-                    <p class="card-text fw-bold"> Leder efter <span class="text-success">@data.Preferences</span> elev</p>
+                    <p class="card-text fw-bold"> Leder efter <span class="text-warning">@data.Preferences</span> elev</p>
                 </div>
 
             </div>
@@ -126,7 +130,7 @@ else
         _companyList = await _companyService.ReadAllCompanyData();
         // Filling up the searchresult with list
         _companySearchResult = _companyList;
-        // _companyList.Clear();
+         //_companyList.Clear();
 
         isLoaded = true;
     }
