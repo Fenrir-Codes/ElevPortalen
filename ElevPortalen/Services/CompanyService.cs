@@ -44,7 +44,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get Company request
+        #region Get Company request with the claimprincipal
         public async Task<List<CompanyModel>> ReadData(ClaimsPrincipal _user)
         {
             try
@@ -62,13 +62,13 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get All Data from Company
+        #region Get All Data from Company if they are visible
         public async Task<List<CompanyModel>> ReadAllCompanyData()
         {
             try
             {
                 //Get all the data
-                var response = await _context.Company.AsNoTracking().ToListAsync();
+                var response = await _context.Company.Where(c => c.IsVisible == true).AsNoTracking().ToListAsync();
 
                 return response; // return the data
             }

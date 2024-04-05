@@ -5,10 +5,19 @@
     overflow: hidden;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 480px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.04);
+    box-shadow: 0px 0px 5px 0px rgba(102,102,102,1);
 }
 
 .card-link{
     cursor:pointer;
+}
+.card-link:hover {
+    text-decoration: underline;
 }
 
 /* Skeleton card body */
