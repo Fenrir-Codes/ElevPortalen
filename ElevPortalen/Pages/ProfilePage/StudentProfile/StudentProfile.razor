@@ -569,20 +569,35 @@ else
     #region Add Skills Function
     private async Task AddSkills(int studentId)
     {
-        Message = await _skillService.CreateSkills(studentId, _Skills);
-        _aletBox.SetMessage(true, Message, 2000, success: true);
-        await OnInitializedAsync();
-        isAddSectionVisible = false;
+        var (message, success) = await _skillService.CreateSkills(studentId, _Skills);
+        if (success)
+        {
+            _aletBox.SetMessage(true, message, 2000, success: true);
+            await OnInitializedAsync();
+            isAddSectionVisible = false;
+        }
+        else
+        {
+            _aletBox.SetMessage(true, message, 10000, danger: true);
+        }
     }
     #endregion
 
     #region Update Skills Function
     private async Task UpdateSkills(int studentId)
     {
-        Message = await _skillService.UpdateSkills(studentId, _Skills);
-        _aletBox.SetMessage(true, Message, 2000, success: true);
-        isUpdateSectionVisible = false;
-        await OnInitializedAsync();
+        var (message, success) = await _skillService.UpdateSkills(studentId, _Skills);
+        if (success)
+        {
+            _aletBox.SetMessage(true, message, 2000, success: true);
+            isUpdateSectionVisible = false;
+            await OnInitializedAsync();
+        }
+        else
+        {
+            _aletBox.SetMessage(true, message, 10000, danger: true);
+        }
+
     }
     #endregion
 

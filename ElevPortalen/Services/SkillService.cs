@@ -58,7 +58,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Create Skills
-        public async Task<string?> CreateSkills(int studentId, SkillModel newSkills)
+        public async Task<(string?, bool)> CreateSkills(int studentId, SkillModel newSkills)
         {
             try
             {
@@ -97,11 +97,12 @@ namespace ElevPortalen.Services
                 _context.StudentSkills.Add(newSkills);
                 await _context.SaveChangesAsync();
 
-                return $"Skills were added successfully.";
+                return ("Skills were added successfully.", true);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Failed to create/update skills: {ex.Message}");
+                // Handle the exception and return an error message
+                return ($"An error has ocurred: {ex.Message}", false);
             }
         }
         #endregion
@@ -124,7 +125,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Update
-        public async Task<string?> UpdateSkills(int studentId, SkillModel updatedSkills)
+        public async Task<(string?, bool)> UpdateSkills(int studentId, SkillModel updatedSkills)
         {
             try
             {
@@ -160,12 +161,14 @@ namespace ElevPortalen.Services
                     _context.Entry(skill).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
 
-                    return "Skills updated successfully";
+                    return ("Skills updated successfully", true);
+
 
                 }
                 else
                 {
-                    return "Student with the StudentId not found."; // Return a message when the student is not found
+                    // Handle the exception and return an error message
+                    return ($"An error has ocurred", false);
                 }
             }
             catch (Exception ex)

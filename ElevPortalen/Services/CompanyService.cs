@@ -27,19 +27,19 @@ namespace ElevPortalen.Services
         #endregion
 
         #region create Company function async
-        public async Task<string> CreateCompany(CompanyModel company)
+        public async Task<(string?, bool)> CreateCompany(CompanyModel company)
         {
             try
             {
                 _context.Company.Add(company); // Add input to context variables
                 await _context.SaveChangesAsync(); // Save data
 
-                return $"Company Profile Created";
+                return ("Company Profile Created.", true);
             }
             catch (Exception ex)
             {
                 // Handle the exception and return an error message
-                throw new InvalidOperationException($"An error has ocurred: {ex.Message}");
+                return ($"An error has ocurred: {ex.Message}", false);
             }
         }
         #endregion
