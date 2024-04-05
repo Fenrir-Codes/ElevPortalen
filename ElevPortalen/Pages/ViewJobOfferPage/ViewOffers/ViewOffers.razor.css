@@ -1,6 +1,6 @@
 ﻿/* Skeleton card */
 .card {
-    max-width: 450px;
+    max-width: 460px;
     transition: transform 0.2s;
 }
 .card-body{

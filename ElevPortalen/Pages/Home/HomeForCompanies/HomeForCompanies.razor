@@ -67,7 +67,7 @@ else
             <!--Calling function to check the days since the student updated the profile-->
             CalculateDaysDifference(data.UpdatedDate);
 
-            <div class="card bg-dark text-white m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToStudentDetails(data!.StudentId)">
+            <div class="card bg-dark bg-gradient text-white m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToStudentDetails(data!.StudentId)">
                 <div class="row g-0">
                     <div class="col-md-4 image border">
                         @if (!string.IsNullOrEmpty(data.profileImage))
@@ -112,7 +112,7 @@ else
                                         // Check if the length of the skill name exceeds a certain threshold
                                         @if (skillName.Length > 10)
                                         {
-                                            <span class="badge bg-dark m-1" title="@skillName">@skillName.Substring(0, 10)...</span>
+                                            <span class="badge bg-dark text-warning m-1" title="@skillName">@skillName.Substring(0, 10)...</span>
                                         }
                                         else
                                         {
@@ -124,12 +124,12 @@ else
                         }
                         else
                         {
-                            <p class="card-text">Eleven har endnu ingen færdigheder tilføjet.</p>
+                            <p class="card-text text-warning">Eleven har endnu ingen færdigheder tilføjet.</p>
                         }
                     }
                     else
                     {
-                        <p class="card-text">Eleven har endnu ingen færdigheder tilføjet.</p>
+                        <p class="card-text text-warning">Eleven har endnu ingen færdigheder tilføjet.</p>
                     }
                 </div>
 
@@ -189,7 +189,7 @@ else
     #endregion
 
     #region search function
-    void onSearch(string searchTerm)
+    void onSearch(string? searchTerm)
     {
         // if the input field empty
         if (string.IsNullOrEmpty(searchTerm))
@@ -198,10 +198,12 @@ else
         }
         else
         {
-            _studentSearchResult = _studentList.Where(student => student.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-            student.Speciality.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-            student.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-            student.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+            _studentSearchResult = _studentList.Where(student =>
+                (student.Title?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (student.Speciality?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (student.FirstName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (student.LastName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)
+            ).ToList();
         }
     }
     #endregion

@@ -65,7 +65,7 @@ else
     <div class="row d-flex justify-content-center">
         @foreach (var data in _companySearchResult)
         {
-            <div class="card bg-dark text-white m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
+            <div class="card bg-dark bg-gradient  text-white m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToCompanytDetails(data.CompanyId)">
                 <div class="row g-0">
                     <div class="col-md-4 image border">
                         @if (!string.IsNullOrEmpty(data.profileImage))
@@ -137,7 +137,7 @@ else
     #endregion
 
     #region search function
-    void onSearch(string searchTerm)
+    void onSearch(string? searchTerm)
     {
         // if the input field empty
         if (string.IsNullOrEmpty(searchTerm))
@@ -147,11 +147,11 @@ else
         else
         {
             _companySearchResult = _companyList.Where(company =>
-            company.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-            company.Preferences.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-            company.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-            company.CompanyAddress.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
-            company.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                (company.CompanyName?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (company.Preferences?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (company.CompanyAddress?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false) || 
+                (company.Description?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)?? false)
+            ).ToList();
         }    
     }
     #endregion
