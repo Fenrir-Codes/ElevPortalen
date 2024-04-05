@@ -37,7 +37,7 @@
             <!-- Actual cards -->
             @foreach (var job in _jobList)
             {
-                <div class="card m-2 p-0 mt-3">
+                <div class="card bg-dark text-white m-2 p-0 mt-3">
                     <div class="row g-0">
                         <div class="col-md-12">
                             <div class="card-body">
@@ -50,9 +50,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer d-flex justify-content-center align-items-center">
-                        <div class="specialization badge bg-secondary mx-1">@job.Speciality</div>
-                        <div class="NumOfPositions badge bg-secondary mx-1">Antal ledige plads : @job.NumberOfPositionsAvailable</div>
+                    <div class="card-footer d-flex justify-content-center align-items-center bg-gradient">
+                        <div class="specialization badge bg-dark text-warning mx-1">@job.Speciality</div>
+                        <div class="NumOfPositions badge bg-dark text-warning mx-1">Antal ledige plads : @job.NumberOfPositionsAvailable</div>
                         <div class="specialization badge bg-dark text-warning mx-1">Ansøgningsfrist : @job.Deadline.ToShortDateString()</div>
                     </div>
 
