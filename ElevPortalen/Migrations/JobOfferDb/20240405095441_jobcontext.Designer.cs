@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ElevPortalen.Migrations.JobOfferDb
 {
     [DbContext(typeof(JobOfferDbContext))]
-    [Migration("20240401115416_offerbase")]
-    partial class offerbase
+    [Migration("20240405095441_jobcontext")]
+    partial class jobcontext
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,9 @@ namespace ElevPortalen.Migrations.JobOfferDb
 
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfPublish")
                         .HasColumnType("datetime2");
