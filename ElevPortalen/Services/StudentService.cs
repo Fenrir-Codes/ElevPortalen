@@ -222,7 +222,7 @@ namespace ElevPortalen.Services
             {
                 // Instead of throwing a new exception with a message that includes the original exception message,
                 // it's better to let the original exception propagate.
-                throw;
+                throw new InvalidOperationException($"{ex.Message}");
             }
         }
         #endregion
