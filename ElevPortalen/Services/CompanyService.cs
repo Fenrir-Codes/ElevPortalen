@@ -77,7 +77,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get All Data from Company if they are visible
+        #region Get All Data from Company if their profile is set to visible
         public async Task<List<CompanyModel>> ReadAllCompanyData()
         {
             try
