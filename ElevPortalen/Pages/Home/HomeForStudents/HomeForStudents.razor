@@ -118,16 +118,16 @@ else
     protected override async Task OnInitializedAsync()
     {
         isLoaded = false;
-        await ReadCompanyData();
+        await ReadVisibleCompanyData();
     }
     #endregion
 
-    #region Read the data from company database
-    public async Task ReadCompanyData()
+    #region Read the data from company database if the profile visible
+    public async Task ReadVisibleCompanyData()
     {
         _companySearchResult.Clear();
         //Getting the data
-        _companyList = await _companyService.ReadAllCompanyData();
+        _companyList = await _companyService.ReadAllVisibleCompanyData();
         // Filling up the searchresult with list
         _companySearchResult = _companyList;
          //_companyList.Clear();

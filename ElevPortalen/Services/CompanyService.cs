@@ -61,12 +61,29 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Get All Data from Company if they are visible
-        public async Task<List<CompanyModel>> ReadAllCompanyData()
+        public async Task<List<CompanyModel>> ReadAllVisibleCompanyData()
         {
             try
             {
                 //Get all the data
                 var response = await _context.Company.Where(c => c.IsVisible == true).AsNoTracking().ToListAsync();
+
+                return response; // return the data
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while retrieving Company data." + ex.Message);
+            }
+        }
+        #endregion
+
+        #region Get All Data from Company if they are visible
+        public async Task<List<CompanyModel>> ReadAllCompanyData()
+        {
+            try
+            {
+                //Get all the data
+                var response = await _context.Company.AsNoTracking().ToListAsync();
 
                 return response; // return the data
             }
