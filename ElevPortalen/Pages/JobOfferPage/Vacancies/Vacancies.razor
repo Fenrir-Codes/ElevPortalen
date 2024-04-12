@@ -44,7 +44,7 @@
                             <div class="card-body">
                                 <h4 class="card-title"><span class="badge bg-success">@job.Title</span></h4>
                                 <div class="position-details">
-                                    <h5 class="card-link pt-2" @onclick="NavigateToViewJobDetails">@job.Title med specielle i @job.Speciality</h5>
+                                    <h5 class="card-link pt-2" @onclick="() => NavigateToViewJobDetails(job.CompanyId)">@job.Title med specielle i @job.Speciality</h5>
                                     <p class="card-text">@job.JobAddress</p>
                                     <p class="card-link card-text badge bg-success" @onclick="() => NavigateToNewTab(job.JobLink)">@job.CompanyName</p>
                                 </div>
@@ -102,8 +102,8 @@
     #endregion
 
 
-    private void NavigateToViewJobDetails()
+    private void NavigateToViewJobDetails(int id)
     {
-        _navManager.NavigateTo("/viewjobdetails");
+        _navManager.NavigateTo($"/viewjobdetails/{id}");
     }
 }

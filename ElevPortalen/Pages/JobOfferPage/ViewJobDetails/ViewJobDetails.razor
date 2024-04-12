@@ -1,8 +1,31 @@
-﻿@page "/viewjobdetails"
+﻿@page "/viewjobdetails/{CompanyId:int}"
+
+@using ElevPortalen.Models
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Services;
+
+@inject JobService _jobService
+@inject IJSRuntime jsRuntime
+@inject NavigationManager _navManager
 
 
-<h1>job details page</h1>
+<div class="container">
+    <h1>job details page</h1>
+    <p>Title : @_job.Title</p>
+    <p>Company : @_job.CompanyName</p>
+    <p>Details : @_job.JobDetails</p>
+    <p>Deadline : @_job.Deadline.ToShortDateString()</p>
+</div>
 
 @code {
+    [Parameter] public int CompanyId { get; set; }
+
+    private JobOfferModel? _job = new JobOfferModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _job = await _jobService.GetOfferWithCompanyId(CompanyId);
+    }
+
 
 }

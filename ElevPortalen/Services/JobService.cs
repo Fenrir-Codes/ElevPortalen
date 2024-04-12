@@ -50,6 +50,21 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Read one offer with the Company Id
+        public async Task<JobOfferModel?> GetOfferWithCompanyId(int companyId)
+        {
+            try
+            {
+                return await _context.JobOfferDataBase.FirstOrDefaultAsync(offer => offer.CompanyId == companyId);
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception, log, and return null or throw an error as appropriate
+                throw new Exception($"An error occurred : {ex.Message}");
+            }
+        }
+        #endregion
+
         #region Read all offers with the Company Id
         public async Task<List<JobOfferModel>> GetAllOffersByCompanyId(int companyId)
         {
