@@ -123,13 +123,20 @@
     {
         try
         {
-            _Message = await _studentService.Update(_studentToUpdate); //calling update from service
-            _alertBox.SetMessage(true, _Message, 2000, success:true);
+            var (message, success) = await _studentService.Update(_studentToUpdate); //calling update from service
+            if (success)
+            {
+                _alertBox.SetMessage(true, message, 2000, success: true);
+            }
+            else
+            {
+                _alertBox.SetMessage(true, message, 10000, danger: true);
+            }
         }
         catch (Exception ex)
         {
             _Message = $"An error occurred sucessfully - " + ex.Message;
-            _alertBox.SetMessage(true, _Message,2000, danger: true);
+            _alertBox.SetMessage(true, _Message, 10000, danger: true);
         }
         await Close();
     }
@@ -140,8 +147,16 @@
     {
         try
         {
-            _Message = await _companyService.Update(_companyToUpdate); //calling update from service
-            _alertBox.SetMessage(true, _Message, 2000, success: true);
+            var (message, success) = await _companyService.Update(_companyToUpdate); //calling update from service
+            if (success)
+            {
+                _alertBox.SetMessage(true, message, 2000, success: true);
+            }
+            else
+            {
+                _alertBox.SetMessage(true, message, 10000, danger: true);
+            }
+            
         }
         catch (Exception ex)
         {          
@@ -157,13 +172,20 @@
     {
         try
         {         
-            _Message = await _messageService.SendMessage(_messageToSend);
-            _alertBox.SetMessage(true, _Message, 2000, success: true);
-            await Close();
+            var (message, success) = await _messageService.SendMessage(_messageToSend);
+            if (success)
+            {
+                _alertBox.SetMessage(true, message, 2000, success: true);
+                await Close();
+            }
+            else
+            {
+                _alertBox.SetMessage(true, message, 10000, danger: true);
+            }
         }
         catch (Exception ex)
         {
-            _Message = $"An error occurred sucessfully - " + ex.Message;
+            _Message = $"An error occurred - " + ex.Message;
             _alertBox.SetMessage(true, _Message, 0, danger: true);
         }
     }

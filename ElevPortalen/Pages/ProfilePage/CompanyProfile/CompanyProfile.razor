@@ -25,8 +25,8 @@ else
             <!--Social container on top-->
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card mb-2">
-                        <div class="card-body shadow-sm">
+                    <div class="card mb-2 mt-4">
+                        <div class="card-body shadow-sm bg-dark bg-gradient text-white">
                             <div class="d-flex justify-content-between align-items-center flex-column flex-sm-row">
                                 <!-- Icons -->
                                 <div class="d-flex mb-sm-0">
@@ -76,7 +76,7 @@ else
             <!--User profile container-->
             <div class="row">
                 <div class="col-lg-4">
-                    <div class="card mb-4">
+                    <div class="card mb-2 bg-dark text-white">
                         <div class="card-body text-center shadow-sm">
                             @if (!string.IsNullOrEmpty(data.profileImage))
                             {
@@ -91,13 +91,13 @@ else
                             <h5 class="my-3">@data.CompanyName</h5>
                             <p class="text-muted mb-4">@data.CompanyAddress</p>
                             <div class="d-flex justify-content-center mb-2">
-                                <button type="button" class="btn btn-outline-success"
+                                <button type="button" class="btn btn-outline-success mx-2"
                                         @onclick="() => DialogModal!.OpenCompanyUpdate(data.CompanyId)">
                                     Opdater Profil
                                 </button>
                                 <button type="button" class="btn btn-outline-danger ms-1"
                                         @onclick="() => DeleteCompanyData(data.CompanyId)" disabled="@(!isConfirmationChecked)">
-                                    Slette Profil
+                                    Slet Profil
                                 </button>
                             </div>
                             <div class="row-lg-4 gx-3 mb-3">
@@ -113,8 +113,8 @@ else
                     </div>
                 </div>
                 <div class="col-lg-8">
-                    <div class="card mb-4">
-                        <div class="card-body shadow-sm">
+                    <div class="card mb-2">
+                        <div class="card-body shadow-sm bg-dark text-white">
                             <div class="row">
                                 <div class="col-sm-3">
                                     <p class="mb-0">Dato for registrering</p>
@@ -247,7 +247,7 @@ else
                 <div class="row">
                     <div class="col-lg-12">
                         @*   <p class="mb-2 fw-bold">Beskrivelse</p> *@
-                        <div class="card mb-2">
+                        <div class="card mb-2 bg-dark text-white">
                             <div class="card-body shadow-sm">
                                 <p class="text-muted mb-0">@data.Description</p>
                             </div>
@@ -400,11 +400,6 @@ else
     }
     #endregion
 
-    private void NavigateToCreateJobOffer(int companyId)
-    {
-        NavManager.NavigateTo($"/createoffer/{companyId}", forceLoad: true); // Pass companyId in the URL
-    }
-
     #region Checking is company has recovery data if nothing exist in their profile
     private async Task CheckIfCompanyHasDataToRecover(ClaimsPrincipal _user)
     {
@@ -422,9 +417,17 @@ else
     {
         if (userIdClaim != null && Guid.TryParse(userIdClaim, out Guid userIdGuid))
         {
-            Message = await _companyService.RecoverCompanyData(userIdGuid);
-            _aletBox.SetMessage(true, Message, 2000, success: true);
-            await OnInitializedAsync();
+            var (message, success) = await _companyService.RecoverCompanyData(userIdGuid);
+            if (success)
+            {
+                _aletBox.SetMessage(true, message, 2000, success: true);
+                await OnInitializedAsync();
+            }
+            else
+            {
+                _aletBox.SetMessage(true, message, 10000, danger: true);
+            }
+
         }
         else
         {

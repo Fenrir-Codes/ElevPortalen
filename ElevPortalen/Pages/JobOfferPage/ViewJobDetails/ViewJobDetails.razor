@@ -10,12 +10,82 @@
 
 
 <div class="container">
-    <h1>job details page</h1>
-    <p>Title : @_job.Title</p>
-    <p>Company : @_job.CompanyName</p>
-    <p>Details : @_job.JobDetails</p>
-    <p>Deadline : @_job.Deadline.ToShortDateString()</p>
+    <div class="row">
+        <div class="card text-white bg-dark bg-gradient mb-3">
+            <div class="card-header">Header</div>
+            <div class="card-body">
+                <h5 class="card-title">Dark card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        Here will be the button with a link to job application
+    </div>
+
+    <div class="row">
+
+    </div>
+
+    @if (_job != null)
+    {
+        <div class="col-lg-12">
+            <div class="card shadow-sm d-flex justify-content-center">
+                <h3>@_job.CompanyName leder efter en @_job.Title specialiseret i @_job.Speciality.</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center shadow-sm">
+                        <h5 class="my-3">@_job.CompanyName</h5>
+                        <p class="text-muted mb-4">@_job.JobAddress</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body shadow-sm">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Title</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@_job.Title</p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Details</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@_job.JobDetails</p>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Deadline</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@_job.Deadline.ToShortDateString()</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>Loading...</p>
+    }
+
 </div>
+  
+
 
 @code {
     [Parameter] public int CompanyId { get; set; }

@@ -1,17 +1,11 @@
-using ElevPortalen;
+using ElevPortalen.Pages.AlertBox;
 using ElevPortalen.Areas.Identity;
 using ElevPortalen.Areas.Identity.Pages.Account;
 using ElevPortalen.Data;
-using ElevPortalen.Models;
-using ElevPortalen.Pages.AlertBox;
 using ElevPortalen.Services;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 

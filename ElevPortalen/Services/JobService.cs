@@ -75,13 +75,13 @@ namespace ElevPortalen.Services
             catch (Exception ex)
             {
                 // Handle the exception, log, and return null or throw an error as appropriate
-                throw new Exception($"An error occurred while retrieving data from the database: {ex.Message}");
+                throw new Exception($"An error occurred : {ex.Message}");
             }
         }
         #endregion
 
         #region Update Job Offer
-        public async Task<string> Update(JobOfferModel updatedJob)
+        public async Task<(string, bool)> Update(JobOfferModel updatedJob)
         {
             try
             {
@@ -102,11 +102,11 @@ namespace ElevPortalen.Services
                     _context.Entry(JobToUpdate).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
 
-                    return $"Job Offer updated successfully";
+                    return ("Job offer updated.", true);
                 }
                 else
                 {
-                    return $"Job Offer not found"; 
+                    return ("Job offer not found.", false);
                     // Return a message when the offer is not found
                 }
             }
@@ -120,20 +120,20 @@ namespace ElevPortalen.Services
         #endregion
 
         #region delete job offer by Id (just one offer)
-        public async Task<string> DeleteOffer(int jobOfferId)
+        public async Task<(string, bool)> DeleteOffer(int jobOfferId)
         {
             try
             {
                 var offerToDelete = await _context.JobOfferDataBase.FindAsync(jobOfferId);
                 if (offerToDelete == null)
                 {
-                    return $"Offer with ID {jobOfferId} not found.";
+                    return ("Error while delete Joboffer.", false);
                 }
 
                 _context.JobOfferDataBase.Remove(offerToDelete);
                 await _context.SaveChangesAsync();
 
-                return $"Offer with ID {jobOfferId} deleted successfully.";
+                return ("JobOffer deleted successfully.", true);
             }
             catch (DbUpdateException ex)
             {
@@ -144,7 +144,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Delete function for all the job offers a company have in the database (all offers with the company id)
-        public async Task<string> DeleteOffersByCompanyId(int companyId)
+        public async Task<(string, bool)> DeleteOffersByCompanyId(int companyId)
         {
             try
             {
@@ -152,13 +152,13 @@ namespace ElevPortalen.Services
 
                 if (!offersToDelete.Any())
                 {
-                    return $"No offers found for company with ID {companyId}.";
+                    return ($"No offers found for this company.", false);
                 }
 
                 _context.JobOfferDataBase.RemoveRange(offersToDelete);
                 await _context.SaveChangesAsync();
 
-                return $"All offers for company with ID {companyId} deleted successfully.";
+                return ($"All offers for company  deleted successfully.", true);
             }
             catch (DbUpdateException ex)
             {
