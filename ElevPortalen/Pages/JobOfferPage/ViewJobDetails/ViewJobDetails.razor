@@ -10,31 +10,20 @@
 
 
 <div class="container">
-    <div class="row">
-        <div class="card text-white bg-dark bg-gradient mb-3">
-            <div class="card-header">Header</div>
-            <div class="card-body">
-                <h5 class="card-title">Dark card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        Here will be the button with a link to job application
-    </div>
-
-    <div class="row">
-
-    </div>
 
     @if (_job != null)
     {
-        <div class="col-lg-12">
-            <div class="card shadow-sm d-flex justify-content-center">
-                <h3>@_job.CompanyName leder efter en @_job.Title specialiseret i @_job.Speciality.</h3>
+
+        <div class="row">
+            <div class="card text-white bg-dark bg-gradient mb-3">
+                <div class="card-header">@_job.Title Specialiseret i @_job.Speciality.</div>
+                <div class="card-body">
+                    <h5 class="card-title">Arbejdsgiver : @_job.CompanyName</h5>
+                    <p class="card-text">@_job.JobDetails</p>
+                </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-lg-4">
                 <div class="card mb-4">

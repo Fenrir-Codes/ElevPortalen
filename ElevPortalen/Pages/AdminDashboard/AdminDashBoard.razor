@@ -1,5 +1,6 @@
 ﻿@page "/admindashboard"
 
+@using ElevPortalen.Areas.Identity.Pages.Account.Manage
 @using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
@@ -13,6 +14,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IConfiguration Configuration
 @inject NavigationManager NavManager
+
 
 <AuthorizeView Roles="Admin">
     <Authorized>
@@ -242,7 +244,7 @@
                                                         </button>
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenCompanyUpdate(company.CompanyId)">Opdater</a></li>
-                                                            <li><a class="dropdown-item" href="#">Fjern</a></li>
+                                                            <li><a class="dropdown-item" >Fjern</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -274,6 +276,7 @@
 
             </div>
         }
+
        
         <DialogModal @ref="DialogModal"  OnClose="ReRenderTable"></DialogModal>
     </Authorized>
@@ -308,6 +311,7 @@
     private bool isCompany = false;
 
     private bool isLoaded = false;
+
 
     #region initialize
     protected override async Task OnInitializedAsync()
