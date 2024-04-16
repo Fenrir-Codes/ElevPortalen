@@ -1,4 +1,4 @@
-﻿@page "/viewjobdetails/{CompanyId:int}"
+﻿@page "/viewjobdetails/{JobOfferId:int}"
 
 @using ElevPortalen.Models
 @using ElevPortalen.Pages.AlertBox
@@ -77,13 +77,13 @@
 
 
 @code {
-    [Parameter] public int CompanyId { get; set; }
+    [Parameter] public int JobOfferId { get; set; }
 
     private JobOfferModel? _job = new JobOfferModel();
 
     protected override async Task OnInitializedAsync()
     {
-        _job = await _jobService.GetOfferWithCompanyId(CompanyId);
+        _job = await _jobService.GetOfferWithJobId(JobOfferId);
     }
 
 
