@@ -11,7 +11,7 @@
 
 <div class="container-fluid">
 
-    @if (_job != null)
+    @if (isLoaded)
     {
         <!-- Row with padding top 5 -->
         <div class="row pt-5 therow">
@@ -33,7 +33,10 @@
                 </div>
                 <div class="m-0">
                     <h4 class="mb-3 fw-bold">Ansøg</h4>
-                    <button class="btn btn-sm btn-success" @onclick="() => NavigateToNewTab(_job.JobLink)">Hjemmeside</button>
+                    @if (!string.IsNullOrEmpty(_job.JobLink))
+                    {
+                        <button class="btn btn-sm btn-success me-2" @onclick="() => NavigateToNewTab(_job.JobLink)">Ansøg via link</button>
+                    }
                     <button class="btn btn-sm btn-success">Send besked</button>
                 </div>
             </div>
@@ -71,7 +74,7 @@
 
                 <!-- Box bottom -->
                 <div class="bg-dark text-white rounded-2 shadow-sm p-4">
-                    <h4 class="mb-4 fw-bold">Virksomhedsdetaljer</h4>
+                    <h4 class="mb-4 fw-bold">Virksomhed</h4>
                     <p>
                         <i class="fa fa-building text-primary me-2 text-success"></i>
                         Arbejdsgiver: @_job.CompanyName
@@ -89,7 +92,53 @@
     }
     else
     {
-        <p>Loading...</p>
+        <!-- skeleton loading-->
+        <div class="row pt-5 therow">
+
+            <!-- The left side of the jobdetails -->
+            <div class="col-lg-8 bg-dark text-white rounded-2 shadow-sm p-5 skeleton-loading">
+                <div class="skeleton-line mb-3"></div>
+                <hr />
+                <div class="d-flex align-items-center mb-5">
+                    <div class="text-start">
+                        <div class="skeleton-line"></div>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <div class="skeleton-line mb-3"></div>
+                    <div class="skeleton-line"></div>
+                </div>
+                <div class="m-0">
+                    <div class="skeleton-line mb-3"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                </div>
+            </div>
+
+            <!-- The right side of the details -->
+            <div class="col-lg-4 rightside">
+                <!-- Box top -->
+                <div class="bg-dark text-white rounded-2 shadow-sm p-4 mb-4 skeleton-loading">
+                    <div class="skeleton-line mb-4"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                </div>
+
+                <!-- Box bottom -->
+                <div class="bg-dark text-white rounded-2 shadow-sm p-4 skeleton-loading">
+                    <div class="skeleton-line mb-4"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line"></div>
+                </div>
+
+            </div>
+
+        </div>
     }
 
 </div>
@@ -102,6 +151,7 @@
     [Parameter] public int JobOfferId { get; set; }
     private AlertBox _aletBox = new AlertBox();
     private JobOfferModel? _job = new JobOfferModel();
+    private bool isLoaded = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,13 +162,14 @@
     private async Task GetJobOffer(int JobId)
     {
         var (message, success, data) = await _jobService.GetOfferWithJobId(JobId);
-        if (success)
+        if (success && data != null)
         {
             _job = data;
+            isLoaded = true;
         }
         else
         {
-            _aletBox.SetMessage(success, message, 10000, danger:true);
+            _aletBox.SetMessage(true, message, 10000, danger:true);
         }
     }
     #endregion

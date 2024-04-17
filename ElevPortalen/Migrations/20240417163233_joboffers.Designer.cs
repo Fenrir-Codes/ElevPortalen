@@ -9,18 +9,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ElevPortalen.Migrations.JobOfferDb
+namespace ElevPortalen.Migrations
 {
     [DbContext(typeof(JobOfferDbContext))]
-    [Migration("20240405095441_jobcontext")]
-    partial class jobcontext
+    [Migration("20240417163233_joboffers")]
+    partial class joboffers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.16")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -39,6 +39,9 @@ namespace ElevPortalen.Migrations.JobOfferDb
                     b.Property<string>("CompanyName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ContactPerson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateOfPublish")
                         .HasColumnType("datetime2");
 
@@ -55,6 +58,9 @@ namespace ElevPortalen.Migrations.JobOfferDb
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfPositionsAvailable")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PhoneNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("Speciality")

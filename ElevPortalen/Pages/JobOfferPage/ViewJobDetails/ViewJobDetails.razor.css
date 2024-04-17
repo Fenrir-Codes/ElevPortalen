@@ -1,4 +1,24 @@
-﻿@media only screen and (max-width: 991px) {
+﻿.skeleton-line {
+    height: 20px;
+    background-color: #777;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0)); /* Shimmer effect */
+    background-size: 200% 100%; /* Size of the background gradient */
+    animation: shimmer 2s infinite linear; /* Shimmer animation */
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0; /* Start position of the gradient */
+    }
+
+    100% {
+        background-position: 200% 0; /* End position of the gradient */
+    }
+}
+
+@media only screen and (max-width: 991px) {
     .rightside {
         margin-top: 24px;
     }

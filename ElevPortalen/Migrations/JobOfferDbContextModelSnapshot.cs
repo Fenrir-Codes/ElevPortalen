@@ -4,19 +4,16 @@ using ElevPortalen.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ElevPortalen.Migrations.JobOfferDb
+namespace ElevPortalen.Migrations
 {
     [DbContext(typeof(JobOfferDbContext))]
-    [Migration("20240417102044_jobbbb")]
-    partial class jobbbb
+    partial class JobOfferDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

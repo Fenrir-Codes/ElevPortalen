@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ElevPortalen.Migrations.JobOfferDb
+namespace ElevPortalen.Migrations
 {
     /// <inheritdoc />
-    public partial class jobcontext : Migration
+    public partial class joboffers : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,6 +19,8 @@ namespace ElevPortalen.Migrations.JobOfferDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CompanyId = table.Column<int>(type: "int", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContactPerson = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<int>(type: "int", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     JobAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     JobLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
