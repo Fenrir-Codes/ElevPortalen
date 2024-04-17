@@ -1,8 +1,134 @@
-﻿@page "/viewjobdetails"
+﻿@page "/viewjobdetails/{JobOfferId:int}"
+
+@using ElevPortalen.Models
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Services;
+
+@inject JobService _jobService
+@inject IJSRuntime jsRuntime
+@inject NavigationManager _navManager
 
 
-<h1>job details page</h1>
+<div class="container-fluid">
+
+    @if (_job != null)
+    {
+        <!-- Row with padding top 5 -->
+        <div class="row pt-5 therow">
+
+            <!-- The left side of the jobdetails -->
+            <div class="col-lg-8 bg-dark text-white rounded-2 shadow-sm p-5">
+                <h3 class="mb-3 fw-bold">@_job.Title</h3>
+                <hr />
+                <div class="d-flex align-items-center mb-5">
+                    <div class="text-start">
+                        <div class="d-flex align-items-center">
+                            <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-success me-2"></i>@_job.JobAddress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <h4 class="mb-3 fw-bold">Jobdetaljer</h4>
+                    <p>@_job.JobDetails</p>
+                </div>
+                <div class="m-0">
+                    <h4 class="mb-3 fw-bold">Ansøg</h4>
+                    <button class="btn btn-sm btn-success" @onclick="() => NavigateToNewTab(_job.JobLink)">Hjemmeside</button>
+                    <button class="btn btn-sm btn-success">Send besked</button>
+                </div>
+            </div>
+
+            <!-- The right side of the details -->
+            <div class="col-lg-4 rightside">
+                <!-- Box top -->
+                <div class="bg-dark text-white rounded-2 shadow-sm p-4 mb-4">
+                    <h4 class="mb-4 fw-bold">Joboversigt</h4>
+                    <p>
+                        <i class="fa fa-calendar-days text-primary me-2 text-success"></i>
+                        Udgivet den: @_job.DateOfPublish.ToShortDateString()
+                    </p>
+                    <p>
+                        <i class="fa fa-angle-right text-primary me-2 text-success"></i>
+                        Ledige stilling: @_job.NumberOfPositionsAvailable
+                    </p>
+                    <p>
+                        <i class="fa fa-map-marker-alt text-primary me-2 text-success"></i>
+                        Sted: @_job.JobAddress
+                    </p>
+                    <p>
+                        <i class="fa fa-address-card text-primary me-2 text-success"></i>
+                        Kontaktperson: @_job.ContactPerson
+                    </p>
+                    <p>
+                        <i class="fa fa-phone text-primary me-2 text-success"></i>
+                        Tlf.: @_job.PhoneNumber
+                    </p>
+                    <p>
+                        <i class="far fa-clock text-primary me-2 text-success"></i>
+                        Deadline: @_job.Deadline.ToShortDateString()
+                    </p>
+                </div>
+
+                <!-- Box bottom -->
+                <div class="bg-dark text-white rounded-2 shadow-sm p-4">
+                    <h4 class="mb-4 fw-bold">Virksomhedsdetaljer</h4>
+                    <p>
+                        <i class="fa fa-building text-primary me-2 text-success"></i>
+                        Arbejdsgiver: @_job.CompanyName
+                    </p>
+                    <p>
+                        <i class="fa fa-map-marker-alt text-primary me-2 text-success"></i>
+                        Adresse: @_job.JobAddress
+                    </p>
+                </div>
+
+            </div>
+            
+        </div>
+
+    }
+    else
+    {
+        <p>Loading...</p>
+    }
+
+</div>
+
+<!-- AlertBox -->
+<AlertBox @ref="_aletBox" />
+
 
 @code {
+    [Parameter] public int JobOfferId { get; set; }
+    private AlertBox _aletBox = new AlertBox();
+    private JobOfferModel? _job = new JobOfferModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetJobOffer(JobOfferId);
+    }
+
+    #region Get the job details with the job ID
+    private async Task GetJobOffer(int JobId)
+    {
+        var (message, success, data) = await _jobService.GetOfferWithJobId(JobId);
+        if (success)
+        {
+            _job = data;
+        }
+        else
+        {
+            _aletBox.SetMessage(success, message, 10000, danger:true);
+        }
+    }
+    #endregion
+
+    #region Navigate to website Link with opening new window
+    public async Task NavigateToNewTab(string? link)
+    {
+        string url = "https://" + link;
+        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+    #endregion
 
 }

@@ -18,15 +18,15 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Create Message
-        public async Task<string> SendMessage(MessageModel message)
+        #region Create Message (send)
+        public async Task<(string, bool)> SendMessage(MessageModel message)
         {
             try
             {
                 _context.Messages.Add(message); // Add input to context variables
                 await _context.SaveChangesAsync(); // Save
 
-                return $"Message sent.";
+                return ($"Message sent.", true);
             }
             catch (Exception ex)
             {
@@ -130,7 +130,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new InvalidOperationException($"{ex.Message}");
             }
         }
         #endregion

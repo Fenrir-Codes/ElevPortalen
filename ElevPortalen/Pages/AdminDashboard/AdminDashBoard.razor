@@ -1,5 +1,6 @@
 ﻿@page "/admindashboard"
 
+@using ElevPortalen.Areas.Identity.Pages.Account.Manage
 @using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
@@ -13,6 +14,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IConfiguration Configuration
 @inject NavigationManager NavManager
+
 
 <AuthorizeView Roles="Admin">
     <Authorized>
@@ -89,20 +91,26 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Third Card: Specialization Search -->
                     <div class="col-lg-6 col-xl-3 mb-2">
                         <div class="card bg-dark bg-gradient text-white h-100">
-                            <div class="card-body text-white">
+                            <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
                                         <div class="text-white-75 small">
-                                            Something
+                                            Søgning på speciale
                                         </div>
                                     </div>
-                                    <i class="fa-solid fa-square-check fa-2xl"></i>
                                 </div>
+                                <select class="form-control" @bind="selectedSpecialization">
+                                    <option disabled selected>Vælg speciale</option>
+                                    <option value="It-Support">It-Supporter</option>
+                                    <option value="Infrastrukture">Infrastruktur</option>
+                                    <option value="Programmering">Programmering</option>
+                                </select>
                             </div>
-                            <div class="card-footer d-flex align-items-center justify-content-between small" style="cursor:pointer">
-                                <div>View</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between small" @onclick="() => GetbySpeciality(selectedSpecialization)" style="cursor:pointer;">
+                                <div>View Filtered Results</div>
                                 <div><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
@@ -126,6 +134,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <!--More contect after the hr tag   , it can be a list of users etc...-->
                 @if (_listOfStudents.Any() || _listOfConpanies.Any())
@@ -197,6 +206,7 @@
                                             <th class="tableheader" scope="col">Id</th>
                                             <th class="tableheader" scope="col">Firmanavn</th>
                                             <th class="tableheader" scope="col">Addresse</th>
+                                            <th class="tableheader" scope="col">Region</th>
                                             <th class="tableheader" scope="col">E-mail</th>
                                             <th class="tableheader" scope="col">Telefonnummer</th>
                                             <th class="tableheader" scope="col">Leder efter</th>
@@ -212,6 +222,7 @@
                                                 <th scope="row">@company.CompanyId</th>
                                                 <td>@company.CompanyName</td>
                                                 <td>@company.CompanyAddress</td>
+                                                <td>@company.Region</td>
                                                 <td>@company.Email</td>
                                                 <td>@company.PhoneNumber</td>
                                                 <td>@company.Preferences</td>
@@ -242,7 +253,7 @@
                                                         </button>
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenCompanyUpdate(company.CompanyId)">Opdater</a></li>
-                                                            <li><a class="dropdown-item" href="#">Fjern</a></li>
+                                                            <li><a class="dropdown-item">Fjern</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -274,8 +285,9 @@
 
             </div>
         }
-       
-        <DialogModal @ref="DialogModal"  OnClose="ReRenderTable"></DialogModal>
+
+
+        <DialogModal @ref="DialogModal" OnClose="ReRenderTable"></DialogModal>
     </Authorized>
 
     <NotAuthorized>
@@ -290,11 +302,15 @@
     private List<StudentModel> _listOfStudents = new List<StudentModel>();
     private List<CompanyModel> _listOfConpanies = new List<CompanyModel>();
 
+    private string? selectedSpecialization;
+
     //Table name
     private string _tableName = "";
     //Count of the registered profiles
     int _studentCount = 0;
     int _companyCount = 0;
+
+    string teststring = "IT-Support";
 
     //Pagination
     private const int PageSize = 15;  // Constant representing the number of items to display per page.
@@ -309,13 +325,21 @@
 
     private bool isLoaded = false;
 
+    private string specialisationFilter = "";
+
     #region initialize
     protected override async Task OnInitializedAsync()
     {
         isLoaded = false;
         await GetCount();
+
     }
     #endregion
+
+    private async Task GetbySpeciality(string spec)
+    {
+        _listOfStudents = await _studentService.GetStudentsBySpecialization(spec);
+    }
 
     #region GetCount
     public async Task GetCount()
@@ -391,5 +415,10 @@
         StateHasChanged();
     }
     #endregion
+
+    #region Filter student by specialization
+
+    #endregion
+
 
 }

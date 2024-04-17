@@ -107,7 +107,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Student Update function
-        public async Task<string> Update(StudentModel student)
+        public async Task<(string, bool)> Update(StudentModel student)
         {
             try
             {
@@ -128,11 +128,11 @@ namespace ElevPortalen.Services
                     _context.Entry(entry).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
 
-                    return $"Updated successfully";
+                    return ($"Updated successfully", true);
                 }
                 else
                 {
-                    return $"Entry not found"; // Return a message when the entry is not found
+                    return ($"Update failed.", false); // Return a message when the entry is not found
                 }
 
             }
@@ -250,6 +250,16 @@ namespace ElevPortalen.Services
 
             }
         }
+        #endregion
+
+        #region Get student by specialization
+        public async Task<List<StudentModel>> GetStudentsBySpecialization(string specialization)
+        {
+            return await _context.Student
+                                 .Where(s => s.Speciality == specialization)
+                                 .ToListAsync();
+        }
+
         #endregion
 
         #region create Recovery data function

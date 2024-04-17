@@ -95,7 +95,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Company Update function
-        public async Task<string> Update(CompanyModel company)
+        public async Task<(string, bool)> Update(CompanyModel company)
         {
             try
             {
@@ -119,11 +119,11 @@ namespace ElevPortalen.Services
                     _context.Entry(entry).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
 
-                    return $"Updated successfully";
+                    return ($"Updated successfully", true);
                 }
                 else
                 {
-                    return $"Entry not found"; // Return a message when the entry is not found
+                    return ($"Entry not found", false); // Return a message when the entry is not found
                 }
 
             }
@@ -136,7 +136,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Delete Company function
-        public async Task<string> Delete(int companytId)
+        public async Task<(string, bool)> Delete(int companytId)
         {
             try
             {
@@ -154,11 +154,11 @@ namespace ElevPortalen.Services
                     _context.Company.Remove(company);
                     await _context.SaveChangesAsync();
 
-                    return "The Company Profile was deleted Successfully.";
+                    return ("The Profile deleted Successfully.", true);
                 }
                 else
                 {
-                    return "Company not found.";
+                    return ("Student not found.", false);
                 }
             }
             catch (Exception ex)
@@ -286,7 +286,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Recover the data function for Company
-        public async Task<string> RecoverCompanyData(Guid id)
+        public async Task<(string, bool)> RecoverCompanyData(Guid id)
         {
             try
             {
@@ -323,12 +323,12 @@ namespace ElevPortalen.Services
                     await _context.SaveChangesAsync();
                     await _recoveryContext.SaveChangesAsync();
 
-                    return "Data successfully recovered.";
+                    return ("Data successfully recovered.", true);
                 }
                 else
                 {
                     // Return a message indicating that recovery data does not exist
-                    return $"No recovery data found for UserId: {id}.";
+                    return ("No recovery data found for UserId: {id}.", false);
                 }
             }
             catch (Exception ex)

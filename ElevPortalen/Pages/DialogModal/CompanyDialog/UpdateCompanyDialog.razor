@@ -26,6 +26,10 @@
                     <label for="address" class="mb-1 fw-bold">Adresse</label>
                     <input id="address" type="text" @bind="@Model.CompanyAddress" class="form-control" placeholder="Adresse" />
                 </div>
+                <div class="col-md-4 mb-2">
+                    <label for="PhoneNumber" class="mb-1 fw-bold">Tlf.</label>
+                    <input id="PhoneNumber" type="tel" @bind="@Model.PhoneNumber" class="form-control" placeholder="Tlf." />
+                </div>
             </div>
             <!-- Select region -->
             <!-- Row -->
@@ -48,14 +52,6 @@
                 </div>
                 <!-- Link -->
                 <div class="col-md-4">
-                    <label for="link" class="mb-1 fw-bold">Website link</label>
-                    <input id="link" type="text" @bind="@Model.Link" class="form-control" placeholder="example@example.com" />
-                </div>
-            </div>
-            <!-- Row -->
-            <div class="row gx-3 mb-3 px-4">
-                <!--select preferences-->
-                <div class="col-md-4">
                     <label class="mb-1 fw-bold" for="_preferences">Preference</label>
                     <select class="form-select form-select-md" @bind="Model.Preferences" id="_preferences"
                             aria-label="Preferences">
@@ -64,6 +60,14 @@
                         <option value="Infrastrukture">Infrastruktur</option>
                         <option value="Programmør">Programmør</option>
                     </select>
+                </div>
+            </div>
+            <!-- Row -->
+            <div class="row gx-3 mb-3 px-4">
+                <!--select preferences-->
+                <div class="col-md-12">
+                    <label for="link" class="mb-1 fw-bold">Website link</label>
+                    <input id="link" type="text" @bind="@Model.Link" class="form-control" placeholder="example@example.com" />
                 </div>
             </div>
             <!-- Textarea description -->
