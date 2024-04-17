@@ -77,7 +77,7 @@ namespace ElevPortalen.Services
         }
         #endregion
 
-        #region Get All Data from Company if their profile is set to visible
+        #region Get All Data from Company 
         public async Task<List<CompanyModel>> ReadAllCompanyData()
         {
             try
@@ -154,11 +154,11 @@ namespace ElevPortalen.Services
                     _context.Company.Remove(company);
                     await _context.SaveChangesAsync();
 
-                    return "The User Profile deleted Successfully.";
+                    return "The Company Profile was deleted Successfully.";
                 }
                 else
                 {
-                    return "Student not found.";
+                    return "Company not found.";
                 }
             }
             catch (Exception ex)

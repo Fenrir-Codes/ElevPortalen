@@ -13,9 +13,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Data.Common;
+using Microsoft.Data.Sqlite;
 
 namespace ElevPortalenTests.ElevPortalenServiceTests {
-    public class CompanyServiceTests {
+    public class CompanyServiceTests { 
 
         private readonly DbContextOptions<ElevPortalenDataDbContext> _options;
         private readonly ElevPortalenDataDbContext _context;
@@ -39,25 +43,11 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
             _dataRecoveryContext = new DataRecoveryDbContext(_recoveryOptions);
 
             //mock dependencies
-            var dataProtectionProviderMock = new Mock<IDataProtectionProvider>();
+            var _dataProtectionProviderMock = new Mock<IDataProtectionProvider>();
 
             //create CompanyService instance with mocked dependencies
-            _companyService = new CompanyService(_context, _dataRecoveryContext, dataProtectionProviderMock.Object);
-        }
-        #endregion
+            _companyService = new CompanyService(_context, _dataRecoveryContext, _dataProtectionProviderMock.Object);
 
-
-        #region create Company function async JUST HERE TO LOOK AT
-        public async Task<(string?, bool)> TestCreateCompany(CompanyModel company) {
-            try {
-                _context.Company.Add(company); // Add input to context variables
-                await _context.SaveChangesAsync(); // Save data
-
-                return ("Company Profile Created.", true);
-            } catch (Exception ex) {
-                // Handle the exception and return an error message
-                return ($"An error has ocurred: {ex.Message}", false);
-            }
         }
         #endregion
 
@@ -67,6 +57,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             //ARRANGE
             await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+
             var company = new CompanyModel {
                 UserId = Guid.NewGuid(),
                 CompanyId = 1,
@@ -334,27 +325,358 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         #endregion
 
         #region Get All Data from Company if they are visible test3 - check for null exception when ReadData returns null
+        //This test does not appear to work and probably will not unless the entire CompanyService is refactored to use interfaces
         [Fact]
         public async void ReadAllVisibleCompanyData_ShouldThrowInvalidOperationException_WhenListIsEmpty() {
 
-            // Arrange
-            var mockDbSet = new Mock<DbSet<CompanyModel>>();
 
-            mockDbSet.As<IQueryable<CompanyModel>>().Setup(m => m.Provider).Throws(new Exception("Simulated exception"));
 
-            var mockContext = new Mock<ElevPortalenDataDbContext>();
-            mockContext.Setup(c => c.Company).Returns(mockDbSet.Object);
+            // ARRANGE
+            // Clear any existing data in the in-memory database
+            await _context.Database.EnsureDeletedAsync();
 
-            var dataProtectionProviderMock = new Mock<IDataProtectionProvider>();
-
-            var companyService = new CompanyService(mockContext.Object, null, dataProtectionProviderMock.Object);
-
-            // Act & Assert
+            // ACT and ASSERT
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await _companyService.ReadAllVisibleCompanyData());
 
-            //This test does not appear to work and probably will not unless the entire CompanyService is refactored to use interfaces
+            
         }
         #endregion
+
+        #region Get All Data from Company if they are visible test4 - Returns only if company is visible
+        [Fact]
+        public async void ReadAllVisibleCompanyData_ShouldNotReturnListOfCompanies_WhenCompanyIsNotVisible() {
+
+            //ARRANGE
+            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+
+            _context.Company.Add(new CompanyModel { //Add data to db
+                CompanyId = 1,
+                CompanyName = "NetCompany",
+                Region = "Sjælland",
+                Email = "Netcompany@Netcompany.dk",
+                Link = "www.google.com",
+                Preferences = "Programmør",
+                Description = "Danmarks NetCompany",
+                profileImage = "pic.jpg",
+                PhoneNumber = 22334455,
+                IsHiring = true, 
+                IsVisible = false, //this one is not visible
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            });
+
+            _context.Company.Add(new CompanyModel {
+                CompanyId = 2,
+                CompanyName = "KMD",
+                Region = "Sjælland",
+                Email = "KMD@KMD.dk",
+                Link = "www.google.com",
+                Preferences = "Programmør",
+                Description = "Kommunedata",
+                profileImage = "pic.jpg",
+                PhoneNumber = 22334455,
+                IsHiring = true, 
+                IsVisible = true, //This is visible
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            });
+
+            await _context.SaveChangesAsync(); //Save changes
+
+            //ACT
+            var result = await _companyService.ReadAllVisibleCompanyData(); //Use method to read companies in db
+
+            //ASSERT
+            Assert.NotNull(result);
+            Assert.IsType<List<CompanyModel>>(result);
+            Assert.Single(result);
+        }
+        #endregion
+
+        #region Get All Data from Company test1 - Return all companies
+        [Fact]
+        public async void ReadAllCompanyData_ShouldReturnListOfAllCompanies() {
+
+            //ARRANGE
+            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+
+            _context.Company.Add(new CompanyModel { //Add data to db, we use mixed data with different visibilities
+                CompanyId = 1,
+                CompanyName = "NetCompany",
+                Region = "Sjælland",
+                Email = "Netcompany@Netcompany.dk",
+                Link = "www.google.com",
+                Preferences = "Programmør",
+                Description = "Danmarks NetCompany",
+                profileImage = "pic.jpg",
+                PhoneNumber = 22334455,
+                IsHiring = false, 
+                IsVisible = false,
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            });
+
+            _context.Company.Add(new CompanyModel {
+                CompanyId = 2,
+                CompanyName = "KMD",
+                Region = "Sjælland",
+                Email = "KMD@KMD.dk",
+                Link = "www.google.com",
+                Preferences = "Programmør",
+                Description = "Kommunedata",
+                profileImage = "pic.jpg",
+                PhoneNumber = 22334455,
+                IsHiring = true, 
+                IsVisible = true,
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            });
+
+            await _context.SaveChangesAsync(); //Save changes
+
+            //ACT
+            var result = await _companyService.ReadAllCompanyData(); //Use method to read companies in db
+
+            //ASSERT
+            Assert.NotNull(result);
+            Assert.IsType<List<CompanyModel>>(result);
+            Assert.Equal(2, result.Count); //Both have been read by method
+        }
+        #endregion
+
+        #region Get All Data from Company test2 - Return all companies should throw exception if no companies are found
+        //This test does not appear to work and probably will not unless the entire CompanyService is refactored to use interfaces
+        [Fact]
+        public async void ReadAllCompanyData_ShouldThrowException() {
+
+            //attempt
+            // ARRANGE
+            // Simulate an exception by making the DbContext null
+            var companyService = new CompanyService(null, null, null);
+            // ACT and ASSERT
+            await Assert.ThrowsAsync<InvalidOperationException>(() => companyService.ReadAllCompanyData());
+
+            //attempt
+            // ARRANGE
+            // Clear any existing data in the in-memory database
+            //await _context.Database.EnsureDeletedAsync();
+            // ACT and ASSERT
+            // Use Assert.ThrowsAsync to verify that the method throws an exception
+            //await Assert.ThrowsAsync<InvalidOperationException>(async () => {
+            // Call the method that is expected to throw an exception
+            //await _companyService.ReadAllCompanyData();
+            //});
+        }
+        #endregion
+
+        #region Get All Data from Company test3 - Return all companies should return an empty list when there are no companies
+        [Fact]
+        public async void ReadAllCompanyData_ShouldReturnEmptyListWhenNoCompaniesExist() {
+
+            //ARRANGE
+            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+
+            //ACT
+            var result = await _companyService.ReadAllCompanyData();
+
+            //ASSERT
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+        #endregion
+
+        #region Company Update function test1 - Update company should successfully update company
+        [Fact]
+        public async void UpdateCompany_ShouldUpdateCompanySuccessfully() {
+
+            //ARRANGE
+            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+            var UserGuid = Guid.NewGuid().ToString(); //make new Guid
+
+            var companyToUpdate = new CompanyModel { //Create and save a company
+                UserId = Guid.Parse(UserGuid),
+                CompanyId = 1,
+                CompanyName = "TestCompany",
+                CompanyAddress = "Address",
+                Region = "Region",
+                Email = "email@example.com",
+                Link = "www.example.com",
+                Preferences = "Preferences",
+                Description = "Description",
+                profileImage = "image.jpg",
+                PhoneNumber = 12345678,
+                IsHiring = true,
+                IsVisible = true,
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            };
+
+            var (message, success) = await _companyService.CreateCompany(companyToUpdate); //save
+
+            var updatedCompany = new CompanyModel { //create an updated companyModel on same Guid with same UserId
+                UserId = Guid.Parse(UserGuid),
+                CompanyId = 1,
+                CompanyName = "UpdatedTestCompany",
+                CompanyAddress = "Address",
+                Region = "Region",
+                Email = "email@example.com",
+                Link = "www.example.com",
+                Preferences = "Preferences",
+                Description = "Description",
+                profileImage = "image.jpg",
+                PhoneNumber = 12345678,
+                IsHiring = true,
+                IsVisible = true,
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            };
+
+            //ACT
+            var result = await _companyService.Update(updatedCompany);
+            var checkResult = await _companyService.ReadAllVisibleCompanyData(); //since company is visible, it should be findable with ReadAllVisibleCompanyData
+
+            //ASSERT
+            Assert.True(success); //check if initial company profile creation was successful
+            Assert.Equal("Company Profile Created.", message); //check if message was right 
+
+            Assert.Equal("Updated successfully", result); //assert if company was updated successfully
+            Assert.Equal("UpdatedTestCompany", checkResult[0].CompanyName); //Assert that data can be found in our mocked companyservice as well
+
+        }
+        #endregion
+
+        #region Company Update function test 2 - Update company should return entry not found if entry is invalid
+        [Fact]
+        public async void UpdateCompany_ShouldReturnEntryNotFound_WhenCompanyId_IsNotInDb() {
+
+            //ARRANGE
+            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+
+            var companyToUpdate = new CompanyModel { //Create and save a company
+                UserId = Guid.NewGuid(),
+                CompanyId = 1,
+                CompanyName = "TestCompany",
+                CompanyAddress = "Address",
+                Region = "Region",
+                Email = "email@example.com",
+                Link = "www.example.com",
+                Preferences = "Preferences",
+                Description = "Description",
+                profileImage = "image.jpg",
+                PhoneNumber = 12345678,
+                IsHiring = true,
+                IsVisible = true,
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            };
+
+            //ACT
+            var result = await _companyService.Update(companyToUpdate);
+
+            //ASSERT
+            Assert.Equal("Entry not found", result);
+        }
+        #endregion
+
+
+        #region Delete Company function test1 - delete should successfully delete company
+        [Fact]
+        public async void DeleteCompany_ShouldDeleteCompanySuccessfully() {
+
+            //ARRANGE
+            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+
+            var companyToDelete = new CompanyModel { //Create and save a company
+                UserId = Guid.NewGuid(),
+                CompanyId = 1,
+                CompanyName = "TestCompany",
+                CompanyAddress = "Address",
+                Region = "Region",
+                Email = "email@example.com",
+                Link = "www.example.com",
+                Preferences = "Preferences",
+                Description = "Description",
+                profileImage = "image.jpg",
+                PhoneNumber = 12345678,
+                IsHiring = true,
+                IsVisible = true,
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            };
+
+            var (message, success) = await _companyService.CreateCompany(companyToDelete); //create a new company for deletion
+
+            //ACT
+            var result = await _companyService.Delete(companyToDelete.CompanyId);
+
+            //ASSERT
+            Assert.True(success); //check if initial company profile creation was successful
+            Assert.Equal("Company Profile Created.", message); //check if message was right 
+
+            Assert.Equal("The Company Profile was deleted Successfully.", result); //check that company was deleted (success message displayed)
+
+        }
+        #endregion
+
+        #region Delete Company function test2 - delete should return company not found if the id is not a match
+        [Fact]
+        public async void DeleteCompany_ShouldReturnCompanyNotFound_IfIdIsNotInDb() {
+
+            //ARRANGE
+            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+            var fakeCompanyId = 0;
+
+
+            //ACT
+            var result = await _companyService.Delete(fakeCompanyId);
+
+            //ASSERT
+
+            Assert.Equal("Company not found.", result); //check that company was not found
+
+        }
+        #endregion
+
+        [Fact]
+        public async Task DeleteCompany_ShouldThrowExceptionOnDatabaseFailure() {
+            // Arrange: Set up conditions to force a database failure, such as mocking DbContext to throw an exception
+            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+
+
+            var company = new CompanyModel {
+                UserId = Guid.NewGuid(),
+                CompanyId = 1,
+                CompanyName = "TestCompany",
+                CompanyAddress = "Address",
+                Region = "Region",
+                Email = "email@example.com",
+                Link = "www.example.com",
+                Preferences = "Preferences",
+                Description = "Description",
+                profileImage = "image.jpg",
+                PhoneNumber = 12345678,
+                IsHiring = true,
+                IsVisible = true,
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            };
+
+            //ACT
+            var (message, success) = await _companyService.CreateCompany(company);
+
+            // Act & Assert
+            Assert.True(success); //check if company profile creation was successful
+            Assert.Equal("Company Profile Created.", message); //check if message is right
+
+            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            {
+                // Call the Delete method which is expected to throw an exception
+                await _companyService.Delete(1); // Pass a valid company ID or any existing ID
+            });
+
+
+        }
+
 
 
         #region TEMPLATE
@@ -363,6 +685,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             //ARRANGE
             await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
+            //_context.Database.CloseConnection();
 
             //ACT
 
