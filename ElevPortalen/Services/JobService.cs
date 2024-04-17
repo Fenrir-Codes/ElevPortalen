@@ -51,11 +51,12 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Read one offer with the job Id
-        public async Task<JobOfferModel?> GetOfferWithJobId(int JobId)
+        public async Task<(string, bool, JobOfferModel?)> GetOfferWithJobId(int JobId)
         {
             try
             {
-                return await _context.JobOfferDataBase.FirstOrDefaultAsync(offer => offer.JobOfferId == JobId);
+                var data = await _context.JobOfferDataBase.FirstOrDefaultAsync(offer => offer.JobOfferId == JobId);
+                return ("Data read successful.", true, data);
             }
             catch (Exception ex)
             {

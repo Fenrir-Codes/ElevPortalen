@@ -29,10 +29,6 @@
                 </div>
             }
         }
-        else if (!_jobList.Any())
-        {
-            <AlertBox IsVisible=true waitForSeconds="0" Message="Ingen jobtilbud i øjeblikket." isWarning=true></AlertBox>
-        }
         else
         {
             <!-- Actual cards -->
@@ -94,15 +90,18 @@
     #endregion
 
     #region Navigate to company website Link with opening new window
-    public async Task NavigateToNewTab(string link)
+    public async Task NavigateToNewTab(string? link)
     {
         string url = "https://" + link;
         await jsRuntime.InvokeVoidAsync("open", url, "_blank");
     }
     #endregion
 
+    #region navigate to job details page
     private void NavigateToViewJobDetails(int id)
     {
         _navManager.NavigateTo($"/viewjobdetails/{id}");
     }
+    #endregion
+
 }
