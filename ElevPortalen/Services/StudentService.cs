@@ -107,7 +107,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Student Update function
-        public async Task<string> Update(StudentModel student)
+        public async Task<(string, bool)> Update(StudentModel student)
         {
             try
             {
@@ -128,11 +128,11 @@ namespace ElevPortalen.Services
                     _context.Entry(entry).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
 
-                    return $"Updated successfully";
+                    return ($"Updated successfully", true);
                 }
                 else
                 {
-                    return $"Entry not found"; // Return a message when the entry is not found
+                    return ($"Update failed.", false); // Return a message when the entry is not found
                 }
 
             }
@@ -222,7 +222,7 @@ namespace ElevPortalen.Services
             {
                 // Instead of throwing a new exception with a message that includes the original exception message,
                 // it's better to let the original exception propagate.
-                throw;
+                throw new InvalidOperationException($"{ex.Message}");
             }
         }
         #endregion

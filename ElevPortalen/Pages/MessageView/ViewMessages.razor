@@ -37,13 +37,16 @@
                                         <td class="align-middle fw-bold" style="max-width:100px;">Fra: @message.SenderName</td>
                                         <td class="align-middle text-center fw-bold">
                                             <small>
-                                                @if (!string.IsNullOrEmpty(message.Content) && message.Content.Length > 10 && message.Content.Length < 21)
+                                                @if (!string.IsNullOrEmpty(message.Content))
                                                 {
-                                                    @message.Content.Substring(0, 2) <span>...</span>
-                                                }
-                                                else
-                                                {
-                                                    @message.Content
+                                                    @if (message.Content.Length > 35)
+                                                    {
+                                                        @message.Content.Substring(0, 25) <span>...</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        @message.Content <span>...</span>
+                                                    }
                                                 }
                                             </small>
                                             </td>
@@ -55,13 +58,16 @@
                                         <td class="align-middle" style="max-width:100px;">Fra: @message.SenderName</td>
                                         <td class="align-middle text-center">
                                             <small>
-                                                @if (!string.IsNullOrEmpty(message.Content) && message.Content.Length > 10 && message.Content.Length < 21)
+                                                @if (!string.IsNullOrEmpty(message.Content))
                                                 {
-                                                    @message.Content.Substring(0, 20) <span>...</span>
-                                                }
-                                                else
-                                                {
-                                                    @message.Content <span>...</span>
+                                                    @if (message.Content.Length > 35)
+                                                    {
+                                                        @message.Content.Substring(0, 25) <span>...</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        @message.Content <span>...</span>
+                                                    }
                                                 }
                                             </small>
                                         </td>

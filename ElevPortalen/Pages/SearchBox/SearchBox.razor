@@ -15,6 +15,9 @@
     private async Task OnInputChange(ChangeEventArgs e)
     {
         searchItem = e.Value?.ToString();
-        await OnSearch.InvokeAsync(searchItem);
+        if (OnSearch.HasDelegate)
+        {
+            await OnSearch.InvokeAsync(searchItem);
+        }
     }
 }

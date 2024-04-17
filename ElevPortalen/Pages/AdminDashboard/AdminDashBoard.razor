@@ -1,5 +1,6 @@
 ﻿@page "/admindashboard"
 
+@using ElevPortalen.Areas.Identity.Pages.Account.Manage
 @using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Data;
@@ -13,6 +14,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IConfiguration Configuration
 @inject NavigationManager NavManager
+
 
 <AuthorizeView Roles="Admin">
     <Authorized>
@@ -48,7 +50,7 @@
                 <!-- Row with 4 cards -->
                 <div class="row pt-2">
                     <div class="col-lg-6 col-xl-3 mb-2">
-                        <div class="card bg-secondary text-white h-100">
+                        <div class="card bg-dark bg-gradient text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
@@ -69,7 +71,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-xl-3 mb-2">
-                        <div class="card bg-secondary text-white h-100">
+                        <div class="card bg-dark bg-gradient text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
@@ -90,7 +92,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-xl-3 mb-2">
-                        <div class="card bg-secondary text-white h-100">
+                        <div class="card bg-dark bg-gradient text-white h-100">
                             <div class="card-body text-white">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
@@ -108,7 +110,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-xl-3 mb-2">
-                        <div class="card bg-secondary text-white h-100">
+                        <div class="card bg-dark bg-gradient text-white h-100">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="me-3">
@@ -130,7 +132,7 @@
                 <!--More contect after the hr tag   , it can be a list of users etc...-->
                 @if (_listOfStudents.Any() || _listOfConpanies.Any())
                 {
-                    <div class="card bg-secondary text-white">
+                    <div class="card bg-dark bg-gradient text-white">
                         <div class="card-body">
                             <h5 class="card-title fw-bold">@_tableName</h5>
 
@@ -242,7 +244,7 @@
                                                         </button>
                                                         <ul class="dropdown-menu">
                                                             <li><a class="dropdown-item" @onclick="() => DialogModal!.OpenCompanyUpdate(company.CompanyId)">Opdater</a></li>
-                                                            <li><a class="dropdown-item" href="#">Fjern</a></li>
+                                                            <li><a class="dropdown-item" >Fjern</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -274,6 +276,7 @@
 
             </div>
         }
+
        
         <DialogModal @ref="DialogModal"  OnClose="ReRenderTable"></DialogModal>
     </Authorized>
@@ -308,6 +311,7 @@
     private bool isCompany = false;
 
     private bool isLoaded = false;
+
 
     #region initialize
     protected override async Task OnInitializedAsync()
