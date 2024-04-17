@@ -18,11 +18,19 @@
         <form>
             <!-- top row with 2 input -->
             <div class="row gx-3 mb-2 mt-2">
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <label for="title" class="form-label small mb-1 fw-bold">Jobtitel</label>
                     <input type="text" class="form-control" id="title" @bind="job.Title" placeholder="Jobtitel" required>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
+                    <label for="contactperson" class="form-label small mb-1 fw-bold">Kontaktperson</label>
+                    <input type="text" class="form-control" id="contactperson" @bind="job.ContactPerson" placeholder="Kontakpersons navn" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="contact" class="form-label small mb-1 fw-bold">Tlf</label>
+                    <input type="tel" class="form-control" id="contact" @bind="job.PhoneNumber" placeholder="Kontaktpersons telefonnummer" required>
+                </div>
+                <div class="col-md-3">
                     <label class="small mb-1 fw-bold" for="inputaddress">Addresse</label>
                     <input class="form-control" list="addressSuggestions" @bind="job.JobAddress" placeholder="Indtast adressen, hvor jobbet finder sted"
                            @oninput="UpdateDropdownWithDelay">
@@ -41,7 +49,7 @@
 
             <!-- Middle -->
             <div class="mb-4">
-                <label for="jobLink" class="form-label small mb-1 fw-bold">Link til jobbet</label>
+                <label for="jobLink" class="form-label small mb-1 fw-bold">Link til jobansøgning side</label>
                 <input type="text" class="form-control" id="jobLink" @bind="job.JobLink" placeholder="www.example.com">
             </div>
             <div class="mb-4">

@@ -18,15 +18,23 @@
 
             <!-- The left side of the jobdetails -->
             <div class="col-lg-8 bg-dark text-white rounded-2 shadow-sm p-5">
-                <div class="d-flex align-items-center mb-5 rounded-2">
+                <h3 class="mb-3 fw-bold">@_job.Title</h3>
+                <hr />
+                <div class="d-flex align-items-center mb-5">
                     <div class="text-start">
-                        <h3 class="mb-3 fw-bold">@_job.Title</h3>
-                        <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-success me-2 fa-xl"></i>@_job.JobAddress</span>
+                        <div class="d-flex align-items-center">
+                            <span class="text-truncate me-3"><i class="fa fa-map-marker-alt text-success me-2 fa-xl"></i>@_job.JobAddress</span>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-5 rounded-2 shadow-sm">
+                <div class="mb-5">
                     <h4 class="mb-3 fw-bold">Jobdetaljer</h4>
                     <p>@_job.JobDetails</p>
+                </div>
+                <div class="m-0">
+                    <h4 class="mb-3 fw-bold">Ansøg</h4>
+                    <button class="btn btn-sm btn-success" @onclick="() => NavigateToNewTab(_job.JobLink)">Hjemmeside</button>
+                    <button class="btn btn-sm btn-success">Send besked</button>
                 </div>
             </div>
 
@@ -49,6 +57,14 @@
                     </p>
                     <p>
                         <i class="fa fa-angle-right text-primary me-2 text-success"></i>
+                        Kontaktperson: @_job.ContactPerson
+                    </p>
+                    <p>
+                        <i class="fa fa-angle-right text-primary me-2 text-success"></i>
+                        Tlf.: @_job.PhoneNumber
+                    </p>
+                    <p>
+                        <i class="fa fa-angle-right text-primary me-2 text-success"></i>
                         Deadline: @_job.Deadline.ToShortDateString()
                     </p>
                 </div>
@@ -63,15 +79,6 @@
                     <p>
                         <i class="fa fa-angle-right text-primary me-2 text-success"></i>
                         Adresse: @_job.JobAddress
-                    </p>
-                    <p>
-                        <i class="fa fa-angle-right text-primary me-2 text-success"></i>
-                        @_job.JobDetails
-                    </p>
-                    <p>
-                        <i class="fa fa-angle-right text-primary me-2 text-success"></i>
-                        <button class="btn btn-success btn-sm">Button 1</button>
-                        <button class="btn btn-success btn-sm">Button 1</button>
                     </p>
                 </div>
 
@@ -96,8 +103,22 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _job = await _jobService.GetOfferWithJobId(JobOfferId);
+        await GetJobOffer(JobOfferId);
     }
 
+    #region Get the job details with the job ID
+    private async Task GetJobOffer(int JobId)
+    {
+        _job = await _jobService.GetOfferWithJobId(JobId);
+    }
+    #endregion
+
+    #region Navigate to website Link with opening new window
+    public async Task NavigateToNewTab(string? link)
+    {
+        string url = "https://" + link;
+        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+    #endregion
 
 }
