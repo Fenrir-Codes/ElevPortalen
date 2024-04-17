@@ -252,6 +252,16 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+        #region Get student by specialization
+        public async Task<List<StudentModel>> GetStudentsBySpecialization(string specialization)
+        {
+            return await _context.Student
+                                 .Where(s => s.Speciality == specialization)
+                                 .ToListAsync();
+        }
+
+        #endregion
+
         #region create Recovery data function
         public async Task<string> CreateRecoveryData(StudentModel deletedStudent)
         {
