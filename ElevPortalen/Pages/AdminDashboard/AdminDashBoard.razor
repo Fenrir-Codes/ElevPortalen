@@ -109,8 +109,8 @@
                                     <option value="Programmering">Programmering</option>
                                 </select>
                             </div>
-                            <div class="card-footer d-flex align-items-center justify-content-between small">
-                                <div @onclick="() => GetbySpeciality(selectedSpecialization)" style="cursor:pointer;">View Filtered Results</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between small" @onclick="() => GetbySpeciality(selectedSpecialization)" style="cursor:pointer;">
+                                <div>View Filtered Results</div>
                                 <div><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
@@ -206,6 +206,7 @@
                                             <th class="tableheader" scope="col">Id</th>
                                             <th class="tableheader" scope="col">Firmanavn</th>
                                             <th class="tableheader" scope="col">Addresse</th>
+                                            <th class="tableheader" scope="col">Region</th>
                                             <th class="tableheader" scope="col">E-mail</th>
                                             <th class="tableheader" scope="col">Telefonnummer</th>
                                             <th class="tableheader" scope="col">Leder efter</th>
@@ -221,6 +222,7 @@
                                                 <th scope="row">@company.CompanyId</th>
                                                 <td>@company.CompanyName</td>
                                                 <td>@company.CompanyAddress</td>
+                                                <td>@company.Region</td>
                                                 <td>@company.Email</td>
                                                 <td>@company.PhoneNumber</td>
                                                 <td>@company.Preferences</td>
