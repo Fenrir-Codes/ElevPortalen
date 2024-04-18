@@ -30,42 +30,52 @@
                     <!-- Account details card-->
                     <div class="card mb-4">
                         <div class="card-header fw-bold text-white bg-dark">Registrer Kontooplysninger</div>
-                        <div class="card-body">
+                        <div class="card-body text-white bg-dark">
                             <form>
-                                <div class="col-md-6">
-                                    <label class="small mb-1 fw-bold" for="title">Title</label>
-                                    <input class="form-control" id="title" type="text"
-                                           placeholder="f.eks. Datatekniker" @bind="_studentData.Title">
-                                </div>
-                                <!-- Form Row-->
-                                <div class="row gx-3 mb-3">
-                                    <!-- Form Group (Name)-->
-                                    <div class="col-md-6">
-                                        <label class="small mb-1 fw-bold" for="firstname">Fornavn</label>
+                                <!-- Row -->
+                                <div class="row gx-3 mb-3 mt-3">
+                                    <!-- Title -->
+                                    <div class="col-md-3">
+                                        <label class="mb-1 fw-bold" for="title">Title</label>
+                                        <input class="form-control" id="title" type="text"
+                                               placeholder="f.eks. Datatekniker" @bind="_studentData.Title">
+                                    </div>
+                                    <!-- Name -->
+                                    <div class="col-md-3">
+                                        <label class="mb-1 fw-bold" for="firstname">Fornavn</label>
                                         <input class="form-control" id="firstname" type="text"
                                                placeholder="Fornavn" @bind="_studentData.FirstName">
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="small mb-1 fw-bold" for="middlename">Mellemnavn</label>
+                                    <div class="col-md-3">
+                                        <label class="mb-1 fw-bold" for="middlename">Mellemnavn</label>
                                         <input class="form-control" id="middlename" type="text"
                                                placeholder="Mellemnavn (hvis du har)" @bind="_studentData.MiddleName">
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="small mb-1 fw-bold" for="flastname">Efternavn</label>
+                                    <div class="col-md-3">
+                                        <label class="mb-1 fw-bold" for="flastname">Efternavn</label>
                                         <input class="form-control" id="lastname" type="text"
                                                placeholder="Efternavn" @bind="_studentData.LastName">
                                     </div>
+                                </div>
+                                <!-- Row -->
+                                <div class="row gx-3 mb-2">
                                     <!--Email-->
-                                    <div class="col-md-6">
-                                        <label class="small mb-1 fw-bold" for="Email">Email</label>
+                                    <div class="col-md-3">
+                                        <label class="mb-1 fw-bold" for="Email">Email</label>
                                         <input class="form-control" id="Email" type="email"
                                                placeholder="example@example.com" @bind="_studentData.Email">
                                     </div>
-                                    <!-- Form Group (address)-->
-                                    <div class="col-md-6">
-                                        <label class="small mb-1 fw-bold" for="inputaddress">Addresse</label>
+                                    <!--Phone-->
+                                    <div class="col-md-3">
+                                        <label class="mb-1 fw-bold" for="inputPhone">Mobil</label>
+                                        <input class="form-control" type="tel" id="inputPhone" name="phone"
+                                               placeholder="8 cifre" @bind="_studentData.PhoneNumber" required>
+                                    </div>
+                                    <!-- address -->
+                                    <div class="col-md-3">
+                                        <label class="mb-1 fw-bold" for="inputaddress">Addresse</label>
                                         <input class="form-control" list="addressSuggestions" @bind="_studentData.Address" placeholder="Enter address"
-                                        @oninput="UpdateDropdownWithDelay">
+                                               @oninput="UpdateDropdownWithDelay">
                                         <datalist id="addressSuggestions">
                                             @foreach (var item in address)
                                             {
@@ -77,17 +87,8 @@
                                             }
                                         </datalist>
                                     </div>
-                                    <!--Phone-->
-                                    <div class="mb-3 col-md-6">
-                                        <label class="small mb-1 fw-bold" for="inputPhone">Mobil</label>
-                                        <input class="form-control" type="tel" id="inputPhone" name="phone"
-                                               placeholder="8 cifre" @bind="_studentData.PhoneNumber" required>
-                                    </div>
-                                </div>
-                                <!-- Form Row -->
-                                <div class="row gx-3 mb-3">
-                                    <div class="col-md-6">
-                                        <label class="small mb-1 fw-bold" for="_speciality">Specialisering</label>
+                                    <div class="col-md-3">
+                                        <label class="mb-1 fw-bold" for="_speciality">Specialisering</label>
                                         <select class="form-select form-select-md" @bind="_studentData.Speciality" id="_speciality" aria-label="Region" required>
                                             <option disabled selected>Vælg dit speciale</option>
                                             <option value="It-Support">It-Supporter</option>
@@ -95,135 +96,160 @@
                                             <option value="Programmering">Programmering</option>
                                         </select>
                                     </div>
+                                </div>
+                                <!-- Row -->
+                                <div class="row gx-3 mb-3">
                                     <div class="col-md-6">
-                                        <label class="small mb-1 fw-bold" for="_picture">Image</label>
+                                        <label class="mb-1 fw-bold" for="_picture">Image</label>
                                         <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                                     </div>
                                 </div>
-                                <!-- Just for fun -->
-                                <div class="row gx-3 mb-3">
-                                    <div class="col-md-6">
-                                        <label class="small mb-1 fw-bold" for="_gender">Gender</label>
-                                        <select class="form-select form-select-md" id="_gender" aria-label="Region" required>
-                                            <option selected>Male</option>
-                                            <option>Female</option>
-                                            <option>Tramssexual Male</option>
-                                            <option>Transsexual Female</option>
-                                            <option>Metrosexual Male</option>
-                                            <option>Metrosexual Female</option>
-                                            <option>Male but curius what being a female is like</option>
-                                            <option>Female but curius what being a male is like</option>
-                                            <option>Male but overweight, have boobs</option>
-                                            <option>Female, but have an Adam's apple</option>
-                                            <option>Born without genitals - Identify as Male</option>
-                                            <option>Born without genitals - Identify as Female</option>
-                                            <option>Born without genitals - Proud of it</option>
-                                            <option>Cointhusian Transfestator</option>
-                                            <option>A Nipple-Sucking, Intergalactic, Anti-Condom Weapon</option>
-                                            <option>Prefen not to say</option>
-                                        </select>
+
+                                <!-- Accordion -->
+                                <div class="accordion accordion-flush mb-3" id="accordionFlush">
+                                    <!-- Accordion item 1 - Links -->
+                                    <div class="accordion-item bg-dark">
+                                        <h2 class="accordion-header" id="flush-headingOne">
+                                            <button class="accordion-button collapsed text-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                Tilføj Social Links
+                                            </button>
+                                        </h2>
+                                        <div id="collapseOne" class="accordion-collapse collapse bg-dark text-white" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlush">
+                                            <div class="accordion-body">
+                                                <div class="row gx-3 mb-3">
+                                                    <div class="col-md-3">
+                                                        <label class="mb-1 fw-bold" for="FBook">Facebook</label>
+                                                        <input class="form-control" id="FBook" type="text"
+                                                               placeholder="www.facebook.com/yourprofile" @bind="_studentData.FacebookLink">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="mb-1 fw-bold" for="linkedin">LinkedIn</label>
+                                                        <input class="form-control" id="linkedin" type="text"
+                                                               placeholder="www.linkedin.com/in/yourProfile" @bind="_studentData.LinkedInLink">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="mb-1 fw-bold" for="Insta">Instagram</label>
+                                                        <input class="form-control" id="Insta" type="text"
+                                                               placeholder="www.instagram.com/yourProfileName" @bind="_studentData.InstagramLink">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="mb-1 fw-bold" for="Github">Github</label>
+                                                        <input class="form-control" id="Github" type="text"
+                                                               placeholder="www.github.com/yourProfileName" @bind="_studentData.GitHubLink">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Accordion item 2 - skills -->
+                                    <div class="accordion-item bg-dark">
+                                        <h2 class="accordion-header" id="flush-headingTwo">
+                                            <button class="accordion-button collapsed text-white fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                Tilføj Færdigheder
+                                            </button>
+                                        </h2>
+                                        <div id="collapseTwo" class="accordion-collapse collapse bg-dark text-white" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlush">
+                                            <div class="accordion-body">
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Programmeringssprog</label>
+                                                        <div class="row">
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CSharp" /> C#
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Java" /> Java
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.DotNet" /> .Net
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Typescript" /> TypeScript
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Python" /> Python
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <div class="row">
+                                                            <label class="mt-4">
+                                                                <input type="checkbox" @bind="_Skills.PHP" /> PHP
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CPlusPlus" /> C++
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.C" /> C
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Blazor" /> Blazor
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.JavaScript" /> JavaScript
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Web-udvikling</label>
+
+                                                        <div class="row">
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Bootstrap" /> Bootstrap
+                                                            </label>
+
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.HTML" /> Html
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CSS" /> CSS
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.SQL" /> SQL
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.NetWork" /> Network
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Andet</label>
+
+                                                        <div class="row">
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.OfficePack" /> Office pakken
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.CloudComputing" /> Cloud technologies
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.VersionControl" /> Git / GitHub
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.Communikation" /> Kommunikation
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.ProblemSolving" /> Problemsolving
+                                                            </label>
+                                                            <label>
+                                                                <input type="checkbox" @bind="_Skills.TeamWorking" /> Team work
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- Fun end -->
-                                <div class="row">
-                                    <label class="mb-1 form-label fw-bold" for="_Skills">Færdigheder</label>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Programmeringssprog</label>
-
-                                        <div class="row">
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.CSharp" /> C#
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.Java" /> Java
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.DotNet" /> .Net
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.Typescript" /> TypeScript
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.Python" /> Python
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 mb-2">
-                                        <div class="row">
-                                            <label class="mt-4">
-                                                <input type="checkbox" @bind="_Skills.PHP" /> PHP
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.CPlusPlus" /> C++
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.C" /> C
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.Blazor" /> Blazor
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.JavaScript" /> JavaScript
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Web-udvikling</label>
-
-                                        <div class="row">
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.Bootstrap" /> Bootstrap
-                                            </label>
-
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.HTML" /> Html
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.CSS" /> CSS
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.SQL" /> SQL
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.NetWork" /> Network
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 mb-2">
-                                        <label class="mb-1 small form-label fw-bold" for="_Skills">Andet</label>
-
-                                        <div class="row">
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.OfficePack" /> Office pakken
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.CloudComputing" /> Cloud technologies
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.VersionControl" /> Git / GitHub
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.Communikation" /> Kommunikation
-                                            </label>
-                                             <label>
-                                                <input type="checkbox" @bind="_Skills.ProblemSolving" /> Problemsolving
-                                            </label>
-                                            <label>
-                                                <input type="checkbox" @bind="_Skills.TeamWorking" /> Team work
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <!-- Form Group (Description)-->
                                 <div class="col-md-12 mb-3">
                                     <label for="Description" class="form-label">Beskrivelse</label>
-                                    <textarea class="form-control" @bind="_studentData.Description" id="_description" rows="4"></textarea>
+                                    <textarea class="form-control" @bind="_studentData.Description" id="_description" rows="12"></textarea>
                                 </div>
 
                             </form>
 
-                            <button class="btn btn-outline-success mt-2" @onclick="CreateStudentProfile">Gem</button>
+                            <button class="btn btn-success mt-2" @onclick="CreateStudentProfile">Gem</button>
 
                         </div>
                     </div>
@@ -337,7 +363,7 @@
                                 </div>
 
                             </form>
-                            
+
                             <button class="btn btn-outline-success mt-2" @onclick="CreateCompanyProfile">Gem</button>
 
                         </div>
@@ -348,7 +374,7 @@
 
     </AuthorizeView>
 
-    <AlertBox @ref="_alertBox"/>
+    <AlertBox @ref="_alertBox" />
 
 </div>
 
@@ -401,7 +427,7 @@
             }
         }
     }
-    # endregion
+    #endregion
 
     #region Create Student Profile Function
     private async Task CreateStudentProfile()
@@ -423,7 +449,7 @@
                     if (Guid.TryParse(userIdString, out Guid userId))
                     {
                         _studentData = new StudentModel
-                        {
+                            {
                                 UserId = userId, // Set the UserId to the user's unique identifier
                                 Title = _studentData.Title,
                                 FirstName = _studentData.FirstName,
@@ -438,7 +464,7 @@
                                 RegisteredDate = DateTime.Now,
                                 UpdatedDate = DateTime.Now
 
-                        };
+                            };
 
                         var (message, success) = await _studentService.CreateStudent(_studentData); //create student data
                         if (success)
@@ -474,7 +500,7 @@
     #region Add Skills Function
     private async Task CreateSkills(int studentId)
     {
-        var (message, success ) = await _skillService.CreateSkills(studentId, _Skills);
+        var (message, success) = await _skillService.CreateSkills(studentId, _Skills);
         if (success)
         {
             _alertBox.SetMessage(true, message, 5000, success: true);
@@ -506,7 +532,7 @@
                     if (Guid.TryParse(userIdString, out Guid userId))
                     {
                         _companyData = new CompanyModel
-                        {
+                            {
                                 UserId = userId,
                                 CompanyName = _companyData.CompanyName,
                                 CompanyAddress = _companyData.CompanyAddress,
@@ -521,7 +547,7 @@
                                 IsVisible = _companyData.IsVisible,
                                 UpdatedDate = DateTime.Now,
                                 RegisteredDate = DateTime.Now,
-                        };
+                            };
 
                         var (message, success) = await _companyService.CreateCompany(_companyData);
                         if (success)
@@ -588,7 +614,7 @@
             else
             {
                 // Handle the error case, show a message to the user
-                _alertBox.SetMessage(true, errorMessage,10000, warning:true);
+                _alertBox.SetMessage(true, errorMessage, 10000, warning: true);
             }
         }
         else
