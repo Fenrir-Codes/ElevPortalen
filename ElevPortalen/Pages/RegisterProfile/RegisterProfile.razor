@@ -19,16 +19,15 @@
 
 <PageTitle>Register</PageTitle>
 
-<div class="container">
+<div class="container-fluid">
 
     <AuthorizeView Roles="Student">
 
         <Authorized>
-            <div class="container d-flex align-content-center justify-content-center">
-                <div class="col-xl-12">
-                    <br />
+            <div class="d-flex align-content-center justify-content-center">
+
                     <!-- Account details card-->
-                    <div class="card mb-4">
+                    <div class="card mt-4 mb-4 col-xl-12">
                         <div class="card-header fw-bold text-white bg-dark">Registrer Kontooplysninger</div>
                         <div class="card-body text-white bg-dark">
                             <form>
@@ -244,7 +243,7 @@
                                 <!-- Form Group (Description)-->
                                 <div class="col-md-12 mb-3">
                                     <label for="Description" class="form-label">Beskrivelse</label>
-                                    <textarea class="form-control" @bind="_studentData.Description" id="_description" rows="12"></textarea>
+                                    <textarea class="form-control" @bind="_studentData.Description" id="_description" rows="13"></textarea>
                                 </div>
 
                             </form>
@@ -253,7 +252,7 @@
 
                         </div>
                     </div>
-                </div>
+
             </div>
         </Authorized>
 
@@ -461,6 +460,10 @@
                                 profileImage = _newFileName,
                                 Speciality = _studentData.Speciality,
                                 PhoneNumber = _studentData.PhoneNumber,
+                                FacebookLink = _studentData.FacebookLink,
+                                LinkedInLink = _studentData.LinkedInLink,
+                                InstagramLink = _studentData.InstagramLink,
+                                GitHubLink = _studentData.GitHubLink,
                                 RegisteredDate = DateTime.Now,
                                 UpdatedDate = DateTime.Now
 
