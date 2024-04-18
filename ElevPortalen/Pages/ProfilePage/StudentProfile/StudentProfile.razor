@@ -31,30 +31,42 @@ else
                             <div class="d-flex justify-content-between align-items-center flex-column flex-sm-row">
                                 <!-- Icons -->
                                 <div class="d-flex mb-sm-0">
-                                    <a @onclick="() => NavigateToNewTab(data.FacebookLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
-                                        <span class="fa-stack fa-sm">
-                                            <i class="fas fa-circle fa-stack-2x"></i>
-                                            <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a @onclick="() => NavigateToNewTab(data.InstagramLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
-                                        <span class="fa-stack fa-sm">
-                                            <i class="fas fa-circle fa-stack-2x"></i>
-                                            <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a @onclick="() => NavigateToNewTab(data.LinkedInLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
-                                        <span class="fa-stack fa-sm">
-                                            <i class="fas fa-circle fa-stack-2x"></i>
-                                            <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a @onclick="() => NavigateToNewTab(data.GitHubLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer;">
-                                        <span class="fa-stack fa-sm">
-                                            <i class="fas fa-circle fa-stack-2x"></i>
-                                            <i class="fab fa-github fa-stack-1x fa-inverse"></i>      
-                                        </span>
-                                    </a>
+                                    @if (!string.IsNullOrEmpty(data.FacebookLink))
+                                    {
+                                        <a @onclick="() => NavigateToNewTab(data.FacebookLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
+                                            <span class="fa-stack fa-sm">
+                                                <i class="fas fa-circle fa-stack-2x"></i>
+                                                <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(data.InstagramLink))
+                                    {
+                                        <a @onclick="() => NavigateToNewTab(data.InstagramLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
+                                            <span class="fa-stack fa-sm">
+                                                <i class="fas fa-circle fa-stack-2x"></i>
+                                                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(data.LinkedInLink))
+                                    {
+                                        <a @onclick="() => NavigateToNewTab(data.LinkedInLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
+                                            <span class="fa-stack fa-sm">
+                                                <i class="fas fa-circle fa-stack-2x"></i>
+                                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(data.GitHubLink))
+                                    {
+                                        <a @onclick="() => NavigateToNewTab(data.GitHubLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer;">
+                                            <span class="fa-stack fa-sm">
+                                                <i class="fas fa-circle fa-stack-2x"></i>
+                                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    }
                                     <button type="button" class="btn btn-outline-success position-relative btn-sm" @onclick="() => NavigateToMyMessages(data.StudentId)">
                                         Inbox 
                                         <span><i class="fa-solid fa-envelope"></i></span>
