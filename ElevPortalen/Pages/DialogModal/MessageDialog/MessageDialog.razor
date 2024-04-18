@@ -65,7 +65,10 @@
     private async Task GetAuthenticatedUsersName()
     {
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        nameOFSender = _authState.User.Identity.Name;
+        if (_authState != null)
+        {
+            nameOFSender = _authState.User.Identity.Name;
+        }
     }
     #endregion
 
