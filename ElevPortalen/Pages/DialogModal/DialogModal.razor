@@ -11,71 +11,62 @@
 @inject MessageService _messageService
 @inject JobService _jobService
 
-<AuthorizeView Roles="Student, Company, Admin">
-    <Authorized>
+<!-- Modal -->
+<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@DisplayStyle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-body p-0 bg-dark text-white">
 
-        <!-- Modal -->
-        <div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@DisplayStyle" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-body p-0 bg-dark text-white">
+                @if (isStudent && !MessageDialog)
+                {
+                    <UpdateStudentDialog Model="_studentToUpdate"></UpdateStudentDialog>
+                }
+                else if (isCompany && !MessageDialog)
+                {
+                    <UpdateCompanyDialog Model="_companyToUpdate"></UpdateCompanyDialog>
+                }
+                else if (MessageDialog)
+                {
+                    <MessageDialog Model="_messageToSend" MessageTo="@_messageTo" ReceiverId="@_recieverId"></MessageDialog>
+                }
+                else if (JobOfferDialog)
+                {
+                    <JobOfferDialog job="_job"></JobOfferDialog>
+                }
+                else
+                {
+                    <AlertBox IsVisible=true Message="Error in - DialogModal Component" waitForSeconds="0" isWarning=true></AlertBox>
+                }
 
-                        @if (isStudent && !MessageDialog)
-                        {
-                            <UpdateStudentDialog Model="_studentToUpdate"></UpdateStudentDialog>
-                        }
-                        else if (isCompany && !MessageDialog)
-                        {
-                            <UpdateCompanyDialog Model="_companyToUpdate"></UpdateCompanyDialog>
-                        }
-                        else if (MessageDialog)
-                        {
-                            <MessageDialog Model="_messageToSend" MessageTo="@_messageTo" ReceiverId="@_recieverId"></MessageDialog>
-                        }
-                        else if (JobOfferDialog)
-                        {
-                            <JobOfferDialog job="_job"></JobOfferDialog>
-                        }
-                        else
-                        {
-                            <AlertBox IsVisible=true Message="No role assigned to user! - DialogModal Component" waitForSeconds="0" isWarning=true></AlertBox>
-                        }
+            </div>
 
-                    </div>
+            <!--Footer of the update page-->
+            <div class="modal-footer d-flex justify-content-center bg-dark text-white">
 
-                    <!--Footer of the update page-->
-                    <div class="modal-footer d-flex justify-content-center bg-dark text-white">
+                @if (isStudent && !MessageDialog)
+                {
+                    <button type="button" class="btn btn-success" @onclick=@SubmitUpdateStudent>Update</button>
+                }
+                else if (isCompany && !MessageDialog)
+                {
+                    <button type="button" class="btn btn-success" @onclick=@SubmitUpdateCompany>Update</button>
+                }
+                else if (JobOfferDialog && !MessageDialog)
+                {
+                    <button type="button" class="btn btn-success" @onclick=@SubmitJobOffer>Opret job</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-success" @onclick=@SubmitMessage>Send</button>
+                }
 
-                        @if (isStudent && !MessageDialog)
-                        {
-                            <button type="button" class="btn btn-success" @onclick=@SubmitUpdateStudent>Update</button>
-                        }
-                        else if (isCompany && !MessageDialog)
-                        {
-                            <button type="button" class="btn btn-success" @onclick=@SubmitUpdateCompany>Update</button>
-                        }
-                        else if (JobOfferDialog && !MessageDialog)
-                        {
-                            <button type="button" class="btn btn-success" @onclick=@SubmitJobOffer>Opret job</button>
-                        }
-                        else
-                        {
-                            <button type="button" class="btn btn-success" @onclick=@SubmitMessage>Send</button>
-                        }
+                <button type="button" class="btn btn-danger" @onclick=@Close>Close</button>
 
-                        <button type="button" class="btn btn-danger" @onclick=@Close>Close</button>
-
-                    </div>
-                </div>
             </div>
         </div>
-    </Authorized>
+    </div>
+</div>
 
-    <NotAuthorized>
-        <AlertBox IsVisible=true isWarning=true Message="You are not authorized user!" waitForSeconds="0"></AlertBox>
-    </NotAuthorized>
-
-</AuthorizeView>
 
 <AlertBox @ref=_alertBox />
 

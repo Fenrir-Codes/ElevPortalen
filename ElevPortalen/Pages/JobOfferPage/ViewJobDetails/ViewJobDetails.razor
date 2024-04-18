@@ -2,11 +2,13 @@
 
 @using ElevPortalen.Models
 @using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 
 @inject JobService _jobService
 @inject IJSRuntime jsRuntime
 @inject NavigationManager _navManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 
 <div class="container-fluid">
@@ -17,7 +19,7 @@
         <div class="row pt-5 therow">
 
             <!-- The left side of the jobdetails -->
-            <div class="col-lg-8 bg-dark text-white rounded-2 shadow-sm p-5">
+            <div class="@columnWidth bg-dark text-white rounded-2 shadow-sm p-5">
                 <h3 class="mb-3 fw-bold">@_job.Title</h3>
                 <hr />
                 <div class="d-flex align-items-center mb-5">
@@ -31,64 +33,77 @@
                     <h4 class="mb-3 fw-bold">Jobdetaljer</h4>
                     <p>@_job.JobDetails</p>
                 </div>
-                <div class="m-0">
-                    <h4 class="mb-3 fw-bold">Ansøg</h4>
-                    @if (!string.IsNullOrEmpty(_job.JobLink))
-                    {
-                        <button class="btn btn-sm btn-success me-2" @onclick="() => NavigateToNewTab(_job.JobLink)">Ansøg via link</button>
-                    }
-                    <button class="btn btn-sm btn-success">Send besked</button>
-                </div>
+                @if (isVisible)
+                {
+                    <div class="m-0">
+                        <h4 class="mb-3 fw-bold">Ansøg</h4>
+                        @if (!string.IsNullOrEmpty(_job.JobLink))
+                        {
+                            <button class="btn btn-sm btn-success me-2" @onclick="() => NavigateToNewTab(_job.JobLink)">Ansøg via link</button>
+                        }
+                        <button class="btn btn-sm btn-success" @onclick="() =>
+                                DialogModal!.OpenMessageDialog(_job.CompanyId, _job.CompanyName, null)">
+                            Send besked
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-danger">@_message</p>
+                }
+                
             </div>
 
-            <!-- The right side of the details -->
-            <div class="col-lg-4 rightside">
-                <!-- Box top -->
-                <div class="bg-dark text-white rounded-2 shadow-sm p-4 mb-4">
-                    <h4 class="mb-4 fw-bold">Joboversigt</h4>
-                    <p>
-                        <i class="fa fa-calendar-days text-primary me-2 text-success"></i>
-                        Udgivet den: @_job.DateOfPublish.ToShortDateString()
-                    </p>
-                    <p>
-                        <i class="fa fa-angle-right text-primary me-2 text-success"></i>
-                        Ledige stilling: @_job.NumberOfPositionsAvailable
-                    </p>
-                    <p>
-                        <i class="fa fa-map-marker-alt text-primary me-2 text-success"></i>
-                        Sted: @_job.JobAddress
-                    </p>
-                    <p>
-                        <i class="fa fa-address-card text-primary me-2 text-success"></i>
-                        Kontaktperson: @_job.ContactPerson
-                    </p>
-                    <p>
-                        <i class="fa fa-phone text-primary me-2 text-success"></i>
-                        Tlf.: @_job.PhoneNumber
-                    </p>
-                    <p>
-                        <i class="far fa-clock text-primary me-2 text-success"></i>
-                        Deadline: @_job.Deadline.ToShortDateString()
-                    </p>
-                </div>
+            @if (isVisible)
+            {
+                <!-- The right side of the details -->
+                <div class="col-lg-4 rightside">
+                    <!-- Box top -->
+                    <div class="bg-dark text-white rounded-2 shadow-sm p-4 mb-4">
+                        <h4 class="mb-4 fw-bold">Joboversigt</h4>
+                        <p>
+                            <i class="fa fa-calendar-days text-primary me-2 text-success"></i>
+                            Udgivet den: @_job.DateOfPublish.ToShortDateString()
+                        </p>
+                        <p>
+                            <i class="fa fa-angle-right text-primary me-2 text-success"></i>
+                            Ledige stilling: @_job.NumberOfPositionsAvailable
+                        </p>
+                        <p>
+                            <i class="fa fa-map-marker-alt text-primary me-2 text-success"></i>
+                            Sted: @_job.JobAddress
+                        </p>
+                        <p>
+                            <i class="fa fa-address-card text-primary me-2 text-success"></i>
+                            Kontaktperson: @_job.ContactPerson
+                        </p>
+                        <p>
+                            <i class="fa fa-phone text-primary me-2 text-success"></i>
+                            Tlf.: @_job.PhoneNumber
+                        </p>
+                        <p>
+                            <i class="far fa-clock text-primary me-2 text-success"></i>
+                            Deadline: @_job.Deadline.ToShortDateString()
+                        </p>
+                    </div>
 
-                <!-- Box bottom -->
-                <div class="bg-dark text-white rounded-2 shadow-sm p-4">
-                    <h4 class="mb-4 fw-bold">Virksomhed</h4>
-                    <p>
-                        <i class="fa fa-building text-primary me-2 text-success"></i>
-                        Arbejdsgiver: @_job.CompanyName
-                    </p>
-                    <p>
-                        <i class="fa fa-map-marker-alt text-primary me-2 text-success"></i>
-                        Adresse: @_job.JobAddress
-                    </p>
-                </div>
+                    <!-- Box bottom -->
+                    <div class="bg-dark text-white rounded-2 shadow-sm p-4">
+                        <h4 class="mb-4 fw-bold">Virksomhed</h4>
+                        <p>
+                            <i class="fa fa-building text-primary me-2 text-success"></i>
+                            Arbejdsgiver: @_job.CompanyName
+                        </p>
+                        <p>
+                            <i class="fa fa-map-marker-alt text-primary me-2 text-success"></i>
+                            Adresse: @_job.JobAddress
+                        </p>
+                    </div>
 
-            </div>
-            
+                </div>
+            }
+
         </div>
-
     }
     else
     {
@@ -145,18 +160,45 @@
 
 <!-- AlertBox -->
 <AlertBox @ref="_aletBox" />
+<DialogModal @ref="DialogModal" OnClose="ReRenderPage"></DialogModal>
 
 
 @code {
     [Parameter] public int JobOfferId { get; set; }
     private AlertBox _aletBox = new AlertBox();
+    private DialogModal? DialogModal { get; set; }
     private JobOfferModel? _job = new JobOfferModel();
+    private AuthenticationState? _authState;
     private bool isLoaded = false;
+    private bool isVisible = false;
+    private string columnWidth = "col-lg-12";
+    private string _message = "";
 
     protected override async Task OnInitializedAsync()
     {
+        await GetAuthState();
         await GetJobOffer(JobOfferId);
     }
+
+    #region Get the auth state and set column and message values
+    private async Task GetAuthState()
+    {
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (IsInRole("Student"))
+        {
+            isVisible = true;
+            columnWidth = "col-lg-8";
+            _message = "For at søge dette job skal du logge ind";
+        }
+        else
+        {
+            isVisible = false;
+            columnWidth = "col-lg-12";
+            _message = "";
+        }
+
+    }
+    #endregion
 
     #region Get the job details with the job ID
     private async Task GetJobOffer(int JobId)
@@ -169,7 +211,7 @@
         }
         else
         {
-            _aletBox.SetMessage(true, message, 10000, danger:true);
+            _aletBox.SetMessage(true, message, 10000, danger: true);
         }
     }
     #endregion
@@ -179,6 +221,21 @@
     {
         string url = "https://" + link;
         await jsRuntime.InvokeVoidAsync("open", url, "_blank");
+    }
+    #endregion
+
+    #region Re-RenderPage function for re-renderint the profile page on change
+    private void ReRenderPage()
+    {
+        StateHasChanged();
+    }
+    #endregion
+
+    #region Check the role (used to show the buttons if Student are logged in)
+    private bool IsInRole(string role)
+    {
+        var user = _authState.User;
+        return user.IsInRole(role);
     }
     #endregion
 
