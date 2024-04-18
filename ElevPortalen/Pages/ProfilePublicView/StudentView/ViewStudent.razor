@@ -21,6 +21,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="d-flex align-items-center">
+                                <p class="text-center m-0 fw-bold me-2">Sociale links:</p>
                                 @if (!string.IsNullOrEmpty(data.FacebookLink))
                                 {
                                     <a @onclick="() => NavigateToNewTab(data.FacebookLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
@@ -59,7 +60,7 @@
                                 }
                                 else
                                 {
-                                        <h4 class="p-2"></h4>
+                                    <p class="m-0 text-center">Eleven har endnu ikke tilføjet nogen sociale links</p>
                                 }
                             </div>
                         </div>
