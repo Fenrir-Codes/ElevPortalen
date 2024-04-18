@@ -6,6 +6,7 @@ using ElevPortalen.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ElevPortalen.DatabaseErrorHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -96,6 +97,9 @@ else
     app.UseHsts();
 }
 
+// Added database connection error handler
+app.UseMiddleware<DatabaseErrorHandler>();
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
@@ -112,3 +116,4 @@ app.MapFallbackToPage("/_Host");
 await CheckRolesExisting(app);
 
 app.Run();
+
