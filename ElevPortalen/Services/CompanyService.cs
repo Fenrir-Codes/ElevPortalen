@@ -211,7 +211,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw;
+                throw new InvalidOperationException($"{ex.Message}");
             }
         }
         #endregion

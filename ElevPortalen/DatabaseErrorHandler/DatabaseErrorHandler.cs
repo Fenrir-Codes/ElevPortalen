@@ -26,7 +26,7 @@ namespace ElevPortalen.DatabaseErrorHandler
                 // If the connection is successful 
                 await _request(context);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // If an exception occurs (no connection for example)
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
