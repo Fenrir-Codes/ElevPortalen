@@ -237,7 +237,8 @@ else
     {
         @if (hasCompanyRecoveryData)
         {
-            <button class="btn btn-success m-2" @onclick="RecoverCompanyData">Gendan Firma data</button>
+            <button class="btn btn-success m-2 mt-3" @onclick="RecoverCompanyData">Gendan Firma data
+                <span class="ms-1"><i class="fa-solid fa-arrows-rotate"></i></span></button>
 
             <AlertBox IsVisible=true Message="Vi har fundet nogle data, som du kan gendanne." isWarning=true waitForSeconds="0"></AlertBox>
             @* <p>The Company's Guid is : @userIdClaim</p> *@

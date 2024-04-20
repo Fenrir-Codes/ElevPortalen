@@ -431,7 +431,9 @@ else
                                             </div>
                                         </div>
 
-                                        <button class="btn btn-outline-success btn-sm" @onclick="() => UpdateSkills(data.StudentId)">Opdater</button>
+                                        <button class="btn btn-outline-success btn-sm"
+                                            @onclick="() => UpdateSkills(data.StudentId)">Opdater</button>
+
                                         <button class="btn btn-outline-danger btn-sm" @onclick="HideUpdateSection">Tilbage</button>
                                     }
                                 </div>
@@ -447,7 +449,9 @@ else
     {
         @if (hasStudentRecoveryData)
         {
-            <button class="btn btn-success m-2" @onclick="RecoverStudentData">Gendan data</button>
+            <button class="btn btn-success m-2 mt-3" @onclick="RecoverStudentData">Gendan data 
+                <span class="ms-1"><i class="fa-solid fa-arrows-rotate"></i></span></button>
+
 
             <AlertBox IsVisible=true Message="Vi har fundet nogle data, som du kan gendanne." isWarning=true waitForSeconds="0"></AlertBox>
             @* <p>The Student's Guid is : @userIdClaim</p> *@
@@ -463,7 +467,7 @@ else
     }
     else
     {
-        <AlertBox IsVisible=true Message="The profile page can not be shown for some reason check component -> StudentProfile" waitForSeconds="0" isDanger=true></AlertBox>
+        <AlertBox IsVisible=true Message="The profile page can not be shown for some reason check component." waitForSeconds="0" isDanger=true></AlertBox>
     }
 }
 
@@ -487,7 +491,7 @@ else
     //Modal and AlertBox
     private DialogModal? DialogModal { get; set; }
     private ViewMessages? ViewMessages { get; set; }
-    private AlertBox? _aletBox = new AlertBox();
+    private AlertBox _aletBox = new AlertBox();
 
     //booleans
     private bool isConfirmationChecked = false;
