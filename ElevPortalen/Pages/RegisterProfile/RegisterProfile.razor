@@ -386,9 +386,6 @@
 
     //Fileupload
     private string? _newFileName = "";
-    private long maxFileSize = 1024 * 1024 * 1; // represents 3MB
-    private int maxAllowedFiles = 1;
-    private List<string> errors = new();
 
     //address lookup
     private string? searchTerm;
@@ -632,7 +629,7 @@
     }
     #endregion
 
-    #region image upload function trough service
+    #region Image upload via service
     private async Task UploadImage(InputFileChangeEventArgs e)
     {
         var (success, message) = await _imageUploadService.LoadFiles(e);

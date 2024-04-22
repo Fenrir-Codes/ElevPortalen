@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 
-
-
 namespace ElevPortalen.Services
 {
     public class ImageUploadService
     {
         private readonly IConfiguration Configuration;
-        private const int maxAllowedFiles = 1; // Adjust this according to your requirements
+        private const int maxAllowedFiles = 1; // max 1 file
+        private long maxFileSize = 1024 * 1024 * 1; // represents 1MB
 
         public ImageUploadService(IConfiguration configuration)
         {
@@ -16,6 +15,11 @@ namespace ElevPortalen.Services
 
         public async Task<(bool success, string? message)> LoadFiles(InputFileChangeEventArgs e)
         {
+            if (e.FileCount > maxAllowedFiles)
+            {
+                return (false, $"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} files are allowed");
+            }
+
             foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
             {
                 try
@@ -32,7 +36,7 @@ namespace ElevPortalen.Services
                     Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 
                     await using FileStream fs = new(path, FileMode.Create);
-                    await file.OpenReadStream().CopyToAsync(fs);
+                    await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
 
                     return (true, newFileName);
                 }
