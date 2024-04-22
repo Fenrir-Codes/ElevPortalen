@@ -13,6 +13,7 @@
 @inject CompanyService _companyService
 @inject StudentService _studentService
 @inject SkillService _skillService
+@inject ImageUploadService _imageUploadService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IConfiguration Configuration
 @inject NavigationManager NavManager
@@ -100,7 +101,7 @@
                                 <div class="row gx-3 mb-3">
                                     <div class="col-md-6">
                                         <label class="mb-1 fw-bold" for="_picture">Image</label>
-                                        <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
+                                    <InputFile OnChange="@UploadImage" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                                     </div>
                                 </div>
 
@@ -340,7 +341,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="small mb-1 fw-bold" for="_picture">Image</label>
-                                        <InputFile OnChange="@LoadFiles" class="form-control" multiple accept=".png,.jpg,.jpeg" />
+                                        <InputFile OnChange="@UploadImage" class="form-control" multiple accept=".png,.jpg,.jpeg" />
                                     </div>
                                 </div>
                                 <!-- Form Group (Description)-->
@@ -631,44 +632,21 @@
     }
     #endregion
 
-    #region Picture file input
-    private async Task LoadFiles(InputFileChangeEventArgs e)
+    #region image upload function trough service
+    private async Task UploadImage(InputFileChangeEventArgs e)
     {
-        errors.Clear();
-
-        if (e.FileCount > maxAllowedFiles)
+        var (success, message) = await _imageUploadService.LoadFiles(e);
+        if (!success)
         {
-            _alertBox.SetMessage(true, $"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} files are allowed", 10000, warning: true);
-            return;
+            //Handle error
+            _alertBox.SetMessage(true, message, 0, danger:true);
         }
-
-        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        else
         {
-            try
-            {
-                _newFileName = Path.ChangeExtension(
-                Path.GetRandomFileName(),
-                Path.GetExtension(file.Name));
-
-                string path = Path.Combine(
-                    Configuration.GetValue<string>("FileStorage")!,
-                    "",
-                    _newFileName);
-
-                Directory.CreateDirectory(Path.Combine(
-                    Configuration.GetValue<string>("FileStorage")!,
-                    ""));
-
-                await using FileStream fs = new(path, FileMode.Create);
-                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
-            }
-            catch (Exception ex)
-            {
-                _alertBox.SetMessage(true, $"File: {file.Name} Error: {ex.Message}", 10000, warning: true);
-            }
+            // or set the returned message to the filename if success
+            _newFileName = message;
         }
     }
     #endregion
-
 
 }

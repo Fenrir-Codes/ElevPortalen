@@ -51,6 +51,7 @@ builder.Services.AddScoped<SkillService>();
 builder.Services.AddScoped<AlertBox>();
 builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<RegisterModel>();
+builder.Services.AddScoped<ImageUploadService>();
 builder.Services.AddHttpClient();
 //Dataprotection service by Jozsef
 builder.Services.AddDataProtection();
