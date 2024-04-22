@@ -154,11 +154,11 @@ namespace ElevPortalen.Services
                     _context.Company.Remove(company);
                     await _context.SaveChangesAsync();
 
-                    return ("The Profile deleted Successfully.", true);
+                    return ("The Company was deleted Successfully.", true);
                 }
                 else
                 {
-                    return ("Student not found.", false);
+                    return ("Company not found.", false);
                 }
             }
             catch (Exception ex)
@@ -205,7 +205,7 @@ namespace ElevPortalen.Services
                 }
                 else
                 {
-                    // Throw an exception if no student found
+                    // Throw an exception if no company found
                     throw new InvalidOperationException($"No company found with Id: {Id}");
                 }
             }
@@ -363,5 +363,6 @@ namespace ElevPortalen.Services
             }
         }
         #endregion
+
     }
 }
