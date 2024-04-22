@@ -20,10 +20,6 @@ namespace ElevPortalen.Models
         public int PhoneNumber { get; set; }
         public bool IsHiring { get; set; }
         public bool IsVisible { get; set; }
-        //public string? FacebookLink { get; set; }
-        //public string? LinkedInLink { get; set; }
-        //public string? InstagramLink { get; set; }
-        //public string? GitHubLink { get; set; }
         public DateTime RegisteredDate { get; set; }
         public DateTime UpdatedDate { get; set; }
 

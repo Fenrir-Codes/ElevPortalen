@@ -5,17 +5,29 @@
 @inject StudentService _studentService
 
 <div class="col-xl-12 col-md-12 col-sm-12">
-    <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
-        Opdater Dine Oplysninger
+    <div class="card-header d-flex align-items-center justify-content-center" style="background-color:black; color:white; height:55px;">
+        <div class="col-12 d-flex align-items-center">
+            @if (!string.IsNullOrEmpty(Model?.profileImage))
+            {
+                <img src="images/ProfileImages/@Model.profileImage" alt="avatar" class="rounded-2 img-fluid me-2" style="width: 40px;">
+            }
+            else
+            {
+                <img src="images/DefaultAvatar.jpg" alt="avatar" class="rounded-circle img-fluid me-2" style="width: 40px;">
+            }
+            <div class="text-center fw-bold flex-grow-1">
+                Opdater Dine Oplysninger
+            </div>
+        </div>
     </div>
     <div class="card-body">
         <!-- Row -->
         <div class="row gx-3 mb-3 px-4">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="title" class="mb-1 fw-bold">Title</label>
                 <input id="title" class="form-control" @bind="@Model.Title" placeholder="Title" />
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label class="mb-1 fw-bold" for="Email">Email</label>
                 <input class="form-control" id="Email" type="email"
                        placeholder="example@example.com" @bind="@Model.Email">
@@ -62,6 +74,7 @@
                 <input id="phone" type="text" @bind="@Model.PhoneNumber" class="form-control" placeholder="Telefonnummer" />
             </div>
         </div>
+
         <!-- Description Textarea -->
         <div class="row gx-3 mb-0 px-4">
             <div class="col-md-12">
