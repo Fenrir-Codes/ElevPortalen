@@ -111,6 +111,7 @@ namespace ElevPortalen.Services
                     entry.Link = company.Link;
                     entry.Preferences = company.Preferences;
                     entry.Description = company.Description;
+                    entry.profileImage = company.profileImage;
                     entry.PhoneNumber = company.PhoneNumber;
                     entry.IsHiring = company.IsHiring;
                     entry.IsVisible = company.IsVisible;

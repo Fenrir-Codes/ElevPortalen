@@ -3,6 +3,7 @@
 @using ElevPortalen.Services
 
 @inject StudentService _studentService
+@inject ImageUploadService _imageUploadService
 
 <div class="col-xl-12 col-md-12 col-sm-12">
     <div class="card-header d-flex align-items-center justify-content-center px-0" style="background-color:black; color:white; height:55px;">
@@ -34,7 +35,7 @@
             </div>
             <div class="col-md-12 col-xl-4 col-sm-12">
                 <label class="mb-1 fw-bold" for="_picture">Profilbillede</label>
-                <InputFile class="form-control form-control-md" id="_picture" multiple accept=".png,.jpg,.jpeg" />
+                <InputFile OnChange="UploadImage" class="form-control form-control-md" id="_picture" multiple accept=".png,.jpg,.jpeg" />
             </div>
         </div>
         <!-- Row -->
@@ -93,5 +94,23 @@
 
     [Parameter]
     public StudentModel? Model { get; set; }
+    private AlertBox _alertBox { get; set; }
+
+    #region Image upload via service
+    private async Task UploadImage(InputFileChangeEventArgs e)
+    {
+        var (success, message) = await _imageUploadService.LoadFiles(e);
+        if (!success)
+        {
+            //Handle error
+            _alertBox.SetMessage(true, message, 0, danger: true);
+        }
+        else
+        {
+            // or set the returned message to the filename if success
+            Model.profileImage = message;
+        }
+    }
+    #endregion
 
 }
