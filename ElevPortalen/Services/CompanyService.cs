@@ -7,7 +7,9 @@ using System.Security.Claims;
 
 namespace ElevPortalen.Services
 {
-    //Lavet af Jozsef
+    /// <summary>
+    ///  Lavet af Jozsef
+    /// </summary>
     public class CompanyService
     {
         private readonly ElevPortalenDataDbContext _context;

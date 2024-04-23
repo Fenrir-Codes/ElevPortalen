@@ -10,6 +10,8 @@ using ElevPortalen.DatabaseErrorHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Code Modificated by Jozsef
+
 // Add services to the container.
 //LoginDb
 var LoginDatabase = builder.Configuration.GetConnectionString("LoginDatabase") ?? 

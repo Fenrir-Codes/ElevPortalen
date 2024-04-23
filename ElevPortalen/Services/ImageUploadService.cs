@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 
+/// <summary>
+///  Lavet af Jozsef
+/// </summary>
 namespace ElevPortalen.Services
 {
     public class ImageUploadService

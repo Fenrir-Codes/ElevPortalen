@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElevPortalen.Services
 {
+    /// <summary>
+    ///  Lavet af Jozsef
+    /// </summary>
     public class SkillService
     {
         private readonly ElevPortalenDataDbContext _context;

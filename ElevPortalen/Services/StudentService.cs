@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using ElevPortalen.Data;
 using System.Data;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ElevPortalen.Services
 {
-
-    // Lavet af Jozsef
+    /// <summary>
+    ///  Lavet af Jozsef
+    /// </summary>
     public class StudentService
     {
         private readonly ElevPortalenDataDbContext _context;

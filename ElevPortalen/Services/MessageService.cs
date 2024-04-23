@@ -4,7 +4,10 @@ using ElevPortalen.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElevPortalen.Services
-{
+{    
+    /// <summary>
+     ///  Lavet af Jozsef
+     /// </summary>
     public class MessageService
     {
         private readonly ElevPortalenDataDbContext _context;
