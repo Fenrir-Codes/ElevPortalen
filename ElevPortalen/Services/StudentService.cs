@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using ElevPortalen.Data;
 using System.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ElevPortalen.Services
 {
@@ -116,23 +117,31 @@ namespace ElevPortalen.Services
                 // If the response is not null
                 if (entry != null)
                 {
-                    entry.Title = student.Title;
-                    entry.FirstName = student.FirstName;
-                    entry.MiddleName = student.MiddleName;
-                    entry.LastName = student.LastName;
-                    entry.Address = student.Address;
-                    entry.Description = student.Description;
-                    entry.Speciality = student.Speciality;
-                    entry.PhoneNumber = student.PhoneNumber;
+                    if (!AreEntitiesEqual(entry, student))
+                    {
+                        entry.Title = student.Title;
+                        entry.FirstName = student.FirstName;
+                        entry.MiddleName = student.MiddleName;
+                        entry.LastName = student.LastName;
+                        entry.Address = student.Address;
+                        entry.Description = student.Description;
+                        entry.profileImage = student.profileImage;
+                        entry.Speciality = student.Speciality;
+                        entry.PhoneNumber = student.PhoneNumber;
 
-                    _context.Entry(entry).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
+                        _context.Entry(entry).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
 
-                    return ($"Updated successfully", true);
+                        return ($"Updated successfully", true);
+                    }
+                    else
+                    {
+                        return ($"No changes were made", true);
+                    }
                 }
                 else
                 {
-                    return ($"Update failed.", false); // Return a message when the entry is not found
+                    return ($"Update failed.", false); // Return a message when update failed
                 }
 
             }
@@ -140,6 +149,21 @@ namespace ElevPortalen.Services
             {
                 throw new InvalidOperationException(ex.Message); // Return an error message if an exception occurs
             }
+        }
+        #endregion
+
+        #region Helper method to check if two CompanyModel entities are equal
+        private bool AreEntitiesEqual(StudentModel entry, StudentModel student)
+        {
+            return entry.Title == student.Title &&
+                entry.FirstName == student.FirstName &&
+                entry.MiddleName == student.MiddleName &&
+                entry.LastName == student.LastName &&
+                entry.Address == student.Address &&
+                entry.Description == student.Description &&
+                entry.profileImage == student.profileImage &&
+                entry.Speciality == student.Speciality &&
+                entry.PhoneNumber == student.PhoneNumber;
         }
         #endregion
 

@@ -104,35 +104,60 @@ namespace ElevPortalen.Services
                 // If the response is not null
                 if (entry != null)
                 {
-                    entry.CompanyName = company.CompanyName;
-                    entry.CompanyAddress = company.CompanyAddress;
-                    entry.Region = company.Region;
-                    entry.Email = company.Email;
-                    entry.Link = company.Link;
-                    entry.Preferences = company.Preferences;
-                    entry.Description = company.Description;
-                    entry.profileImage = company.profileImage;
-                    entry.PhoneNumber = company.PhoneNumber;
-                    entry.IsHiring = company.IsHiring;
-                    entry.IsVisible = company.IsVisible;
-                    entry.UpdatedDate = DateTime.Now;
+                    if (!AreEntitiesEqual(entry, company))
+                    {
+                        // Update entity properties
+                        entry.CompanyName = company.CompanyName;
+                        entry.CompanyAddress = company.CompanyAddress;
+                        entry.Region = company.Region;
+                        entry.Email = company.Email;
+                        entry.Link = company.Link;
+                        entry.Preferences = company.Preferences;
+                        entry.Description = company.Description;
+                        entry.profileImage = company.profileImage;
+                        entry.PhoneNumber = company.PhoneNumber;
+                        entry.IsHiring = company.IsHiring;
+                        entry.IsVisible = company.IsVisible;
+                        entry.UpdatedDate = DateTime.Now;
 
-                    _context.Entry(entry).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
+                        _context.Entry(entry).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
 
-                    return ($"Updated successfully", true);
+                        return ($"Updated successfully", true);
+                    }
+                    else
+                    {
+                        return ($"No changes were made", true);
+                    }
                 }
                 else
                 {
-                    return ($"Entry not found", false); // Return a message when the entry is not found
+                    return ($"Update failed.", false);  // Return a message when update failed
                 }
 
             }
             catch (Exception ex)
             {
                 // Return an error message if an exception occurs
-                throw new InvalidOperationException($"Error occured while update: {ex.Message}");
+                throw new InvalidOperationException($"Error occurred while updating: {ex.Message}");
             }
+        }
+        #endregion
+
+        #region Helper method to check if two CompanyModel entities are equal
+        private bool AreEntitiesEqual(CompanyModel entry, CompanyModel company)
+        {
+            return entry.CompanyName == company.CompanyName &&
+            entry.CompanyAddress == company.CompanyAddress &&
+            entry.Region == company.Region &&
+            entry.Email == company.Email &&
+            entry.Link == company.Link &&
+            entry.Preferences == company.Preferences &&
+            entry.Description == company.Description &&
+            entry.profileImage == company.profileImage &&
+            entry.PhoneNumber == company.PhoneNumber &&
+            entry.IsHiring == company.IsHiring &&
+            entry.IsVisible == company.IsVisible;
         }
         #endregion
 
