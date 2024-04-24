@@ -33,7 +33,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
                 .UseInMemoryDatabase(databaseName: "CompanyServiceTests")
                 .Options;
 
-            //since our ElevP Db context is depending on this context we have to include it even though it is never used
+            //we also have to include the datarecovery db so we can test it (and fill demands of instantiating companyservice)
             _recoveryOptions = new DbContextOptionsBuilder<DataRecoveryDbContext> () 
                 .UseInMemoryDatabase(databaseName: "datarecoveryTest")
                 .Options;
@@ -151,7 +151,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
             {
                 new CompanyModel
                 {
-                    UserId = Guid.Parse(UserGuid),
+                    UserId = Guid.Parse(UserGuid), //Create two companies under the same Guid
                     CompanyId = 1,
                     CompanyName = "Company1",
                     CompanyAddress = "Address1",
@@ -217,6 +217,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
             Assert.Equal(2, result.Count); //we expect 2 companies belonging to the user
             Assert.IsType<CompanyModel>(result[0]); //members of the list is CompanyModel
             Assert.Equal("Company1", result[0].CompanyName); //Assert that data was mocked from testData
+            Assert.NotEqual("Company3", result[1].CompanyName); //the second should not be name created under different Guid
         }
 
         #endregion
@@ -555,7 +556,6 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             //ACT
             var (deleteMessage, isSuccess) = await _companyService.Delete(companyToDelete.CompanyId);
-            //var result = await _companyService.Delete(companyToDelete.CompanyId);
 
             //ASSERT
             Assert.True(success); //check if initial company profile creation was successful
@@ -809,6 +809,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         [Fact]
         public async Task CheckRecoveryDataExist_ShouldReturnTrueForExistingData() {
             // ARRANGE
+            await _context.Database.EnsureDeletedAsync(); // Ensure the database is empty
             // Add recovery data for a specific user to the database
             var userId = Guid.NewGuid();
             await _dataRecoveryContext.CompanyDataRecovery.AddAsync(new CompanyRecoveryModel { UserId = userId });
@@ -842,6 +843,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         [Fact]
         public async Task RecoverCompanyData_ShouldRecoverDataSuccessfully() {
             // ARRANGE
+            await _context.Database.EnsureDeletedAsync(); // Ensure the database is empty
             // Add recovery data for a specific user to the recovery database
             var userId = Guid.NewGuid();
             await _dataRecoveryContext.CompanyDataRecovery.AddAsync(new CompanyRecoveryModel { UserId = userId });
@@ -864,6 +866,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         [Fact]
         public async Task RecoverCompanyData_ShouldReturnFailureForNonExistingData() {
             // ARRANGE
+            await _context.Database.EnsureDeletedAsync(); // Ensure the database is empty
             // Ensure that no recovery data exists in the recovery database for a specific user
 
             // ACT
@@ -879,6 +882,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         [Fact]
         public async Task GetCompanyByGuid_ShouldReturnCompanyIfExists() {
             // ARRANGE
+            await _context.Database.EnsureDeletedAsync(); // Ensure the database is empty
             // Add a company with a specific GUID to the database
             var companyId = Guid.NewGuid();
             var company = new CompanyModel { UserId = companyId };
@@ -898,6 +902,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         [Fact]
         public async Task GetCompanyByGuid_ShouldReturnNullForNonExistingCompany() {
             // ARRANGE
+            await _context.Database.EnsureDeletedAsync(); // Ensure the database is empty
             // Ensure that no company exists in the database with a specific GUID
 
             // ACT
