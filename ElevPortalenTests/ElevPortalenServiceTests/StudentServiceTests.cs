@@ -37,7 +37,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
             //mock dependencies
             var _dataProtectionProviderMock = new Mock<IDataProtectionProvider>();
 
-            //create CompanyService instance with mocked dependencies
+            //create studentService instance with mocked dependencies
             _studentService = new StudentService(_context, _dataRecoveryContext, _dataProtectionProviderMock.Object);
 
         }
@@ -79,7 +79,46 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region create Student function async test2 - check that students cannot be created with the same id
+        #region create Student function async test2 - check that student with skillmodel is created and message displayed
+        [Fact]
+        public async void CreateStudent_ShouldCreateStudentWithSkillModelIfStudentHasSkills() {
+            // ARRANGE
+            await _context.Database.EnsureDeletedAsync(); // Ensure InMemory db is clear
+
+            var student = new StudentModel {
+                UserId = Guid.NewGuid(),
+                StudentId = 1,
+                FirstName = "John",
+                LastName = "Doe",
+                Email = "johnDoe@mail.com",
+                Address = "GadeVej1",
+                Description = "Description",
+                profileImage = "image.jpg",
+                Speciality = "Programmør",
+                PhoneNumber = 12345678,
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now,
+                    Skills = new SkillModel {
+                        StudentId = 1,
+                        CSharp = true,
+                        Java = true
+                    }
+            };
+
+            // ACT
+            var (message, success) = await _studentService.CreateStudent(student);
+            var addedStudent = await _context.Student.FindAsync(student.StudentId); // Control variable - find student in context dbset
+            var result = await _studentService.ReadAllStudentData(); // Since student is visible, it should be findable with ReadAllVisibleStudentData
+
+            // ASSERT
+            Assert.True(success); // Check if student profile creation was successful
+            Assert.Equal("Student Profile Created.", message); // Check if message is correct
+            Assert.NotNull(addedStudent); // Assert that control variable is not null
+            Assert.Equal("John", result[0].FirstName); // Assert that data can be found in our mocked student service as well
+        }
+        #endregion
+
+        #region create Student function async test3 - check that students cannot be created with the same id
         [Fact]
         public async void CreateStudent_ShouldNotCreateStudentWhenStudentAlreadyExists() {
             // ARRANGE
