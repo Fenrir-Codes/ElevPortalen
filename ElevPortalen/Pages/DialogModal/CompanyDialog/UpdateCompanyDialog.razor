@@ -11,18 +11,8 @@
     <div class="col-xl-12 col-md-12 col-sm-12">
         <!--Header of the update page-->
         <div class="card-header d-flex align-items-center justify-content-center px-0" style="background-color:black; color:white; height:55px;">
-            <div class="col-12 d-flex align-items-center">
-                @if (!string.IsNullOrEmpty(Model?.profileImage))
-                {
-                    <img src="images/ProfileImages/@Model.profileImage" alt="avatar" class="rounded-2 img-fluid" style="width: 55px;">
-                }
-                else
-                {
-                    <img src="images/DefaultAvatar.jpg" alt="avatar" class="rounded-2 img-fluid" style="width: 55px;">
-                }
-                <div class="text-center fw-bold flex-grow-1">
-                    Opdater Dine Oplysninger
-                </div>
+            <div class="col-12 text-center">
+                Opdater Dine Oplysninger
             </div>
         </div>
         <!--body of the update page-->
