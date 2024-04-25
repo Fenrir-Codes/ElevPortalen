@@ -101,10 +101,10 @@ namespace ElevPortalen.Services
         {
             try
             {
-                // Check if the student with the given StudentId is already being tracked
+                // Check if the company with the given StudentId is already being tracked
                 var existingCompany = await _context.Company.FindAsync(company.CompanyId);
 
-                // If the existing student is tracked, detach it from the context
+                // If the existing company is tracked, detach it from the context
                 if (existingCompany != null && _context.Entry(existingCompany).State != EntityState.Detached)
                 {
                     _context.Entry(existingCompany).State = EntityState.Detached;
