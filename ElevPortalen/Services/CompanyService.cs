@@ -21,7 +21,7 @@ namespace ElevPortalen.Services
         {
             _context = context;
             _recoveryContext = recoveryContext;
-            _dataProtector = dataProtectionProvider.CreateProtector("ProtectData"); 
+            _dataProtector = dataProtectionProvider.CreateProtector("ProtectData");
             //i just placed it here if need, we can use it to protect data
         }
         #endregion
@@ -101,6 +101,15 @@ namespace ElevPortalen.Services
         {
             try
             {
+                // Check if the student with the given StudentId is already being tracked
+                var existingCompany = await _context.Company.FindAsync(company.CompanyId);
+
+                // If the existing student is tracked, detach it from the context
+                if (existingCompany != null && _context.Entry(existingCompany).State != EntityState.Detached)
+                {
+                    _context.Entry(existingCompany).State = EntityState.Detached;
+                }
+
                 var entry = await _context.Company.FindAsync(company.CompanyId);
 
                 // If the response is not null
@@ -210,7 +219,7 @@ namespace ElevPortalen.Services
                 {
                     throw new InvalidOperationException("Company not found.");
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -335,10 +344,10 @@ namespace ElevPortalen.Services
                         Preferences = recoveryData.Preferences,
                         Description = recoveryData.Description,
                         profileImage = recoveryData.profileImage,
-                        PhoneNumber= recoveryData.PhoneNumber,
-                        IsHiring= recoveryData.IsHiring,
-                        IsVisible= recoveryData.IsVisible,
-                        RegisteredDate= recoveryData.RegisteredDate,
+                        PhoneNumber = recoveryData.PhoneNumber,
+                        IsHiring = recoveryData.IsHiring,
+                        IsVisible = recoveryData.IsVisible,
+                        RegisteredDate = recoveryData.RegisteredDate,
                         UpdatedDate = DateTime.Now
                     };
                     // Add the recovered company to the main context

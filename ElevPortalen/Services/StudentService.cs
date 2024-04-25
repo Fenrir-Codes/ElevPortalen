@@ -1,9 +1,9 @@
-﻿using ElevPortalen.Models;
+﻿using ElevPortalen.Data;
+using ElevPortalen.Models;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using ElevPortalen.Data;
 using System.Data;
+using System.Security.Claims;
 
 namespace ElevPortalen.Services
 {
@@ -112,6 +112,17 @@ namespace ElevPortalen.Services
         {
             try
             {
+
+                // Check if the student with the given StudentId is already being tracked
+                var existingStudent = await _context.Student.FindAsync(student.StudentId);
+
+                // If the existing student is tracked, detach it from the context
+                if (existingStudent != null && _context.Entry(existingStudent).State != EntityState.Detached)
+                {
+                    _context.Entry(existingStudent).State = EntityState.Detached;
+                }
+
+                // Now fetch the student from the database
                 var entry = await _context.Student.FindAsync(student.StudentId);
 
                 // If the response is not null
@@ -120,6 +131,7 @@ namespace ElevPortalen.Services
                     if (!AreEntitiesEqual(entry, student))
                     {
                         entry.Title = student.Title;
+                        entry.Email = student.Email;
                         entry.FirstName = student.FirstName;
                         entry.MiddleName = student.MiddleName;
                         entry.LastName = student.LastName;
@@ -128,6 +140,7 @@ namespace ElevPortalen.Services
                         entry.profileImage = student.profileImage;
                         entry.Speciality = student.Speciality;
                         entry.PhoneNumber = student.PhoneNumber;
+                        entry.UpdatedDate = DateTime.Now;
 
                         _context.Entry(entry).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
