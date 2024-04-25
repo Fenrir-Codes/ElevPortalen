@@ -112,16 +112,7 @@ namespace ElevPortalen.Services
         {
             try
             {
-
-                // Check if the student with the given StudentId is already being tracked
-                var existingStudent = await _context.Student.FindAsync(student.StudentId);
-
-                // If the existing student is tracked, detach it from the context
-                if (existingStudent != null && _context.Entry(existingStudent).State != EntityState.Detached)
-                {
-                    _context.Entry(existingStudent).State = EntityState.Detached;
-                }
-
+                _context.Entry(student).State = EntityState.Detached;
                 // Now fetch the student from the database
                 var entry = await _context.Student.FindAsync(student.StudentId);
 
