@@ -131,6 +131,10 @@ namespace ElevPortalen.Services
                         entry.profileImage = student.profileImage;
                         entry.Speciality = student.Speciality;
                         entry.PhoneNumber = student.PhoneNumber;
+                        entry.FacebookLink = student.FacebookLink;
+                        entry.LinkedInLink = student.LinkedInLink;
+                        entry.InstagramLink = student.InstagramLink;
+                        entry.GitHubLink = student.GitHubLink;
                         entry.UpdatedDate = DateTime.Now;
 
                         _context.Entry(entry).State = EntityState.Modified;
@@ -167,7 +171,11 @@ namespace ElevPortalen.Services
                 entry.Description == student.Description &&
                 entry.profileImage == student.profileImage &&
                 entry.Speciality == student.Speciality &&
-                entry.PhoneNumber == student.PhoneNumber;
+                entry.PhoneNumber == student.PhoneNumber &&
+                entry.FacebookLink == student.FacebookLink &&
+                entry.LinkedInLink == student.LinkedInLink &&
+                entry.InstagramLink == student.InstagramLink &&
+                entry.GitHubLink == student.GitHubLink;
         }
         #endregion
 

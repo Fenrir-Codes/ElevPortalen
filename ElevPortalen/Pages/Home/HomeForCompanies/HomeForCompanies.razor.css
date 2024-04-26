@@ -1,6 +1,10 @@
 ﻿.card {
     transition: transform 0.2s;
 }
+.card-body{
+    min-height:150px;
+    max-height:150px;
+}
 
 .card:hover {
     transform: scale(1.04);

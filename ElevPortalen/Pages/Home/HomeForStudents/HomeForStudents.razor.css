@@ -1,10 +1,11 @@
 ﻿.card {
     transition: transform 0.2s;
 }
-    .card:hover {
-        transform: scale(1.04);
-        box-shadow: 4px 4px 4px 0px rgba(102,102,102,1);
-    }
+
+.card:hover {
+    transform: scale(1.04);
+    box-shadow: 4px 4px 4px 0px rgba(102,102,102,1);
+}
 
 /* Styles for skeleton loading */
 .skeleton-card {

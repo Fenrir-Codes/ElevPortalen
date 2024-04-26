@@ -69,11 +69,11 @@ else
                     <div class="col-md-4 image border">
                         @if (!string.IsNullOrEmpty(data.profileImage))
                         {
-                            <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; height: 150px;">
+                            <img class="img-fluid rounded-start" src="images/ProfileImages/@data.profileImage" style="width: 150px; min-height:150px; max-height: 150px;">
                         }
                         else
                         {
-                            <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg" style="width: 100%; height: auto;">
+                            <img class="img-fluid rounded-start" src="images/DefaultAvatar.jpg" style="width: 100%; min-height:150px; max-height: 150px;">
                         }
                     </div>
                     <div class="col-md-8">

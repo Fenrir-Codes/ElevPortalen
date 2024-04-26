@@ -70,6 +70,29 @@
                 <input id="phone" type="text" @bind="@Model.PhoneNumber" class="form-control" placeholder="Telefonnummer" />
             </div>
         </div>
+        <!-- Social Links-->
+        <div class="row gx-3 mb-3 px-4">
+            <div class="col-md-3">
+                <label class="mb-1 fw-bold" for="FBook">Facebook</label>
+                <input class="form-control" id="FBook" type="text"
+                       placeholder="www.facebook.com/yourprofile" @bind="Model.FacebookLink">
+            </div>
+            <div class="col-md-3">
+                <label class="mb-1 fw-bold" for="linkedin">LinkedIn</label>
+                <input class="form-control" id="linkedin" type="text"
+                       placeholder="www.linkedin.com/in/yourProfile" @bind="Model.LinkedInLink">
+            </div>
+            <div class="col-md-3">
+                <label class="mb-1 fw-bold" for="Insta">Instagram</label>
+                <input class="form-control" id="Insta" type="text"
+                       placeholder="www.instagram.com/yourProfileName" @bind="Model.InstagramLink">
+            </div>
+            <div class="col-md-3">
+                <label class="mb-1 fw-bold" for="Github">Github</label>
+                <input class="form-control" id="Github" type="text"
+                       placeholder="www.github.com/yourProfileName" @bind="Model.GitHubLink">
+            </div>
+        </div>
 
         <!-- Description Textarea -->
         <div class="row gx-3 mb-0 px-4">

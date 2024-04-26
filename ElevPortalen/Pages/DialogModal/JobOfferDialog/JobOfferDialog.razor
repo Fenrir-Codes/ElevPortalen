@@ -21,7 +21,15 @@
             <div class="row gx-3 mb-2 mt-2">
                 <div class="col-md-3">
                     <label for="title" class="form-label small mb-1 fw-bold">Jobtitel</label>
-                    <input type="text" class="form-control" id="title" @bind="job.Title" placeholder="Jobtitel" required>
+                    <select class="form-select form-select-md" @bind="job.Title" id="title" aria-label="Region" required>
+                        <option disabled selected>Vælg Title</option>
+                        <option value="Datatekniker">Datatekniker</option>
+                        <option value="Datamatiker">Datamatiker</option>
+                        <option value="Dataanalyse">Dataanalyse</option>
+                        <option value="Webudvikling">Webudvikling</option>
+                        <option value="IT-Sikkerhed">IT-Sikkerhed</option>
+                        <option value="IT-Teknolog">IT-Teknolog</option>
+                    </select>
                 </div>
                 <div class="col-md-3">
                     <label for="contactperson" class="form-label small mb-1 fw-bold">Kontaktperson</label>
@@ -97,7 +105,7 @@
 
 
 @code {
-    [Parameter] public JobOfferModel? job { get; set; }
+    [Parameter] public JobOfferModel job { get; set; }
     private List<AddressModel> address = new List<AddressModel>();
     private AlertBox _alertBox = new AlertBox();
     private CancellationTokenSource? cancellationTokenSource;
