@@ -107,14 +107,13 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             // ACT
             var (message, success) = await _studentService.CreateStudent(student);
-            var addedStudent = await _context.Student.FindAsync(student.StudentId); // Control variable - find student in context dbset
-            var result = await _studentService.ReadAllStudentData(); // Since student is visible, it should be findable with ReadAllVisibleStudentData
+            var addedStudent = await _context.Student.FindAsync(student.StudentId); // Control variable - find student in context dbset          
 
             // ASSERT
             Assert.True(success); // Check if student profile creation was successful
             Assert.Equal("Student Profile Created.", message); // Check if message is correct
             Assert.NotNull(addedStudent); // Assert that control variable is not null
-            Assert.Equal("John", result[0].FirstName); // Assert that data can be found in our mocked student service as well
+            Assert.True(addedStudent?.Skills?.CSharp); // Assert that student has a skill
         }
         #endregion
 
