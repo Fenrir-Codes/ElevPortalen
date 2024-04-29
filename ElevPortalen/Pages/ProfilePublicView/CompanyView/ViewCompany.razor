@@ -30,7 +30,7 @@
         <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-body text-center shadow-sm">
-                    @if (!string.IsNullOrEmpty(data.profileImage))
+                    @if (!string.IsNullOrEmpty(data.profileImage) || ImageExistOnDisk(data.profileImage))
                     {
                         <img src="images/ProfileImages/@data.profileImage" alt="avatar"
                              class="rounded-circle img-fluid" style="width: 150px;">
@@ -212,6 +212,15 @@
     private void ReRenderPage()
     {
         StateHasChanged();
+    }
+    #endregion
+
+    #region Check for the image existing on the disk
+    private bool ImageExistOnDisk(string imageName)
+    {
+        // path based on folders
+        var imagePath = $"wwwroot/images/ProfileImages/{imageName}";
+        return File.Exists(imagePath);
     }
     #endregion
 

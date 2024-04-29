@@ -69,7 +69,7 @@ else
             <div class="card bg-dark bg-gradient text-white m-2 p-0" style="max-width: 450px; cursor:pointer" @onclick="() => NavigateToStudentDetails(data!.StudentId)">
                 <div class="row g-0">
                     <div class="col-md-4 image border">
-                        @if (!string.IsNullOrEmpty(data.profileImage))
+                        @if (!string.IsNullOrEmpty(data.profileImage) && ImageExistOnDisk(data.profileImage))
                         {
                             <img class="rounded-start" src="images/ProfileImages/@data.profileImage" style="max-width: 150px; min-height:150px; max-height: 150px;">
                         }
@@ -220,6 +220,15 @@ else
     private void NavigateToStudentDetails(int studentId)
     {
         NavManager.NavigateTo($"/viewdetails/{studentId}");
+    }
+    #endregion
+
+    #region Check for the image existing on the disk
+    private bool ImageExistOnDisk(string imageName)
+    {
+        // path based on folders
+        var imagePath = $"wwwroot/images/ProfileImages/{imageName}";
+        return File.Exists(imagePath);
     }
     #endregion
 
