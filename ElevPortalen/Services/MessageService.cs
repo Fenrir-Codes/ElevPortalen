@@ -44,7 +44,9 @@ namespace ElevPortalen.Services
                 if (message != null)
                 {
 
-                    var messageToRemove = _context.Messages.FirstOrDefaultAsync(m => m.MessageId == message.MessageId);
+                    //var messageToRemove = _context.Messages.FirstOrDefaultAsync(m => m.MessageId == message.MessageId);
+                    var messageToRemove = _context.Messages.Local.FirstOrDefault(s => s.MessageId == message.MessageId);
+
                     if (messageToRemove != null)
                     {
                         _context.Entry(messageToRemove).State = EntityState.Detached;
@@ -93,47 +95,36 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Mark Message as Read
-        public async Task MarkMessageAsRead(int messageId)
-        {
-            try
-            {
-                var message = await _context.Messages.FirstOrDefaultAsync(m => m.MessageId == messageId);
-                if (message != null)
-                {
-                    message.IsRead = true;
-                    await _context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException("An error occurred while marking the message as read." + ex.Message);
+        public async Task MarkMessageAsRead(int messageId) {
+            try {
+                var message = await _context.Messages.FirstOrDefaultAsync(m => m.MessageId == messageId) ?? throw new InvalidOperationException($"Message with ID {messageId} does not exist.");
+                message.IsRead = true;
+                await _context.SaveChangesAsync();
+            } catch (Exception ex) {
+                throw new InvalidOperationException("An error occurred while marking the message as read: " + ex.Message);
             }
         }
         #endregion
 
         #region Get Message with ReceiverId
-        public async Task<List<MessageModel>> GetMessageWithReceiverId(int Id)
-        {
-            try
-            {
-                var message = await _context.Messages.Where(m => m.ReceiverId == Id).ToListAsync();
+        public async Task<List<MessageModel>> GetMessageWithReceiverId(int Id) {
+            try {
+                var messages = await _context.Messages.Where(m => m.ReceiverId == Id).ToListAsync();
 
-                if (message != null)
+                if (messages == null || messages.Count == 0) // Check if no messages are found
                 {
-                    return message;
+                    // Throw an exception if no messages found
+                    throw new InvalidOperationException($"No message found with ReceiverId: {Id}");
                 }
-                else
-                {
-                    // Throw an exception if no student found
-                    throw new InvalidOperationException($"No message found with Id: {Id}");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException($"{ex.Message}");
+
+                return messages;
+
+            } catch (Exception ex) {
+                throw new InvalidOperationException($"An error occurred while fetching messages: {ex.Message}");
             }
         }
         #endregion
+
 
         #region Count Unread Messages
         public async Task<int> GetUnredMessageCount(int Id)
