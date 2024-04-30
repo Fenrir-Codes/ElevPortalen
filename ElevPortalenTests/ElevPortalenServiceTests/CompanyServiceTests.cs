@@ -4,19 +4,8 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using ElevPortalen.Models;
-using Microsoft.EntityFrameworkCore.InMemory;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Data.Common;
-using Microsoft.Data.Sqlite;
+
 
 namespace ElevPortalenTests.ElevPortalenServiceTests {
     public class CompanyServiceTests { 
@@ -51,9 +40,9 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region create Company function async test1 - check that company is created and message displayed
+        #region CreateCompany test1 - check that company is created and message displayed
         [Fact]
-        public async void CreateCompany_ShouldCreateCompany() {
+        public async void CreateCompany_ShouldCreateCompany_WhenCompanyModelIsValid() {
 
             //ARRANGE
             await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
@@ -90,7 +79,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region create Company function async test2 - check that companies cannot be created on the same id
+        #region CreateCompany test2 - check that companies cannot be created on the same id
         [Fact]
         public async void CreateCompany_ShouldNotCreateCompanyWhenCompanyAlreadyExists() {
 
@@ -135,9 +124,9 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get Company request with the claimprincipal test1 - ReadData only returns the mocked data with the right Guid, data is CompanyModel
+        #region ReadData test1 - ReadData only returns the mocked data with the right Guid, data is CompanyModel
         [Fact]
-        public async Task ReadData_ReturnsCorrectCompanies() {
+        public async Task ReadData_ReturnsCorrectCompanies_BasedOnUserGuid() {
             //ARRANGE
             await _context.Database.EnsureDeletedAsync(); //ensure InMemory db is clear
             var UserGuid = Guid.NewGuid().ToString(); //make new Guid
@@ -222,7 +211,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
         #endregion
 
-        #region Get Company request with the claimprincipal test2 - ReadData should not return any companies if there are no companies associated with the Guid
+        #region ReadData test2 - should not return any companies if there are no companies associated with the Guid
         [Fact]
         public async Task ReadData_ReturnsNoCompanies_IfThereAreNoCompaniesAssociatedWithTheGuid() {
             //ARRANGE
@@ -244,7 +233,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get All Data from Company if they are visible test1 - Mockdata is notnull, type is list and count is 2
+        #region ReadAllVisibleCompanyData test1 - Mockdata is notnull, type is list and count is 2
         [Fact]
         public async void ReadAllVisibleCompanyData_ShouldReturnListOfCompanies_WhenCompaniesExist() {
 
@@ -295,7 +284,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get All Data from Company if they are visible test2 - Empty DB returns Empty list but not null
+        #region ReadAllVisibleCompanyData test2 - Empty DB returns Empty list but not null
         [Fact]
         public async void ReadAllVisibleCompanyData_ShouldReturnEmptyListOfCompanies_WhenNoCompaniesExist() {
 
@@ -312,14 +301,14 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get All Data from Company if they are visible test3 - Returns only if company is visible
+        #region ReadAllVisibleCompanyData test3 - Returns only if company is visible
         [Fact]
         public async void ReadAllVisibleCompanyData_ShouldNotReturnListOfCompanies_WhenCompanyIsNotVisible() {
 
             //ARRANGE
             await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
 
-            _context.Company.Add(new CompanyModel { //Add data to db
+            _context.Company.Add(new CompanyModel { 
                 CompanyId = 1,
                 CompanyName = "NetCompany",
                 Region = "Sjælland",
@@ -363,7 +352,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get All Data from Company test1 - Return all companies
+        #region ReadAllCompanyData test1 - Return all companies
         [Fact]
         public async void ReadAllCompanyData_ShouldReturnListOfAllCompanies() {
 
@@ -414,7 +403,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get All Data from Company test2 - Return all companies should return an empty list when there are no companies
+        #region ReadAllCompanyData test2 - Return all companies should return an empty list when there are no companies
         [Fact]
         public async void ReadAllCompanyData_ShouldReturnEmptyListWhenNoCompaniesExist() {
 
@@ -430,7 +419,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Company Update function test1 - Update company should successfully update company
+        #region Update test1 - Update company should successfully update company
         [Fact]
         public async void UpdateCompany_ShouldUpdateCompanySuccessfully() {
 
@@ -491,7 +480,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Company Update function test 2 - Update company should return entry not found if entry is invalid
+        #region Update test2 - Update company should return entry not found if entry is invalid
         [Fact]
         public async void UpdateCompany_ShouldReturnEntryNotFound_WhenCompanyId_IsNotInDb() {
 
@@ -527,7 +516,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Delete Company function test1 - delete should successfully delete company
+        #region Delete test1 - delete should successfully delete company
         [Fact]
         public async void DeleteCompany_ShouldDeleteCompanySuccessfully() {
 
@@ -568,7 +557,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Delete Company function test2 - delete should return company not found if the id is not a match
+        #region Delete test2 - delete should return company not found if the id is not a match
         [Fact]
         public async void DeleteCompany_ShouldReturnCompanyNotFound_IfIdIsNotInDb() {
 
@@ -586,7 +575,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get Company by Id (Model) test1 - Retrieve company by valid ID
+        #region GetCompanyById test1 - Retrieve company by valid ID
         [Fact]
         public async Task GetCompanyById_ShouldRetrieveCompanyByValidId() {
             // Arrange
@@ -622,7 +611,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get Company by Id (Model) test2 - Throw exception when ID does not match any company
+        #region GetCompanyById test2 - Throw exception when ID does not match any company
         [Fact]
         public async Task GetCompanyById_ShouldThrowExceptionForInvalidId() {
             // Arrange
@@ -635,7 +624,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get Company by Id to list test1 - Retrieve company list by valid ID
+        #region GetCompanyByIdToList test1 - Retrieve company list by valid ID
         [Fact]
         public async Task GetCompanyByIdToList_ShouldRetrieveCompanyListByValidId() {
             // Arrange
@@ -668,11 +657,11 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
             Assert.NotNull(result);
             Assert.Single(result);
             Assert.Equal(expectedCompany.CompanyName, result[0].CompanyName);
-            // Add assertions for other properties as needed
+            Assert.IsType<CompanyModel>(result[0]); 
         }
         #endregion
 
-        #region Get Company by Id to list test2 - Retrieve company list should not retrieve a list if there is no company with the id
+        #region GetCompanyByIdToList test2 - Retrieve company list should not retrieve a list if there is no company with the id
         [Fact]
         public async Task GetCompanyByIdToList_ShouldNotRetrieveCompanyList_IfIdIsNotValid() {
             // Arrange
@@ -684,6 +673,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             // Assert
             Assert.Empty(result);
+            Assert.IsType<List<CompanyModel>>(result);
 
         }
         #endregion
@@ -772,7 +762,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region create Recovery data function async for CompanyModel test1 - shoudl create recovery data successfully
+        #region CreateRecoveryData test1 - shoudl create recovery data successfully
         [Fact]
         public async Task CreateRecoveryData_ShouldCreateRecoveryDataSuccessfully() {
             // ARRANGE
@@ -800,12 +790,15 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             // ASSERT
             Assert.Equal("Company Recovery Created", result);
-            // Additional assertions can be added to verify that the recovery data is saved correctly in the database
+            // Query the recovery database to check if a company with the name "TestCompany" exists
+            var recoveredCompany = await _dataRecoveryContext.CompanyDataRecovery.FirstOrDefaultAsync(c => c.CompanyName == "TestCompany");
+            Assert.NotNull(recoveredCompany); // Ensure that the company exists in the recovery database
+
         }
 
         #endregion 
 
-        #region Function to check if Company data exist in the recovery database test1 - CheckRecoveryDataExist - Should return true if data exists on the Guid
+        #region CheckRecoveryDataExist test1 - Should return true if data exists on the Guid
         [Fact]
         public async Task CheckRecoveryDataExist_ShouldReturnTrueForExistingData() {
             // ARRANGE
@@ -824,7 +817,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
         #endregion
 
-        #region Function to check if Company data exist in the recovery database test2 - CheckRecoveryDataExist - Should return false if no data exists on the Guid
+        #region CheckRecoveryDataExist test2 - Should return false if no data exists on the Guid
         [Fact]
         public async Task CheckRecoveryDataExist_ShouldReturnFalseForNonExistingData() {
             // ARRANGE
@@ -839,7 +832,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
         #endregion
 
-        #region Recover the data function for Company test1 - RecoverCompanyData should recover data successfully with correct Guid
+        #region RecoverCompanyData test1 - RecoverCompanyData should recover data successfully with correct Guid
         [Fact]
         public async Task RecoverCompanyData_ShouldRecoverDataSuccessfully() {
             // ARRANGE
@@ -862,7 +855,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        # region Recover the data function for Company test2 - RecoverCompanyData should not recover data successfully without correct Guid
+        # region RecoverCompanyData test2 - RecoverCompanyData should not recover data successfully without correct Guid
         [Fact]
         public async Task RecoverCompanyData_ShouldReturnFailureForNonExistingData() {
             // ARRANGE
@@ -878,7 +871,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get a Company by its Guid test1 - Get company by Guid should return the compnay of the Gui exists
+        #region GetCompanyByGuid test1 - Get company by Guid should return the compnay of the Gui exists
         [Fact]
         public async Task GetCompanyByGuid_ShouldReturnCompanyIfExists() {
             // ARRANGE
@@ -898,39 +891,25 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get a Company by its Guid test2 - Get company by Guid should not return the compnay of the Guid does not exist
+        #region GetCompanyByGuid test2 - Get company by Guid should not return the compnay of the Guid does not exist
         [Fact]
         public async Task GetCompanyByGuid_ShouldReturnNullForNonExistingCompany() {
             // ARRANGE
             await _context.Database.EnsureDeletedAsync(); // Ensure the database is empty
-            // Ensure that no company exists in the database with a specific GUID
+
+            var companyId = Guid.NewGuid();
+            var company = new CompanyModel { UserId = Guid.NewGuid() }; //ensure a company exists
+            await _context.Company.AddAsync(company);
+            await _context.SaveChangesAsync();
 
             // ACT
-            var result = await _companyService.GetCompanyByGuid(Guid.NewGuid());
+            var result = await _companyService.GetCompanyByGuid(companyId);
 
             // ASSERT
             Assert.Null(result);
         }
         #endregion
 
-        #region
-        #endregion
 
-        #region TEMPLATE
-        [Fact]
-        public async void Method() {
-
-            //ARRANGE
-            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
-            //_context.Database.CloseConnection();
-
-            //ACT
-
-
-            //ASSERT
-
-        }
-        #endregion
-
-    }
+    } //companyservicetests end bracket
 }

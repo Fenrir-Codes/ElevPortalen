@@ -102,6 +102,7 @@ namespace ElevPortalen.Services
             try
             {
                 var JobToUpdate = await _context.JobOfferDataBase.FindAsync(updatedJob.JobOfferId);
+                //var JobToUpdate = await _context.JobOfferDataBase.FirstOrDefaultAsync(s => s.JobOfferId == updatedJob.JobOfferId);
 
                 // If the response is not null
                 if (JobToUpdate != null)

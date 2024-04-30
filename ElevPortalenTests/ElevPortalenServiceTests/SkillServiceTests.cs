@@ -34,7 +34,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
             _skillService = new SkillService(_context, _dataProtectionProviderMock.Object);
         }
 
-        #region GetSkills - Getting the skill Name as string to List test1 - return list of skills when model is valid
+        #region GetSkills test1 - return list of skills when model is valid
         [Fact]
         public async Task GetSkills_ShouldReturnListOfSkills_WhenValidStudentModelIsProvided() {
             // Arrange
@@ -61,7 +61,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region GetSkills - Getting the skill Name as string to List test2 - return empty list of skills when model is valid, skills are present, but all skills are false
+        #region GetSkills test2 - return empty list of skills when model is valid, skills are present, but all skills are false
         [Fact]
         public async Task GetSkills_ShouldReturnEmptyList_WhenStudentHasNoSkillsSetToTrue() {
             // Arrange
@@ -83,7 +83,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region GetSkills - Getting the skill Name as string to List test3 - return null when studentmodel is null
+        #region GetSkills test3 - return null when studentmodel is null
         [Fact]
         public async Task GetSkills_ShouldReturnNull_WhenStudentModelIsNull() {
             // Arrange
@@ -98,7 +98,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region GetSkills - Getting the skill Name as string to List test4 - reutrn null when studentmodel is valid but skills are null
+        #region GetSkills test4 - reutrn null when studentmodel is valid but skills are null
         [Fact]
         public async Task GetSkills_ShouldReturnNull_WhenStudentSkillsIsNull() {
             // Arrange
@@ -274,7 +274,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
         #region Create Skills test2 - CreateSkills should overwrite existing skills for a student
         [Fact]
-        public async Task CreateSkills_ShouldUpdateExistingSkills_WhenStudentHasExistingSkills() {
+        public async Task CreateSkills_ShouldProbablyNotUpdateExistingSkills_WhenStudentHasSkills() {
             // Arrange
             await _context.Database.EnsureDeletedAsync(); // Ensure InMemory db is clear
             var studentId = 1;

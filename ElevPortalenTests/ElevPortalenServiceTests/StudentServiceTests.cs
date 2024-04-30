@@ -43,9 +43,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-
-
-        #region create Student function async test1 - check that student is created and message displayed
+        #region CreateStudent test1 - check that student is created and message displayed
         [Fact]
         public async void CreateStudent_ShouldCreateStudent() {
             // ARRANGE
@@ -79,7 +77,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region create Student function async test2 - check that student with skillmodel is created and message displayed
+        #region CreateStudent test2 - check that student with skillmodel is created and message displayed
         [Fact]
         public async void CreateStudent_ShouldCreateStudentWithSkillModelIfStudentHasSkills() {
             // ARRANGE
@@ -117,7 +115,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region create Student function async test3 - check that students cannot be created with the same id
+        #region CreateStudent test3 - check that students cannot be created with the same id
         [Fact]
         public async void CreateStudent_ShouldNotCreateStudentWhenStudentAlreadyExists() {
             // ARRANGE
@@ -152,7 +150,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get Student request(Read Data) test1 - ReadData returns all students based on Guid
+        #region Read Data test1 - ReadData returns all students based on Guid
         [Fact]
         public async Task ReadData_ReturnsCorrectStudents() {
             // ARRANGE
@@ -229,7 +227,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get Student request(Read Data) test2 - ReadData should not return any students if there are no students associated with the Guid
+        #region Read Data test2 - ReadData should not return any students if there are no students associated with the Guid
         [Fact]
         public async Task ReadData_ReturnsNoStudents_IfThereAreNoStudentsAssociatedWithTheGuid() {
             // ARRANGE
@@ -240,6 +238,21 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
                 new Claim(ClaimTypes.NameIdentifier, UserGuid)
             }));
 
+            _context.Add(new StudentModel {
+                UserId = Guid.NewGuid(), //add new student, guid not belonging to the user
+                StudentId = 3,
+                FirstName = "Johnathan",
+                LastName = "Doe",
+                Email = "johnathanDoe@mail.com",
+                Address = "GadeVej1",
+                Description = "Description",
+                profileImage = "image.jpg",
+                Speciality = "Programmør",
+                PhoneNumber = 12345678,
+                RegisteredDate = DateTime.Now,
+                UpdatedDate = DateTime.Now
+            });
+
             // ACT
             var result = await _studentService.ReadData(user);
 
@@ -249,7 +262,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get All Data from Student test1 - returns list of students
+        #region ReadAllStudentData test1 - returns list of students
         [Fact]
         public async void ReadAllStudentData_ShouldReturnListOfStudents_WhenStudentsExist() {
             // ARRANGE
@@ -297,7 +310,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get All Data from Student test2 - Empty DB returns Empty list but not null
+        #region ReadAllStudentData test2 - Empty DB returns Empty list but not null
         [Fact]
         public async void ReadAllStudentData_ShouldReturnEmptyListOfStudents_WhenNoStudentsExist() {
             // ARRANGE
@@ -318,7 +331,6 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         public async Task GetStudentCountAsync_ShouldReturnCorrectCount() {
             // Arrange
             await _context.Database.EnsureDeletedAsync(); // Ensure InMemory db is clear
-            var expectedCount = 3; // Assuming there are 3 students in the database
 
             // Add some sample students to the database for testing
             await _context.Student.AddRangeAsync(new List<StudentModel>
@@ -372,7 +384,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
             var actualCount = await _studentService.GetStudentCountAsync();
 
             // Assert
-            Assert.Equal(expectedCount, actualCount);
+            Assert.Equal(3, actualCount);
         }
         #endregion
 
@@ -390,7 +402,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Student Update function test1 - Update student should successfully update student
+        #region Update test1 - Update student should successfully update student
         [Fact]
         public async void UpdateStudent_ShouldUpdateStudentSuccessfully() {
 
@@ -438,7 +450,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Student Update function test 2 - Update student should return entry not found if entry is invalid
+        #region Update test 2 - Update student should return entry not found if entry is invalid
         [Fact]
         public async void UpdateStudent_ShouldReturnEntryNotFound_WhenStudentId_IsNotInDb() {
 
@@ -462,14 +474,16 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             //ACT
             var (resultMessage, isFalse) = await _studentService.Update(studentToUpdate);
+            var checkResult = await _studentService.ReadAllStudentData();
 
             //ASSERT
             Assert.False(isFalse); // Check if the update was unsuccessful
             Assert.Equal("Update failed.", resultMessage); // Assert the result message
+            Assert.Empty(checkResult);
         }
         #endregion
 
-        #region Delete Student function test1 - Delete should successfully delete student
+        #region Delete test1 - Delete should successfully delete student
         [Fact]
         public async void DeleteStudent_ShouldDeleteStudentSuccessfully() {
 
@@ -506,7 +520,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Delete Student function test2 - delete should return student not found if the id is not a match
+        #region Delete test2 - delete should return student not found if the id is not a match
         [Fact]
         public async void DeleteStudent_ShouldReturnStudentNotFound_IfIdIsNotInDb() {
 
@@ -522,7 +536,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get Student by Id (Model) test1 - Retrieve student by valid ID
+        #region GetStudentById test1 - Retrieve student by valid ID
         [Fact]
         public async Task GetStudentById_ShouldRetrieveStudentByValidId() {
             // Arrange
@@ -555,7 +569,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get Student by Id (Model) test2 - Throw exception when ID does not match any student
+        #region GetStudentById test2 - Throw exception when ID does not match any student
         [Fact]
         public async Task GetStudentById_ShouldThrowExceptionForInvalidId() {
             // Arrange
@@ -568,7 +582,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get Student by Id to list test1 - Retrieve student list by valid ID
+        #region GetStudentByIdToList test1 - Retrieve student list by valid ID
         [Fact]
         public async Task GetStudentByIdToList_ShouldRetrieveStudentListByValidId() {
             // Arrange
@@ -598,11 +612,12 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
             Assert.NotNull(result);
             Assert.Single(result);
             Assert.Equal(expectedStudent.FirstName, result[0].FirstName);
-            // Add assertions for other properties as needed
+            Assert.IsType<List<StudentModel>>(result);
+
         }
         #endregion
 
-        #region Get Student by Id to list test2 - Retrieve student list should not retrieve a list if there is no student with the id
+        #region GetStudentByIdToList test2 - Retrieve student list should not retrieve a list if there is no student with the id
         [Fact]
         public async Task GetStudentByIdToList_ShouldNotRetrieveStudentList_IfIdIsNotValid() {
             // Arrange
@@ -614,10 +629,11 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             // Assert
             Assert.Empty(result);
+            Assert.IsType<List<StudentModel>>(result);
         }
         #endregion
 
-        #region Get a Student by its Guid test1 - Get student by Guid should return the student if exists
+        #region GetStudentByGuid test1 - Get student by Guid should return the student if exists
         [Fact]
         public async Task GetStudentByGuid_ShouldReturnStudentIfExists() {
             // ARRANGE
@@ -650,7 +666,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get a Student by its Guid test2 - Get student by Guid should return null if the Guid does not exist
+        #region GetStudentByGuid test2 - Get student by Guid should return null if the Guid does not exist
         [Fact]
         public async Task GetStudentByGuid_ShouldReturnNullForNonExistingStudent() {
             // ARRANGE
@@ -665,13 +681,13 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get students by specialization test1 - GetStudentsBySpecialization should return correct list of students with specified specialization
+        #region GetStudentsBySpecialization test1 - GetStudentsBySpecialization should return correct list of students with specified specialization
         [Fact]
         public async Task GetStudentsBySpecialization_ShouldReturnCorrectListOfStudents() {
             // ARRANGE
             await _context.Database.EnsureDeletedAsync(); //ensure InMemory db is clear
             var specialization = "Programmør";
-            var studentCount = 3;
+            //var studentCount = 3;
             var students = new List<StudentModel>{
                 new StudentModel {                 
                     UserId = Guid.NewGuid(),
@@ -743,7 +759,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Get students by specialization test2 - GetStudentsBySpecialization should handle case where no students with specified specialization
+        #region GetStudentsBySpecialization test2 - GetStudentsBySpecialization should handle case where no students with specified specialization
         [Fact]
         public async Task GetStudentsBySpecialization_ShouldHandleNoStudentsWithSpecifiedSpecialization() {
             // ARRANGE
@@ -755,10 +771,11 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             // ASSERT
             Assert.Empty(result);
+            Assert.IsType<List<StudentModel>>(result);
         }
         #endregion
 
-        #region create Recovery data function async for StudentModel test1 - should create recovery data successfully
+        #region CreateRecoveryData test1 - should create recovery data successfully
         [Fact]
         public async Task CreateRecoveryData_ShouldCreateRecoveryDataSuccessfully() {
             // ARRANGE
@@ -785,12 +802,15 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
             // ASSERT
             Assert.Equal("Recovery Created", result);
-            // Additional assertions can be added to verify that the recovery data is saved correctly in the database
+            //ckeck the recovery database to check if student is there
+            var recoveredStudent = await _dataRecoveryContext.StudentDataRecovery.FirstOrDefaultAsync(c => c.FirstName == "John");
+            Assert.NotNull(recoveredStudent); // Ensure that the student exists in the recovery database
+
         }
 
         #endregion
 
-        #region Function to check if Student data exist in the recovery database test1 - CheckRecoveryDataExist - Should return true if data exists on the Guid
+        #region CheckRecoveryDataExist test1 - Should return true if data exists on the Guid
         [Fact]
         public async Task CheckRecoveryDataExist_ShouldReturnTrueForExistingData() {
             // ARRANGE
@@ -809,7 +829,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
         #endregion
 
-        #region Function to check if Student data exist in the recovery database test2 - CheckRecoveryDataExist - Should return false if no data exists on the Guid
+        #region CheckRecoveryDataExist test2 - Should return false if no data exists on the Guid
         [Fact]
         public async Task CheckRecoveryDataExist_ShouldReturnFalseForNonExistingData() {
             // ARRANGE
@@ -825,7 +845,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
 
         #endregion
 
-        #region Recover the data function for Student test1 - RecoverStudentData should recover data successfully with correct Guid
+        #region RecoverStudentData test1 - RecoverStudentData should recover data successfully with correct Guid
         [Fact]
         public async Task RecoverStudentData_ShouldRecoverDataSuccessfully() {
             // ARRANGE
@@ -847,7 +867,7 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
         }
         #endregion
 
-        #region Recover the data function for Student test2 - RecoverStudentData should not recover data successfully without correct Guid
+        #region RecoverStudentData test2 - RecoverStudentData should not recover data successfully without correct Guid
         [Fact]
         public async Task RecoverStudentData_ShouldReturnFailureForNonExistingData() {
             // ARRANGE
@@ -861,32 +881,6 @@ namespace ElevPortalenTests.ElevPortalenServiceTests {
             Assert.Equal($"No recovery data found for UserId: {studentId}.", message);
         }
         #endregion
-
-
-        #region
-        #endregion
-
-        #region TEMPLATE
-        [Fact]
-        public async void Method() {
-
-            //ARRANGE
-            await _context.Database.EnsureDeletedAsync(); //Ensure InMemory db is clear
-            //_context.Database.CloseConnection();
-
-            //ACT
-
-
-            //ASSERT
-
-        }
-        #endregion
-
-
-
-
-
-
 
 
     } //StudentServiceTests end bracket
