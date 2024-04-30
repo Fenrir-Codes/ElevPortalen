@@ -6,8 +6,11 @@ using ElevPortalen.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ElevPortalen.DatabaseErrorHandler;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Code Modificated by Jozsef
 
 // Add services to the container.
 //LoginDb
@@ -50,6 +53,7 @@ builder.Services.AddScoped<SkillService>();
 builder.Services.AddScoped<AlertBox>();
 builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<RegisterModel>();
+builder.Services.AddScoped<ImageUploadService>();
 builder.Services.AddHttpClient();
 //Dataprotection service by Jozsef
 builder.Services.AddDataProtection();
@@ -96,6 +100,9 @@ else
     app.UseHsts();
 }
 
+// Added database connection error handler
+app.UseMiddleware<DatabaseErrorHandler>();
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
@@ -112,3 +119,4 @@ app.MapFallbackToPage("/_Host");
 await CheckRolesExisting(app);
 
 app.Run();
+

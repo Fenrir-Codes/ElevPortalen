@@ -1,10 +1,11 @@
 ﻿/* Skeleton card */
 .card {
     max-width: 460px;
+    max-height: 250px;
     transition: transform 0.2s;
 }
 .card-body{
-    
+    max-height:176px;
 }
 
 .card:hover {

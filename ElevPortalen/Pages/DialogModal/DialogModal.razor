@@ -1,4 +1,5 @@
-﻿@using ElevPortalen.Models
+﻿<!-- Lavet af Jozsef -->
+@using ElevPortalen.Models
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Pages.DialogModal.CompanyDialog
 @using ElevPortalen.Pages.DialogModal.JobOfferDialog
@@ -90,9 +91,6 @@
 
     public string DisplayStyle = "none;";
     public string ModalClass = "";
-    private readonly string Company = "Company";
-    private readonly string Student = "Student";
-    private readonly string Admin = "Admin";
 
     public bool ShowBackdrop = false;
     private bool isStudent = false;
@@ -147,7 +145,7 @@
             {
                 _alertBox.SetMessage(true, message, 10000, danger: true);
             }
-            
+
         }
         catch (Exception ex)
         {          

@@ -1,7 +1,10 @@
 ﻿using System.Text.Json;
 
+/// <summary>
+///  Lavet af Jozsef
+/// </summary>
 namespace ElevPortalen.Services
-{//Lavet af Jozsef
+{
     using ElevPortalen.Models; // Using Models
 
     //DAWA stands for Danmarks Adressers Web API ( https://dawadocs.dataforsyningen.dk/ )

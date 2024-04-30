@@ -1,4 +1,5 @@
-﻿@page "/vacancies"
+﻿<!-- Lavet af Jozsef -->
+@page "/vacancies"
 
 @using ElevPortalen.Models
 @using ElevPortalen.Pages.AlertBox
@@ -28,6 +29,10 @@
                     </div>
                 </div>
             }
+        }
+        else if (!_jobList.Any())
+        {
+            _alertBox.SetMessage(true, "Der er endnu ikke oprettet jobtilbud", 0, warning: true);
         }
         else
         {
@@ -79,8 +84,6 @@
         if (success)
         {
             _jobList = list;
-
-            // _alertBox.SetMessage(true, message,5000,success:true);
         }
         else
         {

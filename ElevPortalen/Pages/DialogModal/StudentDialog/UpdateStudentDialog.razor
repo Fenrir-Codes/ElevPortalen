@@ -1,40 +1,48 @@
-﻿@using ElevPortalen.Models
+﻿<!-- Lavet af Jozsef -->
+@using ElevPortalen.Models
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Services
 
 @inject StudentService _studentService
+@inject ImageUploadService _imageUploadService
 
 <div class="col-xl-12 col-md-12 col-sm-12">
-    <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
-        Opdater Dine Oplysninger
+    <div class="card-header d-flex align-items-center justify-content-center px-0" style="background-color:black; color:white; height:55px;">
+        <div class="col-12 text-center">
+                Opdater Dine Oplysninger
+        </div>
     </div>
     <div class="card-body">
         <!-- Row -->
         <div class="row gx-3 mb-3 px-4">
-            <div class="col-md-6">
+            <div class="col-md-12 col-xl-4 col-sm-12">
                 <label for="title" class="mb-1 fw-bold">Title</label>
                 <input id="title" class="form-control" @bind="@Model.Title" placeholder="Title" />
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12 col-xl-4 col-sm-12">
                 <label class="mb-1 fw-bold" for="Email">Email</label>
                 <input class="form-control" id="Email" type="email"
                        placeholder="example@example.com" @bind="@Model.Email">
+            </div>
+            <div class="col-md-12 col-xl-4 col-sm-12">
+                <label class="mb-1 fw-bold" for="_picture">Profilbillede</label>
+                <InputFile OnChange="UploadImage" class="form-control form-control-md" id="_picture" multiple accept=".png,.jpg,.jpeg" />
             </div>
         </div>
         <!-- Row -->
         <div class="row gx-3 mb-3 px-4">
             <!-- Firstname -->
-            <div class="col-md-4">
+            <div class="col-md-12 col-xl-4 col-sm-12">
                 <label for="firstname" class="mb-1 fw-bold">Fornavn</label>
                 <input id="firstname" type="text" @bind="@Model.FirstName" class="form-control" placeholder="Fornavn" />
             </div>
             <!-- Middlename -->
-            <div class="col-md-4">
+            <div class="col-md-12 col-xl-4 col-sm-12">
                 <label for="Dmiddlename" class="mb-1 fw-bold">Mellemnavn</label>
                 <input id="middlename" type="text" @bind="@Model.MiddleName" class="form-control" placeholder="Mellemnavn (Hvis du har)" />
             </div>
             <!-- Lastname -->
-            <div class="col-md-4">
+            <div class="col-md-12 col-xl-4 col-sm-12">
                 <label for="lastname" class="mb-1 fw-bold">Efternavn</label>
                 <input id="lastname" type="text" @bind="@Model.LastName" class="form-control" placeholder="Efternavn" />
             </div>
@@ -42,12 +50,12 @@
         <!-- Row -->
         <div class="row gx-3 mb-3 px-4">
             <!-- Address -->
-            <div class="col-md-4">
+            <div class="col-md-12 col-xl-4 col-sm-12">
                 <label for="address" class="mb-1 fw-bold">Adresse</label>
                 <input id="address" type="text" @bind="@Model.Address" class="form-control" placeholder="Adresse" />
             </div>
             <!-- Select speciality -->
-            <div class="col-md-4">
+            <div class="col-md-12 col-xl-4 col-sm-12">
                 <label for="Dregion" class="mb-1 fw-bold">Specialisering</label>
                 <select id="region" class="form-select form-select-md" @bind="@Model.Speciality" aria-label="Region">
                     <option value="" disabled selected>Vælg dit speciale</option>
@@ -57,14 +65,38 @@
                 </select>
             </div>
             <!-- Phone number-->
-            <div class="col-md-4">
+            <div class="col-md-12 col-xl-4 col-sm-12">
                 <label for="phone" class="mb-1 fw-bold">Mobile</label>
                 <input id="phone" type="text" @bind="@Model.PhoneNumber" class="form-control" placeholder="Telefonnummer" />
             </div>
         </div>
+        <!-- Social Links-->
+        <div class="row gx-3 mb-3 px-4">
+            <div class="col-md-3">
+                <label class="mb-1 fw-bold" for="FBook">Facebook</label>
+                <input class="form-control" id="FBook" type="text"
+                       placeholder="www.facebook.com/yourprofile" @bind="Model.FacebookLink">
+            </div>
+            <div class="col-md-3">
+                <label class="mb-1 fw-bold" for="linkedin">LinkedIn</label>
+                <input class="form-control" id="linkedin" type="text"
+                       placeholder="www.linkedin.com/in/yourProfile" @bind="Model.LinkedInLink">
+            </div>
+            <div class="col-md-3">
+                <label class="mb-1 fw-bold" for="Insta">Instagram</label>
+                <input class="form-control" id="Insta" type="text"
+                       placeholder="www.instagram.com/yourProfileName" @bind="Model.InstagramLink">
+            </div>
+            <div class="col-md-3">
+                <label class="mb-1 fw-bold" for="Github">Github</label>
+                <input class="form-control" id="Github" type="text"
+                       placeholder="www.github.com/yourProfileName" @bind="Model.GitHubLink">
+            </div>
+        </div>
+
         <!-- Description Textarea -->
         <div class="row gx-3 mb-0 px-4">
-            <div class="col-md-12">
+            <div class="col-12">
                 <label for="Description" class="mb-1 fw-bold">Beskrivelse</label>
                 <textarea class="form-control" @bind="@Model.Description" id="_description" rows="12"></textarea>
             </div>
@@ -76,5 +108,23 @@
 
     [Parameter]
     public StudentModel? Model { get; set; }
+    private AlertBox _alertBox { get; set; }
+
+    #region Image upload via service
+    private async Task UploadImage(InputFileChangeEventArgs e)
+    {
+        var (success, message) = await _imageUploadService.LoadFiles(e);
+        if (!success)
+        {
+            //Handle error
+            _alertBox.SetMessage(true, message, 0, danger: true);
+        }
+        else
+        {
+            // or set the returned message to the filename if success
+            Model.profileImage = message;
+        }
+    }
+    #endregion
 
 }

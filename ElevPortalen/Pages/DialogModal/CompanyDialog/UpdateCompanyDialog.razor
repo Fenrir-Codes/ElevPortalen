@@ -1,32 +1,35 @@
-﻿@using ElevPortalen.Models;﻿
+﻿<!-- Lavet af Jozsef -->
+@using ElevPortalen.Models;﻿
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Services;
 
 @inject CompanyService _companyService
+@inject ImageUploadService _imageUploadService
 
  <!--container of the update page-->
 <div class="container-fluid d-flex p-0 align-content-center justify-content-center">
     <div class="col-xl-12 col-md-12 col-sm-12">
-
         <!--Header of the update page-->
-        <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
-            Opdater Dine Oplysninger
+        <div class="card-header d-flex align-items-center justify-content-center px-0" style="background-color:black; color:white; height:55px;">
+            <div class="col-12 text-center">
+                Opdater Dine Oplysninger
+            </div>
         </div>
         <!--body of the update page-->
         <div class="card-body">
             <!-- Row -->
             <div class="row gx-3 mb-3 px-4">
                 <!-- Company name -->
-                <div class="col-md-4 mb-2">
+                <div class="col-md-12 col-xl-4 col-sm-12 mb-2">
                     <label for="companyname" class="mb-1 fw-bold">Firmanavn</label>
                     <input id="companyname" type="text" @bind="@Model.CompanyName" class="form-control" placeholder="Firmanavn" />
                 </div>
                 <!-- Address -->
-                <div class="col-md-4 mb-2">
+                <div class="col-md-12 col-xl-4 col-sm-12 mb-2">
                     <label for="address" class="mb-1 fw-bold">Adresse</label>
                     <input id="address" type="text" @bind="@Model.CompanyAddress" class="form-control" placeholder="Adresse" />
                 </div>
-                <div class="col-md-4 mb-2">
+                <div class="col-md-12 col-xl-4 col-sm-12 mb-2">
                     <label for="PhoneNumber" class="mb-1 fw-bold">Tlf.</label>
                     <input id="PhoneNumber" type="tel" @bind="@Model.PhoneNumber" class="form-control" placeholder="Tlf." />
                 </div>
@@ -34,7 +37,7 @@
             <!-- Select region -->
             <!-- Row -->
             <div class="row gx-3 mb-3 px-4">
-                <div class="col-md-4 mb-2">
+                <div class="col-md-12 col-xl-4 col-sm-12 mb-2">
                     <label class="mb-1 fw-bold" for="_region">Region</label>
                     <select class="form-select form-select-md" @bind="Model.Region" id="_region" aria-label="Region">
                         <option disabled selected></option>
@@ -46,12 +49,12 @@
                     </select>
                 </div>
                 <!-- Email -->
-                <div class="col-md-4 mb-2">
+                <div class="col-md-12 col-xl-4 col-sm-12 mb-2">
                     <label for="email" class="mb-1 fw-bold">E-mail</label>
                     <input id="email" type="email" @bind="@Model.Email" class="form-control" placeholder="Email" />
                 </div>
                 <!-- Link -->
-                <div class="col-md-4">
+                <div class="col-md-12 col-xl-4 col-sm-12 mb-2">
                     <label class="mb-1 fw-bold" for="_preferences">Preference</label>
                     <select class="form-select form-select-md" @bind="Model.Preferences" id="_preferences"
                             aria-label="Preferences">
@@ -65,15 +68,19 @@
             <!-- Row -->
             <div class="row gx-3 mb-3 px-4">
                 <!--select preferences-->
-                <div class="col-md-12">
+                <div class="col-md-12 col-xl-6 col-sm-12">
                     <label for="link" class="mb-1 fw-bold">Website link</label>
                     <input id="link" type="text" @bind="@Model.Link" class="form-control" placeholder="example@example.com" />
+                </div>
+                <div class="col-md-12 col-xl-6 col-sm-12">
+                    <label class="mb-1 fw-bold" for="_picture">Profilbillede</label>
+                    <InputFile OnChange="UploadImage" class="form-control form-control-md" id="_picture" multiple accept=".png,.jpg,.jpeg" />
                 </div>
             </div>
             <!-- Textarea description -->
             <!-- Row -->
             <div class="row gx-3 mb-1 px-4">
-                <div class="col-md-12 mb-3">
+                <div class="col-12 mb-3">
                     <label for="Description" class="mb-1 fw-bold">Beskrivelse</label>
                     <textarea class="form-control" @bind="Model.Description" id="_description" rows="12"></textarea>
                 </div>
@@ -101,10 +108,29 @@
         </div>
     </div>
 </div>
+<AlertBox @ref="_alertBox"></AlertBox>
 
 @code {
 
     [Parameter]
     public CompanyModel? Model { get; set; }
+    private AlertBox _alertBox { get; set; }
+
+    #region Image upload via service
+    private async Task UploadImage(InputFileChangeEventArgs e)
+    {
+        var (success, message) = await _imageUploadService.LoadFiles(e);
+        if (!success)
+        {
+            //Handle error
+            _alertBox.SetMessage(true, message, 0, danger: true);
+        }
+        else
+        {
+            // or set the returned message to the filename if success
+            Model.profileImage = message;
+        }
+    }
+    #endregion
 
 }

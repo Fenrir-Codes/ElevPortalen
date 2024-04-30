@@ -1,4 +1,5 @@
-﻿@if (IsVisible)
+﻿<!-- Lavet af Jozsef -->
+@if (IsVisible)
 {
     <div class="container fixed-bottom" style="max-width:600px;">
         @if (isDanger && !string.IsNullOrWhiteSpace(Message))
@@ -66,7 +67,7 @@
         }
     }
 
-    public void SetMessage(bool isVisible, string message, int delayInMillisec, bool danger = false, bool success = false, bool warning = false)
+    public void SetMessage(bool isVisible, string? message, int delayInMillisec, bool danger = false, bool success = false, bool warning = false)
     {
         IsVisible = isVisible;
         Message = message;

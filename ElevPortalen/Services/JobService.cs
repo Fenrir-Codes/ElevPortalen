@@ -5,6 +5,9 @@ using System.Data.Common;
 
 namespace ElevPortalen.Services
 {
+    /// <summary>
+    ///  Lavet af Jozsef
+    /// </summary>
     public class JobService
     {
         private readonly JobOfferDbContext _context;

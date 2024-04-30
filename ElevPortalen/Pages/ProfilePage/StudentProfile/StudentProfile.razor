@@ -1,4 +1,5 @@
-﻿@using ElevPortalen.Pages.AlertBox
+﻿<!-- Lavet af Jozsef -->
+@using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Pages.MessageView
 @using ElevPortalen.Pages.SkeletonLoading
@@ -31,30 +32,42 @@ else
                             <div class="d-flex justify-content-between align-items-center flex-column flex-sm-row">
                                 <!-- Icons -->
                                 <div class="d-flex mb-sm-0">
-                                    <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
-                                        <span class="fa-stack fa-sm">
-                                            <i class="fas fa-circle fa-stack-2x"></i>
-                                            <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
-                                        <span class="fa-stack fa-sm">
-                                            <i class="fas fa-circle fa-stack-2x"></i>
-                                            <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
-                                        <span class="fa-stack fa-sm">
-                                            <i class="fas fa-circle fa-stack-2x"></i>
-                                            <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="mx-lg-2 mx-sm-1" style="color: black">
-                                        <span class="fa-stack fa-sm">
-                                            <i class="fas fa-circle fa-stack-2x"></i>
-                                            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
+                                    @if (!string.IsNullOrEmpty(data.FacebookLink))
+                                    {
+                                        <a @onclick="() => NavigateToNewTab(data.FacebookLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
+                                            <span class="fa-stack fa-sm">
+                                                <i class="fas fa-circle fa-stack-2x"></i>
+                                                <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(data.InstagramLink))
+                                    {
+                                        <a @onclick="() => NavigateToNewTab(data.InstagramLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
+                                            <span class="fa-stack fa-sm">
+                                                <i class="fas fa-circle fa-stack-2x"></i>
+                                                <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(data.LinkedInLink))
+                                    {
+                                        <a @onclick="() => NavigateToNewTab(data.LinkedInLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
+                                            <span class="fa-stack fa-sm">
+                                                <i class="fas fa-circle fa-stack-2x"></i>
+                                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    }
+                                    @if (!string.IsNullOrEmpty(data.GitHubLink))
+                                    {
+                                        <a @onclick="() => NavigateToNewTab(data.GitHubLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer;">
+                                            <span class="fa-stack fa-sm">
+                                                <i class="fas fa-circle fa-stack-2x"></i>
+                                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    }
                                     <button type="button" class="btn btn-outline-success position-relative btn-sm" @onclick="() => NavigateToMyMessages(data.StudentId)">
                                         Inbox 
                                         <span><i class="fa-solid fa-envelope"></i></span>
@@ -419,7 +432,9 @@ else
                                             </div>
                                         </div>
 
-                                        <button class="btn btn-outline-success btn-sm" @onclick="() => UpdateSkills(data.StudentId)">Opdater</button>
+                                        <button class="btn btn-outline-success btn-sm"
+                                            @onclick="() => UpdateSkills(data.StudentId)">Opdater</button>
+
                                         <button class="btn btn-outline-danger btn-sm" @onclick="HideUpdateSection">Tilbage</button>
                                     }
                                 </div>
@@ -435,7 +450,9 @@ else
     {
         @if (hasStudentRecoveryData)
         {
-            <button class="btn btn-success m-2" @onclick="RecoverStudentData">Gendan data</button>
+            <button class="btn btn-success m-2 mt-3" @onclick="RecoverStudentData">Gendan data 
+                <span class="ms-1"><i class="fa-solid fa-arrows-rotate"></i></span></button>
+
 
             <AlertBox IsVisible=true Message="Vi har fundet nogle data, som du kan gendanne." isWarning=true waitForSeconds="0"></AlertBox>
             @* <p>The Student's Guid is : @userIdClaim</p> *@
@@ -451,7 +468,7 @@ else
     }
     else
     {
-        <AlertBox IsVisible=true Message="The profile page can not be shown for some reason check component -> StudentProfile" waitForSeconds="0" isDanger=true></AlertBox>
+        <AlertBox IsVisible=true Message="The profile page can not be shown for some reason check component." waitForSeconds="0" isDanger=true></AlertBox>
     }
 }
 
@@ -475,7 +492,7 @@ else
     //Modal and AlertBox
     private DialogModal? DialogModal { get; set; }
     private ViewMessages? ViewMessages { get; set; }
-    private AlertBox? _aletBox = new AlertBox();
+    private AlertBox _aletBox = new AlertBox();
 
     //booleans
     private bool isConfirmationChecked = false;
@@ -642,6 +659,14 @@ else
     private void NavigateToMyMessages(int Id)
     {
         NavManager.NavigateTo($"/viewmessages/{Id}");
+    }
+    #endregion
+
+    #region Navigate to website Link with opening a new window
+    public async Task NavigateToNewTab(string link)
+    {
+        string url = "https://" + link;
+        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
     }
     #endregion
 

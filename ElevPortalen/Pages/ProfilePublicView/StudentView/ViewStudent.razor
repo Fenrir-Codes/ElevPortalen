@@ -1,4 +1,5 @@
-﻿@page "/viewstudent"
+﻿<!-- Lavet af Jozsef -->
+@page "/viewstudent"
 
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Data;
@@ -9,41 +10,59 @@
 @inject StudentService _studentService
 @inject SkillService _skillService
 @inject MessageService _messageService
+@inject IJSRuntime jsRuntime
 
 @foreach (var data in _student)
 {
     <!--Social links container-->
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-lg-12">
             <div class="card mb-2">
                 <div class="card-body shadow-sm">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="d-flex align-items-center">
-                                <a href="#" class="mx-2" style="color: black">
-                                    <span class="fa-stack fa-sm">
-                                        <i class="fas fa-circle fa-stack-2x"></i>
-                                        <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                                <a href="#" class="mx-2" style="color: black">
-                                    <span class="fa-stack fa-sm">
-                                        <i class="fas fa-circle fa-stack-2x"></i>
-                                        <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                                <a href="#" class="mx-2" style="color: black">
-                                    <span class="fa-stack fa-sm">
-                                        <i class="fas fa-circle fa-stack-2x"></i>
-                                        <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                                <a href="#" class="mx-2" style="color: black">
-                                    <span class="fa-stack fa-sm">
-                                        <i class="fas fa-circle fa-stack-2x"></i>
-                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
+                                <p class="text-center m-0 fw-bold me-2">Sociale links:</p>
+                                @if (!string.IsNullOrEmpty(data.FacebookLink))
+                                {
+                                    <a @onclick="() => NavigateToNewTab(data.FacebookLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
+                                        <span class="fa-stack fa-sm">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                }
+                                else if (!string.IsNullOrEmpty(data.InstagramLink))
+                                {
+                                    <a @onclick="() => NavigateToNewTab(data.InstagramLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
+                                        <span class="fa-stack fa-sm">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                }
+                                else if (!string.IsNullOrEmpty(data.LinkedInLink))
+                                {
+                                    <a @onclick="() => NavigateToNewTab(data.LinkedInLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer">
+                                        <span class="fa-stack fa-sm">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                }
+                                else if (!string.IsNullOrEmpty(data.GitHubLink))
+                                {
+                                    <a @onclick="() => NavigateToNewTab(data.GitHubLink)" class="mx-lg-2 mx-sm-1" style="color: black; cursor:pointer;">
+                                        <span class="fa-stack fa-sm">
+                                            <i class="fas fa-circle fa-stack-2x"></i>
+                                            <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <p class="m-0 text-center">Eleven har endnu ikke tilføjet nogen sociale links</p>
+                                }
                             </div>
                         </div>
                     </div>
@@ -194,7 +213,7 @@
 @code {
     [Parameter]
     public int Id { get; set; }
-    private string? Message = "";
+    private string Message = "";
 
     private List<StudentModel> _student = new List<StudentModel>();
     private List<string> _SkillsOfStudent = new List<string>();
@@ -230,6 +249,14 @@
     private void ReRenderPage()
     {
         StateHasChanged();
+    }
+    #endregion
+
+    #region Navigate to website Link with opening a new window
+    public async Task NavigateToNewTab(string link)
+    {
+        string url = "https://" + link;
+        await jsRuntime.InvokeVoidAsync("open", url, "_blank");
     }
     #endregion
 

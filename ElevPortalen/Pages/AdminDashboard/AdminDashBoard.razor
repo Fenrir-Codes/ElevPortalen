@@ -1,4 +1,5 @@
-﻿@page "/admindashboard"
+﻿<!-- Delvis Lavet af Jozsef -->
+@page "/admindashboard"
 
 @using ElevPortalen.Areas.Identity.Pages.Account.Manage
 @using ElevPortalen.Pages.DialogModal
@@ -109,7 +110,8 @@
                                     <option value="Programmering">Programmering</option>
                                 </select>
                             </div>
-                            <div class="card-footer d-flex align-items-center justify-content-between small" @onclick="() => GetbySpeciality(selectedSpecialization)" style="cursor:pointer;">
+                            <div class="card-footer d-flex align-items-center justify-content-between small"
+                                @onclick="() => GetbySpeciality(selectedSpecialization)" style="cursor:pointer;">
                                 <div>View Filtered Results</div>
                                 <div><i class="fas fa-angle-right"></i></div>
                             </div>
@@ -310,8 +312,6 @@
     int _studentCount = 0;
     int _companyCount = 0;
 
-    string teststring = "IT-Support";
-
     //Pagination
     private const int PageSize = 15;  // Constant representing the number of items to display per page.
     private int currentPage = 1; //Current page set to 1
@@ -322,10 +322,7 @@
     private int Id { get; set; }
     private bool isStudent = false;
     private bool isCompany = false;
-
     private bool isLoaded = false;
-
-    private string specialisationFilter = "";
 
     #region initialize
     protected override async Task OnInitializedAsync()
@@ -336,10 +333,12 @@
     }
     #endregion
 
+    #region sort by speciality (GetBySpeciality)
     private async Task GetbySpeciality(string spec)
     {
         _listOfStudents = await _studentService.GetStudentsBySpecialization(spec);
     }
+    #endregion
 
     #region GetCount
     public async Task GetCount()
@@ -415,10 +414,5 @@
         StateHasChanged();
     }
     #endregion
-
-    #region Filter student by specialization
-
-    #endregion
-
 
 }
