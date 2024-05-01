@@ -93,7 +93,7 @@ else
                 <div class="col-lg-4">
                     <div class="card mb-2 shadow-sm">
                         <div class="card-body text-center">
-                            @if (!string.IsNullOrEmpty(data.profileImage))
+                            @if (!string.IsNullOrEmpty(data.profileImage) && ImageExistOnDisk(data.profileImage))
                             {
                                 <img src="images/ProfileImages/@data.profileImage" alt="avatar"
                                      class="rounded-circle img-fluid" style="width: 150px; height:150px;">
@@ -702,6 +702,15 @@ else
     private async Task GetUnreadMessagesCount(int Id)
     {
        unreadMessages = await _messageService.GetUnredMessageCount(Id);
+    }
+    #endregion
+
+    #region Check for the image existing on the disk
+    private bool ImageExistOnDisk(string imageName)
+    {
+        // path based on folders
+        var imagePath = $"wwwroot/images/ProfileImages/{imageName}";
+        return File.Exists(imagePath);
     }
     #endregion
 

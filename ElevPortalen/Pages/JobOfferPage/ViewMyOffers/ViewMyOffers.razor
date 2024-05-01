@@ -1,0 +1,112 @@
+﻿@page "/myjoboffers/{companyId:int}"
+
+@using ElevPortalen.Models
+@using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.DialogModal
+@using ElevPortalen.Services;
+
+@inject JobService _jobService
+
+<div class="container-fluid">
+
+    @foreach (var job in _jobList)
+    {
+        @if (_jobList.Any())
+        {
+            <div class="card shadow-sm mb-2">
+                <table class="table align-middle p-0 m-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Oprettet</th>
+                            <th>Selskab</th>
+                            <th>Jobtitel</th>
+                            <th>Specialisering</th>
+                            <th>Kontaktperson</th>
+                            <th>Ledige Stillinger</th>
+                            <th>Deadline</th>
+                            <th>Action</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@job.DateOfPublish.ToShortDateString()</td>
+                            <td>@job.CompanyName</td>
+                            <td>@job.Title</td>
+                            <td>@job.Speciality</td>
+                            <td>@job.ContactPerson</td>
+                            <td>@job.NumberOfPositionsAvailable</td>
+                            <td>@job.Deadline.ToShortDateString()</td>
+                            <td><button class="btn btn-sm btn-success" @onclick="() => DialogModal.OpenJobOfferUpdateDialog(job.JobOfferId)">Update</button></td>
+                            <td><button class="btn btn-sm btn-danger" @onclick="() => DeleteJobOfferById(job.JobOfferId)">Delete</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <AlertBox IsVisible=true Message="Intet jobtilbud fundet" waitForSeconds="0" isWarning=true></AlertBox>
+        }
+    }
+</div>
+
+
+<!-- DialogModal for update view -->
+<DialogModal @ref="DialogModal" OnClose="ReRenderPage"></DialogModal>
+<!-- AlertBox -->
+<AlertBox @ref="_alertBox" />
+
+@code {
+    [Parameter] public int companyId { get; set; }
+    private List<JobOfferModel> _jobList = new List<JobOfferModel>();
+    private AlertBox _alertBox = new AlertBox();
+    private DialogModal DialogModal = new DialogModal();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetMyJobOffers();
+    }
+
+    #region Get All Of The Company Job Offer To Table
+    private async Task GetMyJobOffers()
+    {
+        _jobList.Clear();
+
+        var (message, success, data) = await _jobService.GetAllOffersByCompanyId(companyId);
+        if (success)
+        {
+            _jobList = data;
+        }
+        else
+        {
+            _alertBox.SetMessage(true, message, 0, danger:true);
+        }
+    }
+    #endregion
+
+    #region Delete joboffer
+    private async Task DeleteJobOfferById(int JobId)
+    {
+        var (message, success) = await _jobService.DeleteOffer(JobId);
+        if (success)
+        {
+            _alertBox.SetMessage(true, message, 2000, success:true);
+        }
+        else
+        {
+            _alertBox.SetMessage(true, message, 10000, danger:true);
+        }
+        await GetMyJobOffers();
+    }
+    #endregion
+
+    #region Re-RenderPage function for re-renderint the profile page on change
+    private async void ReRenderPage()
+    {
+        await GetMyJobOffers();
+        StateHasChanged();
+    }
+    #endregion
+
+}

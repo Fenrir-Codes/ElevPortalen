@@ -11,7 +11,7 @@
 <div class="col-xl-12 col-md-12 col-sm-12">
     <!--Header of the update page-->
     <div class="card-header d-flex justify-content-center" style="background-color:black; color:white; height:55px;">
-        <h4 class="fw-bold">Opret jobtilbud</h4>
+        <h4 class="fw-bold">@textOfHeader</h4>
     </div>
 
     <div class="container px-4">
@@ -22,7 +22,7 @@
                 <div class="col-md-3">
                     <label for="title" class="form-label small mb-1 fw-bold">Jobtitel</label>
                     <select class="form-select form-select-md" @bind="job.Title" id="title" aria-label="Region" required>
-                        <option disabled selected>Vælg Title</option>
+                        <option disabled selected>Vælg</option>
                         <option value="Datatekniker">Datatekniker</option>
                         <option value="Datamatiker">Datamatiker</option>
                         <option value="Dataanalyse">Dataanalyse</option>
@@ -106,6 +106,7 @@
 
 @code {
     [Parameter] public JobOfferModel job { get; set; }
+    [Parameter] public string textOfHeader { get; set; }
     private List<AddressModel> address = new List<AddressModel>();
     private AlertBox _alertBox = new AlertBox();
     private CancellationTokenSource? cancellationTokenSource;

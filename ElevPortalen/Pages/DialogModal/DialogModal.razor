@@ -32,7 +32,7 @@
                 }
                 else if (JobOfferDialog)
                 {
-                    <JobOfferDialog job="_job"></JobOfferDialog>
+                    <JobOfferDialog job="_job" textOfHeader="@jobDialogHeaderText"></JobOfferDialog>
                 }
                 else
                 {
@@ -52,9 +52,13 @@
                 {
                     <button type="button" class="btn btn-success" @onclick=@SubmitUpdateCompany>Update</button>
                 }
+                else if (JobOfferDialog && JobOfferUpdateButton && !MessageDialog)
+                {
+                    <button type="button" class="btn btn-success" @onclick=@UpdateJobOffer>Update job</button>
+                }
                 else if (JobOfferDialog && !MessageDialog)
                 {
-                    <button type="button" class="btn btn-success" @onclick=@SubmitJobOffer>Opret job</button>
+                    <button type="button" class="btn btn-success" @onclick=@CreateJobOffer>Opret job</button>
                 }
                 else
                 {
@@ -88,6 +92,7 @@
     private AlertBox _alertBox = new AlertBox();
 
     private string _Message = "";
+    private string jobDialogHeaderText = "";
 
     public string DisplayStyle = "none;";
     public string ModalClass = "";
@@ -99,6 +104,7 @@
     // Message dialog fields
     private bool MessageDialog = false;
     private bool JobOfferDialog = false;
+    private bool JobOfferUpdateButton = false;
 
     private string? _messageTo = "";
     private int _recieverId { get; set; }
@@ -180,8 +186,8 @@
     }
     #endregion
 
-    #region Handle validation submit (Job offer)
-    private async Task SubmitJobOffer()
+    #region Create job offer button
+    private async Task CreateJobOffer()
     {
         var (message, success) = await _jobService.Create(_job);
         if (success)
@@ -191,6 +197,22 @@
         else
         {
             _alertBox.SetMessage(true, message, 0, danger:true);
+        }
+        await Close();
+    }
+    #endregion
+
+    #region Update job offer button
+    private async Task UpdateJobOffer()
+    {
+        var (message, success) = await _jobService.Update(_job);
+        if (success)
+        {
+            _alertBox.SetMessage(true, message, 2000, success: true);
+        }
+        else
+        {
+            _alertBox.SetMessage(true, message, 0, danger: true);
         }
         await Close();
     }
@@ -236,6 +258,7 @@
     #region open Job Offer Dialog
     public void OpenJobOfferDialog(int companyId, string? companyName)
     {
+        jobDialogHeaderText = "Opret Jobtilbud";
         JobOfferDialog = true;
         _job.CompanyId = companyId;
         _job.CompanyName = companyName;
@@ -246,12 +269,37 @@
     }
     #endregion
 
+    #region open Job Offer Update Dialog
+    public async Task OpenJobOfferUpdateDialog(int jobOfferId)
+    {
+        jobDialogHeaderText = "Update Jobtilbud";
+        JobOfferDialog = true;
+        JobOfferUpdateButton = true;
+
+        DisplayStyle = "block;";
+        ModalClass = "show";
+        ShowBackdrop = true;
+
+        var (message, success, data) = await _jobService.GetOfferWithJobId(jobOfferId);
+        if (success)
+        {
+            _job = data;
+        }
+        else
+        {
+            _alertBox.SetMessage(true, message, 0 ,warning:true);
+        }
+
+    }
+    #endregion
+
     #region Close Function
     public Task Close()
     {
         isCompany = false;
         isStudent = false;
         JobOfferDialog = false;
+        JobOfferUpdateButton = false;
 
         ResetModels();
 
@@ -262,10 +310,14 @@
     }
     #endregion
 
+    #region reset the models
     private void ResetModels()
     {
         _studentToUpdate = new();
         _companyToUpdate = new();
         _job = new();
     }
+    #endregion
+
+
 }
