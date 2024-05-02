@@ -110,12 +110,12 @@
     #region OnInitialized
     protected override async Task OnInitializedAsync()
     {
-        await ReadMessages();
+        await GetMyMessages();
     }
     #endregion
 
     #region Getting the messages with th ReceiverId
-    public async Task ReadMessages()
+    public async Task GetMyMessages()
     {
         _listOfMessages = await _messageService.GetMessageWithReceiverId(ReceiverId);
     }

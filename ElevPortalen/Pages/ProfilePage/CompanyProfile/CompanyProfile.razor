@@ -55,7 +55,7 @@ else
                 <div class="col-lg-4">
                     <div class="card mb-2">
                         <div class="card-body text-center shadow-sm">
-                            @if (!string.IsNullOrEmpty(data.profileImage))
+                            @if (!string.IsNullOrEmpty(data.profileImage) && ImageExistOnDisk(data.profileImage))
                             {
                                 <img src="images/ProfileImages/@data.profileImage" alt="avatar"
                                      class="rounded-circle img-fluid" style="width: 150px;">
@@ -154,6 +154,11 @@ else
                                                 @onclick="() => DialogModal?.OpenJobOfferDialog(data.CompanyId, data.CompanyName)">
                                             Opret Jobtilbud
                                         </button>
+
+                                        <button class="btn btn-success mb-0 btn-sm"
+                                                @onclick="() => ShowMyJobOffers(data.CompanyId)">
+                                            Vis mine jobtilbud
+                                        </button>
                                     </p>
                                 </div>
                             </div>
@@ -223,7 +228,6 @@ else
                 <!--Description-->
                 <div class="row">
                     <div class="col-lg-12">
-                        @*   <p class="mb-2 fw-bold">Beskrivelse</p> *@
                         <div class="card mb-2">
                             <div class="card-body shadow-sm">
                                 <p class="text-muted mb-0">@data.Description</p>
@@ -378,6 +382,13 @@ else
     }
     #endregion
 
+    #region Navigate to MyOffers
+    private void ShowMyJobOffers(int Id)
+    {
+        NavManager.NavigateTo($"/myjoboffers/{Id}");
+    }
+    #endregion
+
     #region Checking is company has recovery data if nothing exist in their profile
     private async Task CheckIfCompanyHasDataToRecover(ClaimsPrincipal _user)
     {
@@ -421,5 +432,13 @@ else
     }
     #endregion
 
+    #region Check for the image existing on the disk
+    private bool ImageExistOnDisk(string imageName)
+    {
+        // path based on folders
+        var imagePath = $"wwwroot/images/ProfileImages/{imageName}";
+        return File.Exists(imagePath);
+    }
+    #endregion
 
 }

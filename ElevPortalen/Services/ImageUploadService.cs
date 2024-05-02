@@ -20,13 +20,18 @@ namespace ElevPortalen.Services
         {
             if (e.FileCount > maxAllowedFiles)
             {
-                return (false, $"Error: Attempting to upload {e.FileCount} files, but only {maxAllowedFiles} files are allowed");
+                return (false, $"Error: Attempting to upload file, but only {maxAllowedFiles} files are allowed");
+            }
+            if (e.File.Size > maxFileSize)
+            {
+                return (false, $"Error: File size exceeds the maximum allowed size of 1 megabytes");
             }
 
             foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
             {
                 try
                 {
+
                     string newFileName = Path.ChangeExtension(
                         Path.GetRandomFileName(),
                         Path.GetExtension(file.Name));
@@ -45,7 +50,7 @@ namespace ElevPortalen.Services
                 }
                 catch (Exception ex)
                 {
-                    return (false, $"Error uploading file '{file.Name}': {ex.Message}");
+                    return (false, $"Error uploading file. {ex.Message}");
                 }
             }
             return (false, "No files were uploaded."); // Return false if no files were processed

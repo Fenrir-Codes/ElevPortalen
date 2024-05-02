@@ -70,11 +70,19 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Read one offer with the Company Id
-        public async Task<JobOfferModel?> GetOfferWithCompanyId(int companyId)
+        public async Task<(string, bool, JobOfferModel?)> GetOfferWithCompanyId(int companyId)
         {
             try
             {
-                return await _context.JobOfferDataBase.FirstOrDefaultAsync(offer => offer.CompanyId == companyId);
+                var joboffer = await _context.JobOfferDataBase.FirstOrDefaultAsync(offer => offer.CompanyId == companyId);
+                if (joboffer != null)
+                {
+                    return ("", true, joboffer);
+                }
+                else
+                {
+                    return ("No joboffers found!", false, null);
+                }
             }
             catch (Exception ex)
             {
@@ -85,11 +93,19 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Read all offers with the Company Id
-        public async Task<List<JobOfferModel>> GetAllOffersByCompanyId(int companyId)
+        public async Task<(string, bool, List<JobOfferModel>)> GetAllOffersByCompanyId(int companyId)
         {
             try
             {
-                return await _context.JobOfferDataBase.Where(offer => offer.CompanyId == companyId).ToListAsync();
+                var joboffer = await _context.JobOfferDataBase.Where(offer => offer.CompanyId == companyId).ToListAsync();
+                if (joboffer != null)
+                {
+                    return ("", true, joboffer);
+                }
+                else
+                {
+                    return ("No joboffers found!", false, new());
+                }
             }
             catch (Exception ex)
             {
@@ -99,60 +115,87 @@ namespace ElevPortalen.Services
         }
         #endregion
 
+
         #region Update Job Offer
-        public async Task<(string, bool)> Update(JobOfferModel updatedJob)
+        public async Task<(string, bool)> Update(JobOfferModel job)
         {
             try
             {
-                var JobToUpdate = await _context.JobOfferDataBase.FindAsync(updatedJob.JobOfferId);
+                _context.Entry(job).State = EntityState.Detached;
+                var entry = await _context.JobOfferDataBase.FindAsync(job.JobOfferId);
 
                 // If the response is not null
-                if (JobToUpdate != null)
+                if (entry != null)
                 {
-                    JobToUpdate.Title = updatedJob.Title;
-                    JobToUpdate.JobAddress = updatedJob.JobAddress;
-                    JobToUpdate.JobLink = updatedJob.JobLink;
-                    JobToUpdate.JobDetails = updatedJob.JobDetails;
-                    JobToUpdate.NumberOfPositionsAvailable = updatedJob.NumberOfPositionsAvailable;
-                    JobToUpdate.Speciality = updatedJob.Speciality;
-                    JobToUpdate.DateOfPublish = updatedJob.DateOfPublish;
-                    JobToUpdate.Deadline = updatedJob.Deadline;
+                    if (!AreEntitiesEqual(entry, job))
+                    {
+                        entry.Title = job.Title;
+                        entry.ContactPerson = job.ContactPerson;
+                        entry.PhoneNumber = job.PhoneNumber;
+                        entry.JobAddress = job.JobAddress;
+                        entry.JobLink = job.JobLink;
+                        entry.JobDetails = job.JobDetails;
+                        entry.NumberOfPositionsAvailable = job.NumberOfPositionsAvailable;
+                        entry.Speciality = job.Speciality;
+                        entry.Deadline = job.Deadline;
 
-                    _context.Entry(JobToUpdate).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
+                        _context.Entry(entry).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
 
-                    return ("Job offer updated.", true);
+                        return ("Updated successfully", true);
+                    }
+                    else
+                    {
+                        return ($"No changes were made", true);
+                    }
                 }
                 else
                 {
-                    return ("Job offer not found.", false);
+                    return ("Job offer not found", false);
                     // Return a message when the offer is not found
                 }
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"An error occurred while updating data in the database: {ex.Message}"); 
+                throw new InvalidOperationException($"An error occurred while updating data in the database: {ex.Message}");
                 // Return an error message if an exception occurs
             }
         }
 
         #endregion
 
-        #region delete job offer by Id (just one offer)
+        #region Helper method to check if two  entities are equal
+        private bool AreEntitiesEqual(JobOfferModel entry, JobOfferModel jobtoUpdate)
+        {
+            return entry.Title == jobtoUpdate.Title &&
+                entry.ContactPerson == jobtoUpdate.ContactPerson &&
+                entry.PhoneNumber == jobtoUpdate.PhoneNumber &&
+                entry.JobAddress == jobtoUpdate.JobAddress &&
+                entry.JobLink == jobtoUpdate.JobLink &&
+                entry.JobDetails == jobtoUpdate.JobDetails &&
+                entry.NumberOfPositionsAvailable == jobtoUpdate.NumberOfPositionsAvailable &&
+                entry.Speciality == jobtoUpdate.Speciality &&
+                entry.Deadline == jobtoUpdate.Deadline;
+        }
+        #endregion
+
+        #region Delete Joboffer by Id (just one offer)
         public async Task<(string, bool)> DeleteOffer(int jobOfferId)
         {
             try
             {
-                var offerToDelete = await _context.JobOfferDataBase.FindAsync(jobOfferId);
-                if (offerToDelete == null)
+                var JobToDelete = await _context.JobOfferDataBase.FindAsync(jobOfferId);
+                if (JobToDelete != null)
+                {
+                    _context.JobOfferDataBase.Remove(JobToDelete);
+                    await _context.SaveChangesAsync();
+
+                    return ("JobOffer deleted successfully.", true);
+                }
+                else
                 {
                     return ("Error while delete Joboffer.", false);
                 }
-
-                _context.JobOfferDataBase.Remove(offerToDelete);
-                await _context.SaveChangesAsync();
-
-                return ("JobOffer deleted successfully.", true);
             }
             catch (DbUpdateException ex)
             {
@@ -163,7 +206,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Delete function for all the job offers a company have in the database (all offers with the company id)
-        public async Task<(string, bool)> DeleteOffersByCompanyId(int companyId)
+        public async Task<(string, bool)> DeleteAllOffersByCompanyId(int companyId)
         {
             try
             {
@@ -171,13 +214,13 @@ namespace ElevPortalen.Services
 
                 if (!offersToDelete.Any())
                 {
-                    return ($"No offers found for this company.", false);
+                    return ($"No offers found for this company", false);
                 }
 
                 _context.JobOfferDataBase.RemoveRange(offersToDelete);
                 await _context.SaveChangesAsync();
 
-                return ($"All offers for company  deleted successfully.", true);
+                return ($"All offers has been deleted successfully", true);
             }
             catch (DbUpdateException ex)
             {
