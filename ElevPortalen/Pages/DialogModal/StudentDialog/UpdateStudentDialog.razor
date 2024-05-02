@@ -104,11 +104,13 @@
     </div>
 </div>
 
+<AlertBox @ref="_alertBox"></AlertBox>
+
 @code {
 
     [Parameter]
-    public StudentModel? Model { get; set; }
-    private AlertBox _alertBox { get; set; }
+    public StudentModel Model { get; set; }
+    private AlertBox _alertBox = new AlertBox();
 
     #region Image upload via service
     private async Task UploadImage(InputFileChangeEventArgs e)
@@ -116,8 +118,9 @@
         var (success, message) = await _imageUploadService.LoadFiles(e);
         if (!success)
         {
-            //Handle error
-            _alertBox.SetMessage(true, message, 0, danger: true);
+
+           _alertBox.SetMessage(true, message, 10000, danger: true);
+
         }
         else
         {
