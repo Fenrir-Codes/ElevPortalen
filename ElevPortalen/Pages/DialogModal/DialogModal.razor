@@ -28,7 +28,7 @@
                 }
                 else if (MessageDialog)
                 {
-                    <MessageDialog Model="_messageToSend" MessageTo="@_messageTo" ReceiverId="@_recieverId"></MessageDialog>
+                    <MessageDialog Model="_messageToSend" MessageTo="@_messageTo" ReceiverId="@_recieverId" SenderId="@_sendererId"></MessageDialog>
                 }
                 else if (JobOfferDialog)
                 {
@@ -108,6 +108,7 @@
 
     private string? _messageTo = "";
     private int _recieverId { get; set; }
+    private int _sendererId { get; set; }
     // sent it to job offer dialog
     private int _companyId { get; set; }
 
@@ -243,10 +244,11 @@
     #endregion
 
     #region Message Dialog
-    public void OpenMessageDialog(int id, string? firstName, string? lastName)
+    public void OpenMessageDialog(int id, int senderId, string? firstName, string? lastName)
     {
         MessageDialog = true;
         _recieverId = id;
+        _sendererId = senderId;
         _messageTo = firstName + " " + lastName;
 
         DisplayStyle = "block;";
@@ -318,6 +320,7 @@
         _job = new();
     }
     #endregion
+
 
 
 }

@@ -2,6 +2,7 @@
 @page "/viewmessages/{ReceiverId:int}"
 
 @using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Models;
 
@@ -88,7 +89,8 @@
             @if (MessageOpen)
             {
                 <div class="card-footer d-flex">
-                    <button class="btn btn-sm btn-danger" @onclick="ToggleBack">Tilbage</button>
+                    <button class="btn btn-sm btn-danger me-2" @onclick="ToggleBack">Tilbage</button>
+                    <button class="btn btn-sm btn-success" @onclick="() => DialogModal.OpenMessageDialog(_Message.SendererId,_Message.ReceiverId, _Message.SenderName,null)">Besvar</button>
                 </div>
             }
         </div>
@@ -100,10 +102,17 @@
 
 </div>
 
+<!-- DialogModal for update view -->
+<DialogModal @ref="DialogModal" OnClose="ReRenderPage"></DialogModal>
+<!-- AlertBox -->
+<AlertBox @ref="_alertBox" />
+
 @code {
     [Parameter] public int ReceiverId { get; set; }
     private MessageModel _Message = new MessageModel();
     private List<MessageModel> _listOfMessages = new List<MessageModel>();
+    private AlertBox _alertBox = new AlertBox();
+    private DialogModal DialogModal = new DialogModal();
     private bool MessageOpen = false;
     private string? messageFrom = "";
 
@@ -136,6 +145,14 @@
     {
         MessageOpen = false;
         await OnInitializedAsync();
+        StateHasChanged();
+    }
+    #endregion
+
+    #region Re-RenderPage function for re-renderint the profile page on change
+    private async void ReRenderPage()
+    {
+        await GetMyMessages();
         StateHasChanged();
     }
     #endregion

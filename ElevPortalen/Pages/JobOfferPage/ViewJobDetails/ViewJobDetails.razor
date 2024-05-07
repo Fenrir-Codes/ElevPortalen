@@ -5,8 +5,11 @@
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
 @inject JobService _jobService
+@inject StudentService _studentService
 @inject IJSRuntime jsRuntime
 @inject NavigationManager _navManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -43,7 +46,7 @@
                             <button class="btn btn-sm btn-success me-2" @onclick="() => NavigateToNewTab(_job.JobLink)">Ansøg via link</button>
                         }
                         <button class="btn btn-sm btn-success" @onclick="() =>
-                                DialogModal!.OpenMessageDialog(_job.CompanyId, _job.CompanyName, null)">
+                                DialogModal!.OpenMessageDialog(_job.CompanyId, senderId, _job.CompanyName, null)">
                             Send besked
                         </button>
                     </div>
@@ -170,15 +173,18 @@
     private DialogModal? DialogModal { get; set; }
     private JobOfferModel? _job = new JobOfferModel();
     private AuthenticationState? _authState;
+    public ClaimsPrincipal? _user { get; set; }
     private bool isLoaded = false;
     private bool isVisible = false;
     private string columnWidth = "col-lg-12";
     private string _message = "";
+    private int senderId = 0;
 
     protected override async Task OnInitializedAsync()
     {
         await GetAuthState();
         await GetJobOffer(JobOfferId);
+        await GetTheStudentIdAsSenderId();
     }
 
     #region Get the auth state and set column and message values
@@ -197,7 +203,6 @@
             columnWidth = "col-lg-12";
             _message = "";
         }
-
     }
     #endregion
 
@@ -237,6 +242,24 @@
     {
         var user = _authState.User;
         return user.IsInRole(role);
+    }
+    #endregion
+
+    #region Get the studentId as sender id
+    private async Task GetTheStudentIdAsSenderId()
+    {
+        // Getting the user current authentication state.
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (_authState != null)
+        {
+            _user = _authState.User;
+            var student = await _studentService.ReadData(_user);
+            if (student != null)
+            {
+                senderId = student[0].StudentId;
+            }
+        }
     }
     #endregion
 

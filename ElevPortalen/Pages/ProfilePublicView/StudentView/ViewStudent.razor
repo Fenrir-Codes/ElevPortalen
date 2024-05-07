@@ -6,11 +6,15 @@
 @using ElevPortalen.Services;
 @using ElevPortalen.Models;
 @using ElevPortalen.Pages.DialogModal;
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
 @inject StudentService _studentService
+@inject CompanyService _companyService
 @inject SkillService _skillService
 @inject MessageService _messageService
 @inject IJSRuntime jsRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @foreach (var data in _student)
 {
@@ -149,7 +153,7 @@
                         </div>
                         <div class="col-sm-9">                
                             <button class="btn btn-success mb-0 btn-sm" @onclick="() =>
-                                DialogModal!.OpenMessageDialog(data.StudentId, data.FirstName, data.LastName)">Send besked</button>
+                                DialogModal!.OpenMessageDialog(data.StudentId, senderId, data.FirstName, data.LastName)">Send besked</button>
                         </div>
                     </div>
                 </div>
@@ -213,7 +217,10 @@
 @code {
     [Parameter]
     public int Id { get; set; }
+    public ClaimsPrincipal? _user { get; set; }
+    private AuthenticationState? _authState;
     private string Message = "";
+    private int senderId = 0;
 
     private List<StudentModel> _student = new List<StudentModel>();
     private List<string> _SkillsOfStudent = new List<string>();
@@ -225,6 +232,7 @@
     {
         await GetStudentProfile(Id);
         await GetSkills(_student);
+        await GetTheCompanyIdAsSenderId();
     }
     #endregion
 
@@ -266,6 +274,24 @@
         // path based on folders
         var imagePath = $"wwwroot/images/ProfileImages/{imageName}";
         return File.Exists(imagePath);
+    }
+    #endregion
+
+    #region Get the companyId as sender id
+    private async Task GetTheCompanyIdAsSenderId()
+    {
+        // Getting the user current authentication state.
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (_authState != null)
+        {
+            _user = _authState.User;
+            var company = await _companyService.ReadData(_user);
+            if (company != null)
+            {
+                senderId = company[0].CompanyId;
+            }
+        }
     }
     #endregion
 
