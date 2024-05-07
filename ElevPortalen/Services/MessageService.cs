@@ -1,13 +1,13 @@
 ﻿using ElevPortalen.Data;
-using Microsoft.AspNetCore.DataProtection;
 using ElevPortalen.Models;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElevPortalen.Services
-{    
+{
     /// <summary>
-     ///  Lavet af Jozsef
-     /// </summary>
+    ///  Lavet af Jozsef
+    /// </summary>
     public class MessageService
     {
         private readonly ElevPortalenDataDbContext _context;
@@ -39,39 +39,33 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Delete Message with the messageId
-        public async Task<string> Delete(int Id)
+        public async Task<(bool, string)> Delete(int Id)
         {
             try
             {
-                var message = await _context.Messages.FindAsync(Id);
+                var message = _context.Messages.FirstOrDefault(m => m.MessageId == Id);
                 if (message != null)
                 {
-
-                    var messageToRemove = _context.Messages.FirstOrDefaultAsync(m => m.MessageId == message.MessageId);
-                    if (messageToRemove != null)
-                    {
-                        _context.Entry(messageToRemove).State = EntityState.Detached;
-                    }
-
                     _context.Messages.Remove(message);
                     await _context.SaveChangesAsync();
-
-                    return "Message Deleted.";
+                    return (true, "Message Deleted.");
                 }
                 else
                 {
-                    return $"Messasge not found with MessageId - {Id}.";
+                    return (false, $"Error: message could not be deleted - messageId : {Id}.");
                 }
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"An error has occurred: {ex.Message}");
+                return (false, $"Error: {ex.Message}");
             }
         }
         #endregion
 
-        #region Delete Messages with the receiverId
-        public async Task<string> DeleteAllWithReceiverId(int receiverId)
+
+
+        #region Delete multiple Messages with the receiverId
+        public async Task<(bool, string)> DeleteAllWithReceiverId(int receiverId)
         {
             try
             {
@@ -81,11 +75,11 @@ namespace ElevPortalen.Services
                 {
                     _context.Messages.RemoveRange(messages);
                     await _context.SaveChangesAsync();
-                    return "Messages Deleted.";
+                    return (true, "Messages Deleted.");
                 }
                 else
                 {
-                    return $"No messages found with ReceiverId - {receiverId}.";
+                    return (false, $"No messages found with ReceiverId - {receiverId}.");
                 }
             }
             catch (Exception ex)
