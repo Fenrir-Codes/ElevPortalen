@@ -106,7 +106,7 @@
     private bool JobOfferDialog = false;
     private bool JobOfferUpdateButton = false;
 
-    private string? _messageTo = "";
+    private string? _messageTo { get; set; }
     private int _recieverId { get; set; }
     private int _sendererId { get; set; }
     // sent it to job offer dialog
@@ -244,12 +244,28 @@
     #endregion
 
     #region Message Dialog
-    public void OpenMessageDialog(int id, int senderId, string? firstName, string? lastName)
+    public void OpenMessageDialog(int recieverId, int senderId, string? firstName, string? lastName)
     {
         MessageDialog = true;
-        _recieverId = id;
+        _recieverId = recieverId;
         _sendererId = senderId;
         _messageTo = firstName + " " + lastName;
+
+        DisplayStyle = "block;";
+        ModalClass = "show";
+        ShowBackdrop = true;
+    }
+    #endregion
+
+    #region Message Dialog
+    public void OpenAnswareDialog(int senderId, int recieverId, string? firstName, string? lastName,string? subject, string? content)
+    {
+        MessageDialog = true;
+        _recieverId = senderId;
+        _sendererId = recieverId;
+        _messageTo = firstName + " " + lastName;
+        _messageToSend.SenderName = firstName + lastName;
+        _messageToSend.Subject = "Re: " + subject;
 
         DisplayStyle = "block;";
         ModalClass = "show";
@@ -317,11 +333,9 @@
     {
         _studentToUpdate = new();
         _companyToUpdate = new();
-        _messageToSend = new();
         _job = new();
     }
     #endregion
-
 
 
 }

@@ -93,7 +93,8 @@
             {
                 <div class="card-footer d-flex">
                     <button class="btn btn-sm btn-success me-2" @onclick="ToggleBack"><i class="fa-solid fa-circle-left me-1"></i>Tilbage</button>
-                    <button class="btn btn-sm btn-success me-2" @onclick="() => DialogModal.OpenMessageDialog(_Message.SendererId, _Message.ReceiverId, _Message.SenderName, null)">
+                    <button class="btn btn-sm btn-success me-2" @onclick="() =>
+                        DialogModal.OpenAnswareDialog(_Message.SendererId, _Message.ReceiverId, _Message.SenderName, null, _Message.Subject, null)">
                         <i class="fa-solid fa-message me-1"></i>Besvar
                     </button>
                     <button class="btn btn-sm btn-outline-danger me-2" @onclick="() => DeleteMessage(_Message.MessageId)"><i class="fa-solid fa-trash-can me-1"></i>Delete</button>        
