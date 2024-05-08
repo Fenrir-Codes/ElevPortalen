@@ -1,12 +1,12 @@
-using ElevPortalen.Pages.AlertBox;
 using ElevPortalen.Areas.Identity;
 using ElevPortalen.Areas.Identity.Pages.Account;
 using ElevPortalen.Data;
+using ElevPortalen.DatabaseErrorHandler;
+using ElevPortalen.Pages.AlertBox;
 using ElevPortalen.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ElevPortalen.DatabaseErrorHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,10 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //LoginDb
-var LoginDatabase = builder.Configuration.GetConnectionString("LoginDatabase") ?? 
+var LoginDatabase = builder.Configuration.GetConnectionString("LoginDatabase") ??
     throw new InvalidOperationException("Connection string 'LoginDatabase' not found.");
 //The ElevPortalenDb.
-var PortalDatabase = builder.Configuration.GetConnectionString("PortalDatabase") ?? 
+var PortalDatabase = builder.Configuration.GetConnectionString("PortalDatabase") ??
     throw new InvalidOperationException("Connection string 'PortalDatabase' not found.");
 //RecoveryDb
 var DataRecoveryString = builder.Configuration.GetConnectionString("RecoveryDatabase") ??
@@ -35,9 +35,22 @@ builder.Services.AddDbContext<JobOfferDbContext>(options => options.UseSqlServer
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //Added IdentityRole by Jozsef
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+options.SignIn.RequireConfirmedAccount = false)
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings to min 6 char and require Uppercase, unique char, and digit.
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+});
+//Identity END
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -57,6 +70,7 @@ builder.Services.AddScoped<ImageUploadService>();
 builder.Services.AddHttpClient();
 //Dataprotection service by Jozsef
 builder.Services.AddDataProtection();
+
 // End ----
 
 var app = builder.Build();
