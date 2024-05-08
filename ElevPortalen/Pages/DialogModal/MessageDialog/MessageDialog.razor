@@ -28,7 +28,8 @@
                 <textarea class="form-control" id="_message" rows="8" @bind="Model.Content"></textarea>
             </div>
             <p>
-           @* The reciever ID is: @ReceiverId *@
+@*            The reciever ID is: @ReceiverId 
+           The sender ID is: @SenderId *@
         </p>
         </div>
 
@@ -39,6 +40,8 @@
     public MessageModel? Model { get; set; }
     [Parameter]
     public int ReceiverId { get; set; }
+    [Parameter]
+    public int SenderId { get; set; }
     [Parameter]
     public string? MessageTo { get; set; }
 
@@ -57,6 +60,7 @@
 
         // Set values automatically
         Model.ReceiverId = ReceiverId;
+        Model.SendererId = SenderId;
         Model.SenderName = nameOFSender;
         Model.Timestamp = DateTime.Now;
     }

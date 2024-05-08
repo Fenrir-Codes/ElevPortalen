@@ -2,6 +2,7 @@
 @page "/viewmessages/{ReceiverId:int}"
 
 @using ElevPortalen.Pages.AlertBox
+@using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Models;
 
@@ -34,19 +35,20 @@
                                 <tr style="cursor:pointer;" @onclick="() => ToggleOpenMessage(message)">
                                     @if (!message.IsRead)
                                     {
+                                        // if the message is not marked as readed mark it bold and closed envelope icon
                                         <td style="max-width:10px;"><i class="fa-solid fa-envelope fa-xl"></i></td>
                                         <td class="align-middle fw-bold" style="max-width:100px;">Fra: @message.SenderName</td>
                                         <td class="align-middle text-center fw-bold">
                                             <small>
-                                                @if (!string.IsNullOrEmpty(message.Content))
+                                                @if (!string.IsNullOrEmpty(message.Subject))
                                                 {
-                                                    @if (message.Content.Length > 35)
+                                                    @if (message.Subject.Length > 35)
                                                     {
-                                                        @message.Content.Substring(0, 25) <span>...</span>
+                                                        @message.Subject.Substring(0, 25) <span>...</span>
                                                     }
                                                     else
                                                     {
-                                                        @message.Content <span>...</span>
+                                                        @message.Subject <span>...</span>
                                                     }
                                                 }
                                             </small>
@@ -55,19 +57,20 @@
                                     }
                                     else
                                     {
+                                        //if the message marked as readed and mark it with opened envelope icon
                                         <td style="max-width:10px;"><i class="fa-solid fa-envelope-open fa-xl"></i></td>
                                         <td class="align-middle" style="max-width:100px;">Fra: @message.SenderName</td>
                                         <td class="align-middle text-center">
                                             <small>
-                                                @if (!string.IsNullOrEmpty(message.Content))
+                                                @if (!string.IsNullOrEmpty(message.Subject))
                                                 {
-                                                    @if (message.Content.Length > 35)
+                                                    @if (message.Subject.Length > 35)
                                                     {
-                                                        @message.Content.Substring(0, 25) <span>...</span>
+                                                        @message.Subject.Substring(0, 25) <span>...</span>
                                                     }
                                                     else
                                                     {
-                                                        @message.Content <span>...</span>
+                                                        @message.Subject <span>...</span>
                                                     }
                                                 }
                                             </small>
@@ -81,6 +84,7 @@
                 }
                 else
                 {
+                    // else the card body is the message content
                     <p class="m-3">@_Message.Content</p>
                 }
             </div>
@@ -88,7 +92,12 @@
             @if (MessageOpen)
             {
                 <div class="card-footer d-flex">
-                    <button class="btn btn-sm btn-danger" @onclick="ToggleBack">Tilbage</button>
+                    <button class="btn btn-sm btn-success me-2" @onclick="ToggleBack"><i class="fa-solid fa-circle-left me-1"></i>Tilbage</button>
+                    <button class="btn btn-sm btn-success me-2" @onclick="() =>
+                        DialogModal.OpenAnswareDialog(_Message.SendererId, _Message.ReceiverId, _Message.SenderName, null, _Message.Subject, null)">
+                        <i class="fa-solid fa-message me-1"></i>Besvar
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger me-2" @onclick="() => DeleteMessage(_Message.MessageId)"><i class="fa-solid fa-trash-can me-1"></i>Delete</button>        
                 </div>
             }
         </div>
@@ -100,10 +109,17 @@
 
 </div>
 
+<!-- DialogModal for update view -->
+<DialogModal @ref="DialogModal" OnClose="ReRenderPage"></DialogModal>
+<!-- AlertBox -->
+<AlertBox @ref="_alertBox" />
+
 @code {
     [Parameter] public int ReceiverId { get; set; }
     private MessageModel _Message = new MessageModel();
     private List<MessageModel> _listOfMessages = new List<MessageModel>();
+    private AlertBox _alertBox = new AlertBox();
+    private DialogModal DialogModal = new DialogModal();
     private bool MessageOpen = false;
     private string? messageFrom = "";
 
@@ -136,6 +152,31 @@
     {
         MessageOpen = false;
         await OnInitializedAsync();
+        StateHasChanged();
+    }
+    #endregion
+
+    #region Delete function for message
+    private async Task DeleteMessage(int messageId)
+    {
+        var (success, message) = await _messageService.Delete(messageId);
+        if (success)
+        {
+            _alertBox.SetMessage(success, message, 2000, success:true);
+            ToggleBack();
+
+        }
+        else
+        {
+            _alertBox.SetMessage(true, message, 10000, danger:true);
+        }
+    }
+    #endregion
+
+    #region Re-RenderPage function for re-renderint the profile page on change
+    private async void ReRenderPage()
+    {
+        await GetMyMessages();
         StateHasChanged();
     }
     #endregion

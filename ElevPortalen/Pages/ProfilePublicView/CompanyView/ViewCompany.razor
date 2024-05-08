@@ -6,10 +6,14 @@
 @using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
 @using ElevPortalen.Models;
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
 @inject CompanyService _companyService
+@inject StudentService _studentService
 @inject NavigationManager NavManager
 @inject IJSRuntime jsRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @foreach (var data in _company)
 {
@@ -94,7 +98,7 @@
                         </div>
                         <div class="col-sm-9">
                             <button class="btn btn-success mb-0 btn-sm" @onclick="() =>
-                                DialogModal!.OpenMessageDialog(data.CompanyId, data.CompanyName, null)">
+                                DialogModal!.OpenMessageDialog(data.CompanyId, senderId, data.CompanyName, null)">
                                 Send besked
                             </button>
                         </div>
@@ -184,12 +188,16 @@
     private List<CompanyModel> _company = new List<CompanyModel>();
     private AlertBox _alertBox = new AlertBox();
     private DialogModal? DialogModal { get; set; }
+    public ClaimsPrincipal? _user { get; set; }
+    private AuthenticationState? _authState;
+    private int senderId = 0;
 
 
     #region Oninitialize
     protected override async Task OnInitializedAsync()
     {
         await GetCompanyProfile(Id);
+        await GetTheStudentIdAsSenderId();
     }
     #endregion
 
@@ -221,6 +229,24 @@
         // path based on folders
         var imagePath = $"wwwroot/images/ProfileImages/{imageName}";
         return File.Exists(imagePath);
+    }
+    #endregion
+
+    #region Get the id as sender id
+    private async Task GetTheStudentIdAsSenderId()
+    {
+        // Getting the user current authentication state.
+        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (_authState != null)
+        {
+            _user = _authState.User;
+            var student = await _studentService.ReadData(_user);
+            if (student != null)
+            {
+                senderId = student[0].StudentId;
+            }
+        }
     }
     #endregion
 

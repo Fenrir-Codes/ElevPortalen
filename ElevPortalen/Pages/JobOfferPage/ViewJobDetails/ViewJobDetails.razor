@@ -5,8 +5,11 @@
 @using ElevPortalen.Pages.AlertBox
 @using ElevPortalen.Pages.DialogModal
 @using ElevPortalen.Services;
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
 
 @inject JobService _jobService
+@inject StudentService _studentService
 @inject IJSRuntime jsRuntime
 @inject NavigationManager _navManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -43,7 +46,7 @@
                             <button class="btn btn-sm btn-success me-2" @onclick="() => NavigateToNewTab(_job.JobLink)">Ansøg via link</button>
                         }
                         <button class="btn btn-sm btn-success" @onclick="() =>
-                                DialogModal!.OpenMessageDialog(_job.CompanyId, _job.CompanyName, null)">
+                                DialogModal!.OpenMessageDialog(_job.CompanyId, senderId, _job.CompanyName, null)">
                             Send besked
                         </button>
                     </div>
@@ -99,6 +102,7 @@
                             <i class="fa fa-map-marker-alt text-primary me-2 text-success"></i>
                             Adresse: @_job.JobAddress
                         </p>
+                       @*  the sender id : @senderId *@
                     </div>
 
                 </div>
@@ -170,10 +174,12 @@
     private DialogModal? DialogModal { get; set; }
     private JobOfferModel? _job = new JobOfferModel();
     private AuthenticationState? _authState;
+    public ClaimsPrincipal? _user { get; set; }
     private bool isLoaded = false;
     private bool isVisible = false;
     private string columnWidth = "col-lg-12";
     private string _message = "";
+    private int senderId = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -185,11 +191,18 @@
     private async Task GetAuthState()
     {
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (IsInRole("Student"))
+        if (_authState != null && IsInRole("Student"))
         {
             isVisible = true;
             columnWidth = "col-lg-8";
             _message = "For at søge dette job skal du logge ind";
+            
+            _user = _authState.User;
+            var student = await _studentService.ReadData(_user);
+            if (student != null)
+            {
+                senderId = student[0].StudentId;
+            }
         }
         else
         {
@@ -197,7 +210,6 @@
             columnWidth = "col-lg-12";
             _message = "";
         }
-
     }
     #endregion
 
@@ -239,5 +251,6 @@
         return user.IsInRole(role);
     }
     #endregion
+
 
 }
