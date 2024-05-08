@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ElevPortalen.Migrations.ElevPortalenDataDb
+namespace ElevPortalen.Migrations
 {
     [DbContext(typeof(ElevPortalenDataDbContext))]
     partial class ElevPortalenDataDbContextModelSnapshot : ModelSnapshot
@@ -96,6 +96,9 @@ namespace ElevPortalen.Migrations.ElevPortalenDataDb
 
                     b.Property<string>("SenderName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SendererId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Subject")
                         .HasColumnType("nvarchar(max)");
