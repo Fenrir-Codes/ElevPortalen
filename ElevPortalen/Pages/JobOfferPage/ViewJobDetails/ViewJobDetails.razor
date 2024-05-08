@@ -102,6 +102,7 @@
                             <i class="fa fa-map-marker-alt text-primary me-2 text-success"></i>
                             Adresse: @_job.JobAddress
                         </p>
+                       @*  the sender id : @senderId *@
                     </div>
 
                 </div>
@@ -184,18 +185,24 @@
     {
         await GetAuthState();
         await GetJobOffer(JobOfferId);
-        await GetTheStudentIdAsSenderId();
     }
 
     #region Get the auth state and set column and message values
     private async Task GetAuthState()
     {
         _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        if (IsInRole("Student"))
+        if (_authState != null && IsInRole("Student"))
         {
             isVisible = true;
             columnWidth = "col-lg-8";
             _message = "For at søge dette job skal du logge ind";
+            
+            _user = _authState.User;
+            var student = await _studentService.ReadData(_user);
+            if (student != null)
+            {
+                senderId = student[0].StudentId;
+            }
         }
         else
         {
@@ -245,22 +252,5 @@
     }
     #endregion
 
-    #region Get the studentId as sender id
-    private async Task GetTheStudentIdAsSenderId()
-    {
-        // Getting the user current authentication state.
-        _authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-        if (_authState != null)
-        {
-            _user = _authState.User;
-            var student = await _studentService.ReadData(_user);
-            if (student != null)
-            {
-                senderId = student[0].StudentId;
-            }
-        }
-    }
-    #endregion
 
 }

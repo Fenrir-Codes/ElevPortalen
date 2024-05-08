@@ -1,6 +1,5 @@
 ﻿using ElevPortalen.Data;
 using ElevPortalen.Models;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElevPortalen.Services
@@ -11,13 +10,11 @@ namespace ElevPortalen.Services
     public class MessageService
     {
         private readonly ElevPortalenDataDbContext _context;
-        private readonly IDataProtector? _dataProtector;
 
         #region constructor
-        public MessageService(ElevPortalenDataDbContext context, IDataProtectionProvider dataProtectionProvider)
+        public MessageService(ElevPortalenDataDbContext context)
         {
             _context = context;
-            _dataProtector = dataProtectionProvider.CreateProtector("ProtectData");
         }
         #endregion
 
@@ -61,8 +58,6 @@ namespace ElevPortalen.Services
             }
         }
         #endregion
-
-
 
         #region Delete multiple Messages with the receiverId
         public async Task<(bool, string)> DeleteAllWithReceiverId(int receiverId)
@@ -141,9 +136,9 @@ namespace ElevPortalen.Services
 
                 return unreadMessageCount;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new InvalidOperationException("An error occurred while counting unread messages." + ex.Message);
+                return 0;
             }
         }
         #endregion
