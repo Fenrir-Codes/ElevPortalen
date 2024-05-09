@@ -12,14 +12,11 @@
 
     <main class="">
         <article class="p-2">
-            <CustomErrorBoundary @ref="@errorBoundary" Context="Exception">
+            <CustomErrorBoundary @ref="errorBoundary">
                 <ChildContent>
-
                     @Body
-
                 </ChildContent>
-
-                <ErrorContent>
+                <ErrorContent Context="Exception">
                     <div class="alert bg-danger text-white alert-dismissible m-2">
                         <p>
                             Type: @Exception.GetType()
@@ -33,9 +30,8 @@
                         <p>
                             Help link: @Exception.HelpLink
                         </p>
-                        @*                         Type: @Exception.GetType() | Message: @Exception.Message | Method: @Exception.TargetSite | Help link: @Exception.HelpLink *@
 
-                        <button class="btn-close" data-bs-dismiss="alert" onclick="@errorBoundary.Recover"></button>
+                        <button class="btn-close" data-bs-dismiss="alert" @onclick="() => errorBoundary.Recover()"></button>
                     </div>
                 </ErrorContent>
             </CustomErrorBoundary>
@@ -45,7 +41,7 @@
 </div>
 
 @code {
-    private ErrorBoundary? errorBoundary;
+    private CustomErrorBoundary errorBoundary = new CustomErrorBoundary();
 
     private bool _iconMenuActive { get; set; }
     private string? IconMenuCssClass => _iconMenuActive ? "width: 80px;" : null;
