@@ -19,7 +19,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Create Message (send)
-        public async Task<(string, bool)> SendMessage(MessageModel message)
+        public async Task<(string?, bool)> SendMessage(MessageModel message)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"An error har ocurred: {ex.Message}");
+                return ($"An error har ocurred: {ex.Message}", false);
             }
         }
         #endregion
@@ -79,26 +79,25 @@ namespace ElevPortalen.Services
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"An error has occurred: {ex.Message}");
+                return (false, $"An error has occurred: {ex.Message}");
             }
         }
         #endregion
 
         #region Mark Message as Read
-        public async Task MarkMessageAsRead(int messageId)
+        public async Task<(bool, string?)> MarkMessageAsRead(int messageId)
         {
-            try
+
+            var message = await _context.Messages.FirstOrDefaultAsync(m => m.MessageId == messageId);
+            if (message != null)
             {
-                var message = await _context.Messages.FirstOrDefaultAsync(m => m.MessageId == messageId);
-                if (message != null)
-                {
-                    message.IsRead = true;
-                    await _context.SaveChangesAsync();
-                }
+                message.IsRead = true;
+                await _context.SaveChangesAsync();
+                return (true, null);
             }
-            catch (Exception ex)
+            else
             {
-                throw new InvalidOperationException("An error occurred while marking the message as read." + ex.Message);
+                return (false, $"An error while marking the message as readed.");
             }
         }
         #endregion

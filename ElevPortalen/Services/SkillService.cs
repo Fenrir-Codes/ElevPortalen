@@ -111,18 +111,18 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Retrieve the skills with StudentId
-        public async Task<SkillModel> GetSkillsByStudentId(int studentId)
+        public async Task<(string?, SkillModel?)> GetSkillsByStudentId(int studentId)
         {
             try
             {
                 var skills = await _context.StudentSkills
                     .Where(s => s.StudentId == studentId).FirstAsync();
 
-                return skills;
+                return (null, skills);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"An error occurred while retrieving skills data: {ex.Message}");
+                return ($"An error occurred while retrieving skills data: {ex.Message}", null);
             }
         }
         #endregion
@@ -182,7 +182,7 @@ namespace ElevPortalen.Services
         #endregion
 
         #region Delete skills
-        public async Task<string?> DeleteSkills(int studentId)
+        public async Task<(bool, string?)> DeleteSkills(int studentId)
         {
             try
             {
@@ -195,16 +195,16 @@ namespace ElevPortalen.Services
                     _context.StudentSkills.Remove(skill);
                     await _context.SaveChangesAsync();
 
-                    return $"Skills deleted successfully."; //success
+                    return (true, "Skills deleted successfully."); //success
                 }
                 else
                 {
-                    return "Skills not found for the specified student"; // Return a message when the skills are not found
+                    return (false, "Skills not found for the specified student"); // Return a message when the skills are not found
                 }
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Failed to delete skills: {ex.Message}");
+                return (false, $"{ex.Message}");
             }
         }
 

@@ -630,7 +630,15 @@ else
     private async Task ToggleUpdateSkillsSection(int id)
     {
         isUpdateSectionVisible = true;
-        _Skills = await _skillService.GetSkillsByStudentId(id);
+        var (message, skills) = await _skillService.GetSkillsByStudentId(id);
+        if (skills != null)
+        {
+            _Skills = skills;
+        }
+        else
+        {
+            _alertBox.SetMessage(true, message, 10000, danger:true);
+        }
     }
     #endregion
 
